@@ -2,7 +2,6 @@ package com.intoParquet
 
 import org.apache.log4j.Logger
 import org.apache.log4j.Level
-import com.intoParquet.plugin.CastToParquet
 import com.intoParquet.plugin.SparkBuilder
 import com.intoParquet.plugin.AppLogger
 
@@ -16,7 +15,7 @@ object Main extends AppLogger {
 
         SparkBuilder.spark
 
-        SparkBuilder.afterAll
+        SparkBuilder.afterAll()
 
     }
 }
