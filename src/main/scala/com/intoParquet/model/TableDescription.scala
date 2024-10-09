@@ -22,7 +22,7 @@ object TableDescription {
     }
 
     protected[model] def matchCase(line: String): Boolean = {
-        val firstCol: Regex = raw"name\s+type\s+comment".r
+        val firstCol: Regex = raw"name\s+type(\s+comment)?".r
         line match {
             case firstCol(_*) => true
             case _            => false

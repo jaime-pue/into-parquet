@@ -66,4 +66,9 @@ days_of_week int número de días que está abierto el centro
         val twoSpaces = "name   type  	comment"
         assert(TableDescription.matchCase(twoSpaces))
     }
+
+    test("Should work if only name and type") {
+        val example = "name type"
+        assert(TableDescription.matchCase(example))
+    }
 }
