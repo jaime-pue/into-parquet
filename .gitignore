@@ -61,7 +61,7 @@ buildNumber.properties
 .classpath
 
 # Forbidden classes
-/service/CastToParquet.scala
+CastToParquet.scala
 
 # Raw data
 data
