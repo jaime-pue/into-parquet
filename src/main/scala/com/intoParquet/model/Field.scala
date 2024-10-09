@@ -23,13 +23,21 @@ class Field(_fieldName: String, _fieldType: SQLType) {
         this(_fieldName, Field.intoSQLType(_fieldType))
     }
 
+    override def equals(obj: Any): Boolean = {
+        obj match {
+            case d: Field =>
+                d.fieldName.equals(this._fieldName) && d.fieldType.equals(this.fieldType)
+            case _ => false
+        }
+    }
+
 }
 
 object Field {
     protected[model] def intoSQLType(value: String): SQLType = {
         sanitizeString(value) match {
             case "string"        => StringType
-            case "integer"       => IntegerType
+            case "int"           => IntegerType
             case "boolean"       => BooleanType
             case "timestamp"     => TimeStampType
             case "double"        => DoubleType
@@ -40,7 +48,7 @@ object Field {
         }
     }
 
-    private def sanitizeString(value: String): String = {
+    protected[model] def sanitizeString(value: String): String = {
         value.trim().toLowerCase()
     }
 }

@@ -1,12 +1,10 @@
 package com.intoParquet.plugin
 
-import org.apache.spark.sql.types.StructType
-import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.SaveMode
+import com.intoParquet.mapping.IntoFieldDescriptors
+import com.intoParquet.model.{FieldDescriptors, TableDescription}
 import com.intoParquet.plugin.SparkBuilder.spark
-import com.intoParquet.mapping.IntoFieldMapper
-import com.intoParquet.model.TableDescription
-import com.intoParquet.mapping.IntoColumnMapper
+import org.apache.spark.sql.{DataFrame, SaveMode}
+import org.apache.spark.sql.types.StructType
 
 object Converter extends AppLogger {
 
@@ -52,8 +50,14 @@ object Converter extends AppLogger {
         tableDescription: String
     ): DataFrame = {
         val description = new TableDescription(tableDescription)
-        val fields      = IntoFieldMapper.fromDescription(description)
-        IntoColumnMapper.applySchema(df, fields)
+        val fields      = IntoFieldDescriptors.fromDescription(description)
+        applySchema(df, fields)
+    }
+
+    protected[plugin] def applySchema(df: DataFrame, description: FieldDescriptors): DataFrame = {
+        description.fields.foldLeft(df) { (temp, field) =>
+            temp.withColumn(field.fieldName, field.colExpression)
+        }
     }
 
     def executeCastGoalWithTableDescription(input: String, tableDescription: String): Unit = {
