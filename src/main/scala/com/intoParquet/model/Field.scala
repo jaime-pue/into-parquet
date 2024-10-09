@@ -1,5 +1,6 @@
 package com.intoParquet.model
 
+import com.intoParquet.exception.NotImplementedTypeException
 import org.apache.spark.sql.types.DataType
 import org.apache.spark.sql.Column
 import org.apache.spark.sql.functions.col
@@ -35,7 +36,7 @@ object Field {
             case "bigint"        => LongType
             case "decimal(38,2)" => new DecimalType(38, 2)
             case "tinyint"       => ShortType
-            case e               => throw new Exception(s"Not recognized type conversion for $e")
+            case e               => throw new NotImplementedTypeException(e)
         }
     }
 
