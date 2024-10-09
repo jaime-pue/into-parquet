@@ -4,13 +4,12 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-# VSCode settings
+# IDE settings
 .bloop
 .metals
 .vscode
-.scalafmt.conf
-data
 .sdkmanrc
+.idea
 
 # Spark folders
 spark-warehouse
@@ -62,5 +61,7 @@ buildNumber.properties
 .classpath
 
 # Forbidden classes
-/plugin/CastToParquet.scala
-/plugin/SparkBuilder.scala
+/service/CastToParquet.scala
+
+# Raw data
+data
