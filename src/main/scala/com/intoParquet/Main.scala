@@ -3,7 +3,7 @@ package com.intoParquet
 import org.apache.log4j.Logger
 import org.apache.log4j.Level
 import com.intoParquet.plugin.SparkBuilder
-import com.intoParquet.plugin.AppLogger
+import com.intoParquet.utils.AppLogger
 
 object Main extends AppLogger {
     Logger.getLogger("org.apache.spark").setLevel(Level.WARN)

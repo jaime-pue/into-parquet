@@ -3,6 +3,7 @@ package com.intoParquet.plugin
 import com.intoParquet.mapping.IntoFieldDescriptors
 import com.intoParquet.model.{FieldDescriptors, TableDescription}
 import com.intoParquet.plugin.SparkBuilder.spark
+import com.intoParquet.utils.AppLogger
 import org.apache.spark.sql.{DataFrame, SaveMode}
 import org.apache.spark.sql.types.StructType
 
