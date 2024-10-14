@@ -41,6 +41,7 @@ object Converter extends AppLogger {
     }
 
     private def readInferSchema(filename: String): DataFrame = {
+        logInfo(s"Read data & infer schema from $filename")
         spark.read
             .option("mode", "DROPMALFORMED")
             .option("columnNameOfCorruptRecord", "ERROR")
@@ -52,7 +53,7 @@ object Converter extends AppLogger {
             .csv(filepath(filename))
     }
 
-    def writeTo(df: DataFrame, path: String): Unit = {
+    private def writeTo(df: DataFrame, path: String): Unit = {
         logInfo(s"Writing dataframe to $path")
 
         logInfo(s"Dataframe: $path, rows: ${df.cache().count()}")
