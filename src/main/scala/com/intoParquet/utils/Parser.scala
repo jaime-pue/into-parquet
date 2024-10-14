@@ -2,6 +2,7 @@ package com.intoParquet.utils
 
 import com.intoParquet.model.enumeration.{InferSchema, Raw, ReadSchema, WriteMode}
 import scopt.OptionParser
+
 object Parser {
 
     case class InputArgs(
@@ -19,9 +20,23 @@ object Parser {
             .optional()
             .action((_, c) => c.copy(recursive = true))
             .text("Flag. Cast all files inside input folder")
-        opt[Unit]('r', "raw").optional().action((_, c) => c.copy(writeMethod = Raw))
-        opt[Unit]('i', "infer").optional().action((_, c) => c.copy(writeMethod = InferSchema))
-        opt[Unit]('p', "parse").optional().action((_, c) => c.copy(writeMethod = ReadSchema))
+        opt[Unit]('r', "raw")
+            .optional()
+            .action((_, c) => c.copy(writeMethod = Raw))
+            .text("Read csv fields as String")
+        opt[Unit]('i', "infer")
+            .optional()
+            .action((_, c) => c.copy(writeMethod = InferSchema))
+            .text("Read csv fields and try to infer the schema")
+        opt[Unit]('p', "parse")
+            .optional()
+            .action((_, c) => c.copy(writeMethod = ReadSchema))
+            .text("Read csv fields and apply a schema from /data/input/schema")
+        checkConfig(c =>
+            if (c.recursive && c.csvFile.isDefined)
+                failure("Recursive flag and files are mutually exclusive options")
+            else success
+        )
     }
 
     def parseSystemArgs(args: Array[String]): Option[InputArgs] = {
