@@ -21,10 +21,13 @@ object SparkBuilder extends AppLogger {
     }
 
     def afterAll(): Unit = {
-        logInfo("STOP SPARK SESSION")
-        SparkSession.clearActiveSession()
-        SparkSession.clearDefaultSession()
         spark.stop()
+        logInfo("Stop spark session")
+    }
+    
+    def beforeAll(): Unit = {
+        logInfo("Start spark session")
+        spark
     }
 
 

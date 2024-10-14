@@ -15,7 +15,7 @@ trait MapperTableDescription[A] {
         }
     }
 
-    protected[mapping] def cleanLines(lines: Array[String]): Array[String] = {
+    protected[mapping] def cleanLines(lines: List[String]): List[String] = {
         lines.map(l => l.trim()).filterNot(l => l.equals(""))
     }
 

@@ -5,6 +5,8 @@ import org.apache.spark.sql.types.DataType
 import org.apache.spark.sql.Column
 import org.apache.spark.sql.functions.col
 
+/** Individual field description. Holds column name and type
+ * */
 class Field(_fieldName: String, _fieldType: SQLType) {
     private val fieldNameHolder: String  = _fieldName
     private val fieldTypeHolder: SQLType = _fieldType

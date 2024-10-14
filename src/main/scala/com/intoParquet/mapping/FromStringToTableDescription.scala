@@ -6,7 +6,7 @@ import com.intoParquet.model.TableDescription
 object FromStringToTableDescription extends MapperTableDescription[String]{
 
     override def castTo(value: String): TableDescription = {
-        val fileLines = deleteFirstLine(cleanLines(value.split("\n")))
+        val fileLines = deleteFirstLine(cleanLines(value.split("\n").toList))
         new TableDescription(fileLines)
     }
 

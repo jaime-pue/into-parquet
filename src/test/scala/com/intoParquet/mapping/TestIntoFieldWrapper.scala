@@ -1,9 +1,9 @@
 package com.intoParquet.mapping
 
-import com.intoParquet.model.{Field, FieldDescriptors, TableDescription}
+import com.intoParquet.model.{Field, FieldWrapper, TableDescription}
 import org.scalatest.funsuite.AnyFunSuite
 
-class TestIntoFieldDescriptors extends AnyFunSuite {
+class TestIntoFieldWrapper extends AnyFunSuite {
 
     test("Should cast from a table description to several fields") {
         val describeTable =
@@ -15,7 +15,7 @@ class TestIntoFieldDescriptors extends AnyFunSuite {
         val description = FromStringToTableDescription.castTo(describeTable)
         val randomName  = new Field("random_name", "string")
         val randomInt   = new Field("random_int", "int")
-        val expected    = new FieldDescriptors(Seq(randomName, randomInt))
+        val expected    = new FieldWrapper(Seq(randomName, randomInt))
         assertResult(expected)(IntoFieldDescriptors.fromDescription(description))
     }
 

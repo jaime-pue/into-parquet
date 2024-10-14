@@ -12,11 +12,11 @@ object Main extends AppLogger {
 
     def main(args: Array[String]): Unit = {
 
-        logInfo("Start session")
+        SparkBuilder.beforeAll()
 
         val inputArgs: InputArgs =
             parseSystemArgs(args).getOrElse(throw new WrongInputArgsException)
-        SparkBuilder.spark
+        Controller.inputArgController(inputArgs)
         SparkBuilder.afterAll()
 
     }
