@@ -1,6 +1,9 @@
 package com.intoParquet.model.enumeration
 
-sealed trait WriteMode
+sealed trait WriteMode {
+
+    override def toString: String = getClass.toString
+}
 
 object Raw extends WriteMode
 

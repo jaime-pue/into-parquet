@@ -1,7 +1,6 @@
 package com.intoParquet.utils
 
 import org.scalatest.funsuite.AnyFunSuite
-import com.intoParquet.model.enumeration.{InferSchema, Raw, ReadSchema, WriteMode}
 
 class TestParser extends AnyFunSuite {
 
@@ -29,17 +28,23 @@ class TestParser extends AnyFunSuite {
         assert(args.isEmpty)
     }
 
-    test("Should list files recursively") {
-        val input = Array("-R")
-        val args  = Parser.parseSystemArgs(input).get
+    test("Should default to recursive method") {
+        val input: Array[String] = Array()
+        val args = Parser.parseSystemArgs(input).get
         assert(args.recursive)
     }
 
-    test("Should accept combinations") {
-        val input = Array("-R", "-f", "random", "--infer")
-        val args  = Parser.parseSystemArgs(input).get
-        assert(args.recursive)
-        assert(args.writeMethod.equals(InferSchema))
-        assert(args.csvFile.get.equals("random"))
+    test("Should force recursive to false if files found") {
+        val input = Array("-f", "Any")
+        val args = Parser.parseSystemArgs(input).get
+        assume(args.csvFile.isDefined)
+        assert(!args.recursive)
     }
+
+    test("Should fail if write mode is not allowed") {
+        val input = Array("-m", "blah")
+        val args = Parser.parseSystemArgs(input)
+        assert(args.isEmpty)
+    }
+
 }
