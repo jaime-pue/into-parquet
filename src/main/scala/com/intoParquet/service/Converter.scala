@@ -1,8 +1,8 @@
 package com.intoParquet.service
 
 import com.intoParquet.configuration.BasePaths
-import com.intoParquet.mapping.{FromStringToTableDescription, IntoFieldDescriptors}
-import com.intoParquet.model.{FieldWrapper, ParsedObject, TableDescription}
+import com.intoParquet.mapping.{IntoFieldDescriptors, IntoTableDescription}
+import com.intoParquet.model.{FieldWrapper, TableDescription}
 import com.intoParquet.service.SparkBuilder.spark
 import com.intoParquet.utils.AppLogger
 import org.apache.spark.sql.types.StructType
@@ -63,7 +63,7 @@ object Converter extends AppLogger {
         df: DataFrame,
         tableDescription: String
     ): DataFrame = {
-        val description = FromStringToTableDescription.castTo(tableDescription)
+        val description = IntoTableDescription.castTo(tableDescription)
         val fields      = IntoFieldDescriptors.fromDescription(description)
         applySchema(df, fields)
     }

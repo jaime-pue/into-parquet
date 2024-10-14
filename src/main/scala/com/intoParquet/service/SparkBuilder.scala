@@ -4,7 +4,6 @@ import com.intoParquet.utils.AppLogger
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.SparkContext
 
-
 object SparkBuilder extends AppLogger {
 
     lazy val sparkContext: SparkContext = spark.sparkContext
@@ -24,11 +23,10 @@ object SparkBuilder extends AppLogger {
         spark.stop()
         logInfo("Stop spark session")
     }
-    
+
     def beforeAll(): Unit = {
         logInfo("Start spark session")
         spark
     }
-
 
 }

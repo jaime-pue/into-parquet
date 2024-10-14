@@ -12,7 +12,7 @@ class TestIntoFieldWrapper extends AnyFunSuite {
               |random_name string
               |random_int int con comentario
               |""".stripMargin
-        val description = FromStringToTableDescription.castTo(describeTable)
+        val description = IntoTableDescription.castTo(describeTable)
         val randomName  = new Field("random_name", "string")
         val randomInt   = new Field("random_int", "int")
         val expected    = new FieldWrapper(Seq(randomName, randomInt))

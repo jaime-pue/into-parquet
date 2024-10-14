@@ -1,12 +1,10 @@
-package com.intoParquet.mapping.mapper
+package com.intoParquet.mapping
 
 import com.intoParquet.model.TableDescription
 
 import scala.util.matching.Regex
 
-trait MapperTableDescription[A] {
-    def castTo(value: A): TableDescription
-
+object IntoTableDescription {
     protected[mapping] def matchCase(line: String): Boolean = {
         val firstCol: Regex = raw"name\s+type(\s+comment)?.*".r
         line match {
@@ -21,5 +19,15 @@ trait MapperTableDescription[A] {
 
     protected[mapping] def deleteFirstLine(lines: Seq[String]): Seq[String] = {
         lines.filterNot(l => matchCase(l))
+    }
+
+    def castTo(value: List[String]): TableDescription = {
+        val fileLines = deleteFirstLine(cleanLines(value))
+        new TableDescription(fileLines)
+    }
+
+    def castTo(value: String): TableDescription = {
+        val fileLines = deleteFirstLine(cleanLines(value.split("\n").toList))
+        new TableDescription(fileLines)
     }
 }

@@ -3,13 +3,15 @@ package com.intoParquet.service
 import com.intoParquet.configuration.BasePaths
 import com.intoParquet.exception.NoFileFoundException
 
-import java.nio.file.Paths
+import java.nio.file.{Files, Paths}
+import scala.collection.JavaConverters.asScalaIteratorConverter
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
 object FileLoader {
 
     private val InputSchemaPath: String = BasePaths().InputSchemaPath
+    private val InputRawPath: String    = BasePaths().InputRawPath
 
     def readFile(fileName: String): Option[List[String]] = {
         readFromDataFolder(fileName) match {
@@ -35,4 +37,17 @@ object FileLoader {
     private def resolveFilePath(fileName: String): String = {
         Paths.get(s"$InputSchemaPath$fileName").toAbsolutePath.toString
     }
+
+    def readAllFilesFromRaw: Array[String] = {
+        val filePath = Paths.get(s"$InputRawPath").toAbsolutePath
+        Files
+            .list(filePath)
+            .iterator()
+            .asScala
+            .filter(Files.isRegularFile(_))
+            .filter(_.getFileName.toString.endsWith(".csv"))
+            .map(_.getFileName.toString.replace(".csv", ""))
+            .toArray
+    }
+
 }

@@ -1,7 +1,7 @@
 package com.intoParquet
 
 import com.intoParquet.exception.NoFileFoundException
-import com.intoParquet.mapping.FromStringToParsedObjectWrapper
+import com.intoParquet.mapping.IntoParsedObjectWrapper
 import com.intoParquet.model.{
     InferSchema,
     ParsedObject,
@@ -15,6 +15,7 @@ import com.intoParquet.service.Converter.{
     executeRaw,
     executeWithTableDescription
 }
+import com.intoParquet.service.FileLoader
 import com.intoParquet.utils.Parser.InputArgs
 
 object Controller {
@@ -40,10 +41,14 @@ object Controller {
     }
 
     def inputArgController(value: InputArgs): Unit = {
-        val i = FromStringToParsedObjectWrapper.castTo(
-          value.csvFile.getOrElse(throw new NoFileFoundException("v"))
-        )
-        routeOnWriteMode(value.writeMethod, i)
+        val files = if (value.recursive) {
+            IntoParsedObjectWrapper.castTo(FileLoader.readAllFilesFromRaw)
+        } else {
+            IntoParsedObjectWrapper.castTo(
+              value.csvFile.getOrElse(throw new NoFileFoundException("v"))
+            )
+        }
+        routeOnWriteMode(value.writeMethod, files)
 
     }
 }

@@ -14,4 +14,9 @@ class TestFileLoader extends AnyFunSuite {
         val file = FileLoader.readFile("imagine")
         assert(file.isEmpty)
     }
+
+    test("Should return a list of files from raw") {
+        val f = FileLoader.readAllFilesFromRaw
+        f.foreach(println)
+    }
 }
