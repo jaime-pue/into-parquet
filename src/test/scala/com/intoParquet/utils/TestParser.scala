@@ -1,0 +1,30 @@
+package com.intoParquet.utils
+
+import org.scalatest.funsuite.AnyFunSuite
+
+class TestParser  extends  AnyFunSuite {
+
+    test("Should parse a string") {
+        val input = Array("--files", "random")
+        val args = Parser.parseSystemArgs(input)
+        assertResult("random")(args.get.csvFile.get)
+    }
+
+    test("Should work if nothing is passed") {
+        val input: Array[String] = Array()
+        val args = Parser.parseSystemArgs(input)
+        assert(args.get.csvFile.isEmpty)
+    }
+
+    test("Should work with simple call") {
+        val input = Array("-f", "random")
+        val args = Parser.parseSystemArgs(input)
+        assertResult("random")(args.get.csvFile.get)
+    }
+
+    test("Should fail if wrong inputs") {
+        val input = Array("-i", "2")
+        val args = Parser.parseSystemArgs(input)
+        assert(args.isEmpty)
+    }
+}

@@ -1,4 +1,4 @@
-package com.intoParquet.plugin
+package com.intoParquet.service
 
 import com.intoParquet.utils.AppLogger
 import org.apache.spark.sql.SparkSession

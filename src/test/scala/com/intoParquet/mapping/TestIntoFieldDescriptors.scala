@@ -12,7 +12,7 @@ class TestIntoFieldDescriptors extends AnyFunSuite {
               |random_name string
               |random_int int con comentario
               |""".stripMargin
-        val description = new TableDescription(describeTable)
+        val description = FromStringToTableDescription.castTo(describeTable)
         val randomName  = new Field("random_name", "string")
         val randomInt   = new Field("random_int", "int")
         val expected    = new FieldDescriptors(Seq(randomName, randomInt))

@@ -1,16 +1,17 @@
-package com.intoParquet.plugin
+package com.intoParquet.service
 
-import com.intoParquet.mapping.IntoFieldDescriptors
-import com.intoParquet.model.{FieldDescriptors, TableDescription}
-import com.intoParquet.plugin.SparkBuilder.spark
+import com.intoParquet.configuration.BasePaths
+import com.intoParquet.mapping.{FromStringToTableDescription, IntoFieldDescriptors}
+import com.intoParquet.model.FieldDescriptors
+import com.intoParquet.service.SparkBuilder.spark
 import com.intoParquet.utils.AppLogger
-import org.apache.spark.sql.{DataFrame, SaveMode}
 import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.{DataFrame, SaveMode}
 
 object Converter extends AppLogger {
 
-    private val InputBasePath: String  = "./data/input/raw/"
-    private val OutputBasePath: String = "./data/output/"
+    private val InputBasePath: String  = BasePaths().InputRawPath
+    private val OutputBasePath: String = BasePaths().OutputBasePath
 
     private def filepath(filename: String) = {
         s"$InputBasePath${filename}.csv"
@@ -50,12 +51,12 @@ object Converter extends AppLogger {
         df: DataFrame,
         tableDescription: String
     ): DataFrame = {
-        val description = new TableDescription(tableDescription)
+        val description = FromStringToTableDescription.castTo(tableDescription)
         val fields      = IntoFieldDescriptors.fromDescription(description)
         applySchema(df, fields)
     }
 
-    protected[plugin] def applySchema(df: DataFrame, description: FieldDescriptors): DataFrame = {
+    def applySchema(df: DataFrame, description: FieldDescriptors): DataFrame = {
         description.fields.foldLeft(df) { (temp, field) =>
             temp.withColumn(field.fieldName, field.colExpression)
         }
