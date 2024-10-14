@@ -18,12 +18,14 @@ object Controller extends AppLogger {
         value: WriteMode,
         wrapper: ParsedObjectWrapper
     ): Unit = {
-        wrapper.elements.foreach(e =>
+        wrapper.elements.foreach(e => {
+            logInfo(s"Start job for: ${e.id}")
             value match {
-                case Raw         => executeRaw(e.id)
+                case Raw => executeRaw(e.id)
                 case InferSchema => executeInferSchema(e.id)
-                case ReadSchema  => readFromSchema(e)
+                case ReadSchema => readFromSchema(e)
             }
+        }
         )
     }
 
