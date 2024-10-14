@@ -1,4 +1,4 @@
-package com.intoParquet.model
+package com.intoParquet.model.enumeration
 
 sealed trait WriteMode
 

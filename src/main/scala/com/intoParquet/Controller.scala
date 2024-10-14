@@ -2,14 +2,8 @@ package com.intoParquet
 
 import com.intoParquet.exception.NoFileFoundException
 import com.intoParquet.mapping.IntoParsedObjectWrapper
-import com.intoParquet.model.{
-    InferSchema,
-    ParsedObject,
-    ParsedObjectWrapper,
-    Raw,
-    ReadSchema,
-    WriteMode
-}
+import com.intoParquet.model.{ParsedObject, ParsedObjectWrapper}
+import com.intoParquet.model.enumeration.{InferSchema, Raw, ReadSchema, WriteMode}
 import com.intoParquet.service.Converter.{
     executeInferSchema,
     executeRaw,
