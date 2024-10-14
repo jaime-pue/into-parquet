@@ -1,2 +1,3 @@
 name type comment
-random string
+name string
+id int

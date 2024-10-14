@@ -1,7 +1,8 @@
 package com.intoParquet.configuration
 
-case class BasePaths(
-    InputRawPath: String = "./data/input/raw/",
-    InputSchemaPath: String = "./data/input/schema/",
-    OutputBasePath: String = "./data/output/"
-) {}
+case class BasePaths(base: String = "./data"
+) {
+    val InputRawPath: String    = s"$base/input/raw/"
+    val InputSchemaPath: String = s"$base/input/schema/"
+    val OutputBasePath: String  = s"$base/output/"
+}

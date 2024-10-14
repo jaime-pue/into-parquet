@@ -12,6 +12,10 @@ trait AppLogger {
         log.debug(msg)
     }
 
+    protected def logWarning(msg: Any): Unit = {
+        log.warn(msg)
+    }
+
     protected def logError(msg: Any): Unit = {
         log.error(msg)
     }

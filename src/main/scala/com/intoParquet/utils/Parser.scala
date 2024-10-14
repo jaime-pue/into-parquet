@@ -8,7 +8,8 @@ object Parser {
     case class InputArgs(
         csvFile: Option[String],
         writeMethod: WriteMode = ReadSchema,
-        recursive: Boolean = true
+        recursive: Boolean = true,
+        directory: String = "./data"
     )
 
     private final val parser = new OptionParser[InputArgs]("into-parquet") {
@@ -23,6 +24,9 @@ object Parser {
                 else failure("Write mode should be one of the following: [R]aw, [I]nfer, [P]arse")
             )
             .text("Choose one of the following: [R]aw, [I]nfer, [P]arse")
+        opt[String]('p', "path").optional
+            .action((path, c) => c.copy(directory = path))
+            .text("Path to folder")
         checkConfig(c =>
             if (c.recursive && c.csvFile.isDefined)
                 failure("Recursive flag and files are mutually exclusive options")

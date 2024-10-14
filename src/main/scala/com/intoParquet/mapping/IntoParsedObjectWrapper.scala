@@ -4,9 +4,12 @@ import com.intoParquet.model.{ParsedObject, ParsedObjectWrapper, TableDescriptio
 import com.intoParquet.service.FileLoader
 
 object IntoParsedObjectWrapper {
-    protected[mapping] def parseLine(elements: Array[String]): ParsedObjectWrapper = {
+    protected[mapping] def parseLine(
+        elements: Array[String],
+        fromPath: FileLoader
+    ): ParsedObjectWrapper = {
         val i = elements.map(id => {
-            val table: Option[TableDescription] = FileLoader.readFile(id) match {
+            val table: Option[TableDescription] = fromPath.readFile(id) match {
                 case Some(value) => Some(IntoTableDescription.castTo(value))
                 case None        => None
             }
@@ -15,12 +18,7 @@ object IntoParsedObjectWrapper {
         new ParsedObjectWrapper(i)
     }
 
-    def castTo(value: String): ParsedObjectWrapper = {
-        val elements = value.split(";").map(_.trim)
-        parseLine(elements)
-    }
-
-    def castTo(value: Array[String]): ParsedObjectWrapper = {
-        parseLine(value)
+    def castTo(value: Array[String], fromPath: FileLoader): ParsedObjectWrapper = {
+        parseLine(value, fromPath)
     }
 }

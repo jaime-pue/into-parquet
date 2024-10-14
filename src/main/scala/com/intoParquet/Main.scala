@@ -6,6 +6,8 @@ import com.intoParquet.utils.AppLogger
 import com.intoParquet.utils.Parser.{InputArgs, parseSystemArgs}
 import org.apache.log4j.{Level, Logger}
 
+import scala.util.{Failure, Success}
+
 object Main extends AppLogger {
     Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
     Logger.getLogger("org.spark-project").setLevel(Level.WARN)
@@ -16,7 +18,15 @@ object Main extends AppLogger {
 
         val inputArgs: InputArgs =
             parseSystemArgs(args).getOrElse(throw new WrongInputArgsException)
-        Controller.inputArgController(inputArgs)
+        Controller.inputArgController(inputArgs) match {
+            case Failure(exception) =>
+                logError(
+                    s"""Job fail with exception
+                      |${exception.getMessage}
+                      |""".stripMargin)
+                throw exception
+            case Success(_) => logInfo("Everything ok")
+        }
         SparkBuilder.afterAll()
 
     }

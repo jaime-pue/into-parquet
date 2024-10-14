@@ -1,18 +1,18 @@
 package com.intoParquet
 
+import com.intoParquet.configuration.BasePaths
 import com.intoParquet.exception.NoFileFoundException
 import com.intoParquet.mapping.IntoParsedObjectWrapper
 import com.intoParquet.model.{ParsedObject, ParsedObjectWrapper}
 import com.intoParquet.model.enumeration.{InferSchema, Raw, ReadSchema, WriteMode}
-import com.intoParquet.service.Converter.{
-    executeInferSchema,
-    executeRaw,
-    executeWithTableDescription
-}
+import com.intoParquet.service.Converter.{executeInferSchema, executeRaw, executeWithTableDescription}
 import com.intoParquet.service.FileLoader
+import com.intoParquet.utils.AppLogger
 import com.intoParquet.utils.Parser.InputArgs
 
-object Controller {
+import scala.util.{Failure, Success, Try}
+
+object Controller extends AppLogger {
 
     def routeOnWriteMode(
         value: WriteMode,
@@ -34,15 +34,19 @@ object Controller {
         }
     }
 
-    def inputArgController(value: InputArgs): Unit = {
-        val files = if (value.recursive) {
-            IntoParsedObjectWrapper.castTo(FileLoader.readAllFilesFromRaw)
+    def inputArgController(value: InputArgs): Try[Unit] = {
+        val basePaths = BasePaths(value.directory)
+        val fileLoader = new FileLoader(basePaths)
+        val csv = if (value.recursive) {
+            logInfo(s"Read all csv files from ${basePaths.InputRawPath}")
+            new FileLoader(basePaths).readAllFilesFromRaw match {
+                case Failure(exception) => return Failure(exception)
+                case Success(value) => value
+            }
         } else {
-            IntoParsedObjectWrapper.castTo(
-              value.csvFile.getOrElse(throw new NoFileFoundException("v"))
-            )
+            value.csvFile.getOrElse(throw new NoFileFoundException("v")).split(";").map(_.trim)
         }
-        routeOnWriteMode(value.writeMethod, files)
-
+        val files = IntoParsedObjectWrapper.castTo(csv, fileLoader)
+        Try(routeOnWriteMode(value.writeMethod, files))
     }
 }

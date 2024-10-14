@@ -4,19 +4,6 @@ import org.scalatest.funsuite.AnyFunSuite
 
 class TestIntoTableDescription extends AnyFunSuite {
 
-    test("Should turn a string into a seq") {
-        val example = """
-        |name	type	comment
-        |society_code	string	Código de sociedad
-        |""".stripMargin
-        val expected = Array(
-          "",
-          "name	type	comment",
-          "society_code	string	Código de sociedad"
-        )
-        assertResult(expected)(example.split("\n"))
-    }
-
     test("Should return only field data") {
         val example = Seq(
           "name	type	comment",
