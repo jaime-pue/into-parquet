@@ -10,6 +10,18 @@ class TestParser extends AnyFunSuite {
         assertResult("random")(args.get.csvFile.get)
     }
 
+    test("Should declare empty as None") {
+        val input = Array("-f", "")
+        val args = Parser.parseSystemArgs(input)
+        assert(args.get.csvFile.isEmpty)
+    }
+
+    test("Should declare empty as None even with multiple whitespaces") {
+        val input = Array("-f", "    ")
+        val args = Parser.parseSystemArgs(input)
+        assert(args.get.csvFile.isEmpty)
+    }
+
     test("Should work if nothing is passed") {
         val input: Array[String] = Array()
         val args                 = Parser.parseSystemArgs(input)

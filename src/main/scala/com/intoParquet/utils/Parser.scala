@@ -15,7 +15,12 @@ object Parser {
     private final val parser = new OptionParser[InputArgs]("into-parquet") {
         head("Cast csv files to parquet format", "v0.0.1")
         opt[String]('f', "files").optional
-            .action((inputDate, c) => c.copy(csvFile = Some(inputDate), recursive = false))
+            .action((inputFiles, c) =>
+                c.copy(
+                  csvFile = if (isEmpty(inputFiles)) None else Some(inputFiles),
+                  recursive = false
+                )
+            )
             .text("csv files for processing, separated by ';'")
         opt[String]('m', "mode").optional
             .action((writeMethod, c) => c.copy(writeMethod = parseWriteMethod(writeMethod)))
@@ -57,5 +62,9 @@ object Parser {
             case "parse" => ReadSchema
             case "p"     => ReadSchema
         }
+    }
+
+    def isEmpty(value: String): Boolean = {
+        value.trim.isEmpty
     }
 }
