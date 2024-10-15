@@ -9,7 +9,8 @@ object Parser {
         csvFile: Option[String],
         castMethod: CastMode = ParseSchema,
         recursive: Boolean = true,
-        directory: String = "./data",
+        inputDir: Option[String] = None,
+        outputDir: Option[String] = None,
         failFast: Boolean = false
     ) {
         override def toString: String = {
@@ -43,8 +44,11 @@ object Parser {
             )
             .text("Choose one of the following: [R]aw, [I]nfer, [P]arse")
         opt[String]('p', "path").optional
-            .action((path, c) => c.copy(directory = path))
-            .text("Path to folder")
+            .action((path, c) => c.copy(inputDir = if (isEmpty(path)) None else Some(path)))
+            .text("Path to input folder")
+        opt[String]('o', "output").optional
+            .action((path, c) => c.copy(outputDir = if (isEmpty(path)) None else Some(path)))
+            .text("Path to output folder")
         opt[Unit]("fail-fast").optional
             .action((_, c) => c.copy(failFast = true))
             .text("Fail and exit if any process fails")

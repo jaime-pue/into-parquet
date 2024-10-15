@@ -13,7 +13,7 @@ import scala.util.{Failure, Success, Try}
 object IntoController extends AppLogger {
 
     def castTo(args: InputArgs): Try[Controller] = {
-        val basePaths  = BasePaths(args.directory)
+        val basePaths  = new BasePaths(args.inputDir, args.outputDir)
         val fileLoader = new FileLoader(basePaths)
         val csv = if (args.recursive) {
             logInfo(s"Read all csv files from ${basePaths.inputBasePath}")

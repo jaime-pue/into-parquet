@@ -1,16 +1,25 @@
 package com.intoParquet.configuration
 
-case class BasePaths(base: String = "./data"
+class BasePaths(
+    inputDir: Option[String] = None,
+    outputDir: Option[String] = None
 ) {
-    private val InputRawPath: String    = s"$base/input/raw/"
-    private val InputSchemaPath: String = s"$base/input/schema/"
-    private val OutputBasePath: String  = s"$base/output/"
+    private val InputRawPath: String    = s"$inputDir/input/raw/"
+    private val InputSchemaPath: String = s"$inputDir/input/schema/"
+    private val OutputBasePath: String  = s"$inputDir/output/"
+
+    private val DefaultInput: String  = "./data/input/"
+    private val DefaultOutput: String = "./data/output/"
+
+    def this(base: String) = {
+        this(Some(s"$base/input/"), Some(s"$base/output/"))
+    }
 
     def inputBasePath: String = {
-        s"$base/input/"
+        inputDir.getOrElse(DefaultInput)
     }
 
     def outputBasePath: String = {
-        s"$base/output/"
+        outputDir.getOrElse(DefaultOutput)
     }
 }

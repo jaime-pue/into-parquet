@@ -23,8 +23,8 @@ class TestFileLoader extends AnyFunSuite {
         assert(f.length > 0)
     }
 
-    test("Should fail if base path doesn't exist") {
-        val wrongDirectory: FileLoader = new FileLoader(BasePaths("Imagine"))
+    test("Should fail if inputDir path doesn't exist") {
+        val wrongDirectory: FileLoader = new FileLoader(new BasePaths("Imagine"))
         val f = wrongDirectory.readAllFilesFromRaw
         assert(f.isFailure)
     }
