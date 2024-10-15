@@ -14,9 +14,7 @@ Create a folder structure:
 Root/
 └── data/
     ├── input/
-    │   ├── raw
-    │   └── schema
-    └── output
+    └── output/
 ```
 
 Compiles to jar type:
@@ -49,7 +47,8 @@ flag BOOLEAN COMMENT 'boolean flag'
 |---------------|----------|------------------------------------------------|--------|
 | `--files`     | `-f`     | List of files for processing, separated by `;` | String |
 | `--mode`      | `-m`     | Cast method                                    | String |
-| `--path`      | `-p`     | Path where `/data` folder is                   | String |
+| `--path`      | `-p`     | Path where csv files are                       | String |
+| `--output`    | `-o`     | Where to put parquet files                     | String |
 | `--fail-fast` |          | Fail if any error found                        | Flag   |
 
 ### Cast method options
