@@ -10,11 +10,11 @@ import org.apache.spark.sql.{DataFrame, SaveMode}
 
 class Converter(basePaths: BasePaths) extends AppLogger {
 
-    private val InputBasePath: String  = basePaths.InputRawPath
-    private val OutputBasePath: String = basePaths.OutputBasePath
+    private val inputBasePath: String  = basePaths.inputBasePath
+    private val outputBasePath: String = basePaths.outputBasePath
 
     private def filepath(filename: String) = {
-        s"$InputBasePath${filename}.csv"
+        s"$inputBasePath${filename}.csv"
     }
 
     private def readCSV(filename: String, schema: StructType): DataFrame = {
@@ -54,10 +54,10 @@ class Converter(basePaths: BasePaths) extends AppLogger {
     }
 
     private def writeTo(df: DataFrame, path: String): Unit = {
-        logInfo(s"Writing dataframe to $OutputBasePath$path")
+        logInfo(s"Writing dataframe to $outputBasePath$path")
 
         logInfo(s"Dataframe: $path, rows: ${df.cache().count()}")
-        df.repartition(1).write.mode(SaveMode.Overwrite).parquet({ s"${OutputBasePath}$path" })
+        df.repartition(1).write.mode(SaveMode.Overwrite).parquet({ s"${outputBasePath}$path" })
     }
 
     def applyTableDescription(

@@ -11,8 +11,8 @@ import scala.util.{Failure, Success, Try}
 
 class FileLoader(paths: BasePaths) extends AppLogger {
 
-    private val InputSchemaPath: String = paths.InputSchemaPath
-    private val InputRawPath: String    = paths.InputRawPath
+    private val InputSchemaPath: String = paths.inputBasePath
+    private val InputRawPath: String    = paths.inputBasePath
 
     def readFile(fileName: String): Option[List[String]] = {
         readFromDataFolder(fileName) match {

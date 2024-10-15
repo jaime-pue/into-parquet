@@ -11,7 +11,7 @@ object Resources {
     lazy val path: BasePaths   = BasePaths(ResourceFolder)
 
     def cleanDirectory: Boolean = {
-        val directory = new Directory(new File(path.OutputBasePath))
+        val directory = new Directory(new File(path.outputBasePath))
         directory.deleteRecursively()
     }
 }

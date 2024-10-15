@@ -16,7 +16,7 @@ object IntoController extends AppLogger {
         val basePaths  = BasePaths(args.directory)
         val fileLoader = new FileLoader(basePaths)
         val csv = if (args.recursive) {
-            logInfo(s"Read all csv files from ${basePaths.InputRawPath}")
+            logInfo(s"Read all csv files from ${basePaths.inputBasePath}")
             new FileLoader(basePaths).readAllFilesFromRaw match {
                 case Failure(exception) => return Failure(exception)
                 case Success(value)     => value
