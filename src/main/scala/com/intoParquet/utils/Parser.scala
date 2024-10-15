@@ -20,7 +20,11 @@ object Parser {
     }
 
     private final val parser = new OptionParser[InputArgs]("into-parquet") {
-        head("Cast csv files to parquet format", "v0.0.1")
+        head(
+          "Cast csv files to parquet format",
+          "version 0.0.1",
+          "\ninto-parquet  Copyright (C) 2024  Jaime Álvarez Fernández"
+        )
         opt[String]('f', "files").optional
             .action((inputFiles, c) => {
                 if (isEmpty(inputFiles)) {
@@ -45,6 +49,7 @@ object Parser {
                 failure("Recursive flag and files are mutually exclusive options")
             else success
         )
+        help("help").text("prints this usage text")
         note("""
               |Default options:
               |>>> Recursive method is true.
