@@ -4,7 +4,6 @@ import com.intoParquet.configuration.BasePaths
 import com.intoParquet.controller.Controller
 import com.intoParquet.exception.NoCSVException
 import com.intoParquet.model.ParsedObjectWrapper
-import com.intoParquet.model.enumeration.WriteMode
 import com.intoParquet.service.FileLoader
 import com.intoParquet.utils.AppLogger
 import com.intoParquet.utils.Parser.InputArgs

@@ -54,7 +54,7 @@ class Converter(basePaths: BasePaths) extends AppLogger {
     }
 
     private def writeTo(df: DataFrame, path: String): Unit = {
-        logInfo(s"Writing dataframe to $path")
+        logInfo(s"Writing dataframe to $OutputBasePath/$path")
 
         logInfo(s"Dataframe: $path, rows: ${df.cache().count()}")
         df.repartition(1).write.mode(SaveMode.Overwrite).parquet({ s"${OutputBasePath}$path" })
@@ -70,6 +70,7 @@ class Converter(basePaths: BasePaths) extends AppLogger {
     }
 
     def applySchema(df: DataFrame, description: FieldWrapper): DataFrame = {
+        logInfo(s"Apply schema to dataframe")
         description.fields.foldLeft(df) { (temp, field) =>
             temp.withColumn(field.fieldName, field.colExpression)
         }
