@@ -1,13 +1,13 @@
 package com.intoParquet.utils
 
-import com.intoParquet.model.enumeration.{InferSchema, Raw, ReadSchema, CastMode}
+import com.intoParquet.model.enumeration.{InferSchema, Raw, ParseSchema, CastMode}
 import scopt.OptionParser
 
 object Parser {
 
     case class InputArgs(
                             csvFile: Option[String],
-                            castMethod: CastMode = ReadSchema,
+                            castMethod: CastMode = ParseSchema,
                             recursive: Boolean = true,
                             directory: String = "./data"
     ) {
@@ -53,7 +53,7 @@ object Parser {
         note("""
               |Default options:
               |>>> Recursive method is true.
-              |>>> Cast method set to ReadSchema.
+              |>>> Cast method set to ParseSchema.
               |""".stripMargin)
     }
 
@@ -72,8 +72,8 @@ object Parser {
             case "r"     => Raw
             case "infer" => InferSchema
             case "i"     => InferSchema
-            case "parse" => ReadSchema
-            case "p"     => ReadSchema
+            case "parse" => ParseSchema
+            case "p"     => ParseSchema
         }
     }
 

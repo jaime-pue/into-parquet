@@ -1,7 +1,7 @@
 package com.intoParquet.controller
 
 import com.intoParquet.configuration.BasePaths
-import com.intoParquet.model.enumeration.{InferSchema, Raw, ReadSchema, CastMode}
+import com.intoParquet.model.enumeration.{InferSchema, Raw, ParseSchema, CastMode}
 import com.intoParquet.model.{ParsedObject, ParsedObjectWrapper}
 import com.intoParquet.service.Converter
 import com.intoParquet.utils.AppLogger
@@ -20,7 +20,7 @@ class Controller(_basePaths: BasePaths, _castMode: CastMode, _wrapper: ParsedObj
         this.castMode match {
             case Raw         => converter.executeRaw(e.id)
             case InferSchema => converter.executeInferSchema(e.id)
-            case ReadSchema  => readFromSchema(e)
+            case ParseSchema  => readFromSchema(e)
         }
     }
 

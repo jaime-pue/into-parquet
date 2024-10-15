@@ -9,4 +9,4 @@ object Raw extends CastMode
 
 object InferSchema extends CastMode
 
-object ReadSchema extends CastMode
+object ParseSchema extends CastMode

@@ -53,17 +53,17 @@ flag BOOLEAN COMMENT 'boolean flag'
 
 ### Cast method options
 
-#### Raw
+#### Raw Schema
 
 Read all fields as String and don't perform any inference or cast to anything
 
-#### Infer
+#### Infer Schema
 
 Infer schema automatically and try casting each column to appropriate type. 
 
 May infer types wrong, such as inferring a String field as an Integer. "00002" could be cast to 2
 
-#### Parse
+#### Parse Schema
 
 Apply a given schema from a text file with the same name as the processed csv file
 
