@@ -42,4 +42,9 @@ class TestMain extends SparkTestBuilder with BeforeAndAfterEach {
         val args = Array("-p", "imagine")
         intercept[NoFileFoundException](Main.main(args))
     }
+
+    test("Should fail with fail-fast Mode") {
+        val args = Array("-p", Resources.ResourceFolder, "--fail-fast", "-f", "exampleTable;badRecord")
+        intercept[Exception](Main.main(args))
+    }
 }

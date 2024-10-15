@@ -24,10 +24,10 @@ object IntoController extends AppLogger {
         } else {
             args.csvFile match {
                 case Some(value) => value.split(";").map(_.trim)
-                case None => return Failure(new NoCSVException)
+                case None        => return Failure(new NoCSVException)
             }
         }
         val files: ParsedObjectWrapper = IntoParsedObjectWrapper.castTo(csv, fileLoader)
-        Success(new Controller(basePaths, args.castMethod, files))
+        Success(new Controller(basePaths, args.castMethod, files, args.failFast))
     }
 }

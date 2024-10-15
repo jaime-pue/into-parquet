@@ -6,10 +6,11 @@ import scopt.OptionParser
 object Parser {
 
     case class InputArgs(
-                            csvFile: Option[String],
-                            castMethod: CastMode = ParseSchema,
-                            recursive: Boolean = true,
-                            directory: String = "./data"
+        csvFile: Option[String],
+        castMethod: CastMode = ParseSchema,
+        recursive: Boolean = true,
+        directory: String = "./data",
+        failFast: Boolean = false
     ) {
         override def toString: String = {
             s"""Configuration:
@@ -44,6 +45,9 @@ object Parser {
         opt[String]('p', "path").optional
             .action((path, c) => c.copy(directory = path))
             .text("Path to folder")
+        opt[Unit]("fail-fast").optional
+            .action((_, c) => c.copy(failFast = true))
+            .text("Fail and exit if any process fails")
         checkConfig(c =>
             if (c.recursive && c.csvFile.isDefined)
                 failure("Recursive flag and files are mutually exclusive options")

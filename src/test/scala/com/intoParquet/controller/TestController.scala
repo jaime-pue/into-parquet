@@ -10,7 +10,15 @@ class TestController extends SparkTestBuilder {
         val goodFile = new ParsedObject("exampleTable", None)
         val badFile  = new ParsedObject("badFile", None)
         val wrapper  = new ParsedObjectWrapper(Seq(goodFile, badFile, goodFile))
-        val controller: Controller = new Controller(Resources.path, Raw, wrapper)
+        val controller: Controller = new Controller(Resources.path, Raw, wrapper, false)
         assert(controller.execution.isSuccess)
+    }
+
+    test("Should fail with fail fast mode") {
+        val goodFile = new ParsedObject("exampleTable", None)
+        val badFile  = new ParsedObject("badFile", None)
+        val wrapper  = new ParsedObjectWrapper(Seq(goodFile, badFile, goodFile))
+        val controller: Controller = new Controller(Resources.path, Raw, wrapper, true)
+        assert(controller.execution.isFailure)
     }
 }

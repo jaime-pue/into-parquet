@@ -1,17 +1,21 @@
 package com.intoParquet.controller
 
 import com.intoParquet.configuration.BasePaths
-import com.intoParquet.model.enumeration.{InferSchema, Raw, ParseSchema, CastMode}
+import com.intoParquet.model.enumeration.{CastMode, InferSchema, ParseSchema, Raw}
 import com.intoParquet.model.{ParsedObject, ParsedObjectWrapper}
 import com.intoParquet.service.Converter
 import com.intoParquet.utils.AppLogger
 
-import scala.util.{Success, Try}
+import scala.util.{Failure, Success, Try}
 
-class Controller(_basePaths: BasePaths, _castMode: CastMode, _wrapper: ParsedObjectWrapper)
-    extends AppLogger {
+class Controller(
+    _basePaths: BasePaths,
+    _castMode: CastMode,
+    _wrapper: ParsedObjectWrapper,
+    failFast: Boolean
+) extends AppLogger {
 
-    private val castMode: CastMode         = _castMode
+    private val castMode: CastMode           = _castMode
     private val wrapper: ParsedObjectWrapper = _wrapper
     private val converter: Converter         = new Converter(_basePaths)
 
@@ -20,7 +24,7 @@ class Controller(_basePaths: BasePaths, _castMode: CastMode, _wrapper: ParsedObj
         this.castMode match {
             case Raw         => converter.executeRaw(e.id)
             case InferSchema => converter.executeInferSchema(e.id)
-            case ParseSchema  => readFromSchema(e)
+            case ParseSchema => readFromSchema(e)
         }
     }
 
@@ -32,11 +36,27 @@ class Controller(_basePaths: BasePaths, _castMode: CastMode, _wrapper: ParsedObj
     }
 
     def execution: Try[Unit] = {
+        if (failFast) {
+            failFastMode
+        } else { ignoreErrorMode }
+    }
+
+    private def ignoreErrorMode: Try[Unit] = {
         Success(this.wrapper.elements.foreach(e => {
             try { castElement(e) }
             catch {
                 case ex: Exception => logError(ex.getMessage)
             }
         }))
+    }
+
+    private def failFastMode: Try[Unit] = {
+        this.wrapper.elements.foreach(e => {
+            try { castElement(e) }
+            catch {
+                case ex: Exception => return Failure(ex)
+            }
+        })
+        Success()
     }
 }

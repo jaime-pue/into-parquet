@@ -45,11 +45,12 @@ flag BOOLEAN COMMENT 'boolean flag'
 
 ## CLI Options
 
-| Name      | Shortcut | Comment                                        | Type   |
-|-----------|----------|------------------------------------------------|--------|
-| `--files` | `-f`     | List of files for processing, separated by `;` | String |
-| `--mode`  | `-m`     | Cast method                                    | String |
-| `--path`  | `-p`     | Path where `/data` folder is                   | String |
+| Name          | Shortcut | Comment                                        | Type   |
+|---------------|----------|------------------------------------------------|--------|
+| `--files`     | `-f`     | List of files for processing, separated by `;` | String |
+| `--mode`      | `-m`     | Cast method                                    | String |
+| `--path`      | `-p`     | Path where `/data` folder is                   | String |
+| `--fail-fast` |          | Fail if any error found                        | Flag   |
 
 ### Cast method options
 
@@ -59,7 +60,7 @@ Read all fields as String and don't perform any inference or cast to anything
 
 #### Infer Schema
 
-Infer schema automatically and try casting each column to appropriate type. 
+Infer schema automatically and try casting each column to appropriate type.
 
 May infer types wrong, such as inferring a String field as an Integer. "00002" could be cast to 2
 
