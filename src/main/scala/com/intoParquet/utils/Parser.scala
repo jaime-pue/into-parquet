@@ -15,12 +15,13 @@ object Parser {
     private final val parser = new OptionParser[InputArgs]("into-parquet") {
         head("Cast csv files to parquet format", "v0.0.1")
         opt[String]('f', "files").optional
-            .action((inputFiles, c) =>
-                c.copy(
-                  csvFile = if (isEmpty(inputFiles)) None else Some(inputFiles),
-                  recursive = false
-                )
-            )
+            .action((inputFiles, c) => {
+                if (isEmpty(inputFiles)) {
+                    c.copy(csvFile = None)
+                } else {
+                    c.copy(csvFile = Some(inputFiles), recursive = false)
+                }
+            })
             .text("csv files for processing, separated by ';'")
         opt[String]('m', "mode").optional
             .action((writeMethod, c) => c.copy(writeMethod = parseWriteMethod(writeMethod)))

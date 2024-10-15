@@ -16,6 +16,13 @@ class TestParser extends AnyFunSuite {
         assert(args.get.csvFile.isEmpty)
     }
 
+    test("Should set recursive as true if files are empty") {
+        val input = Array("-f", "")
+        val args = Parser.parseSystemArgs(input)
+        assume(args.get.csvFile.isEmpty)
+        assert(args.get.recursive)
+    }
+
     test("Should declare empty as None even with multiple whitespaces") {
         val input = Array("-f", "    ")
         val args = Parser.parseSystemArgs(input)
