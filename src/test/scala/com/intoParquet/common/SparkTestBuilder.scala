@@ -39,6 +39,7 @@ trait SparkTestBuilder extends AnyFunSuite with DataFrameSuiteBase {
         super.afterAll()
         spark.sessionState.catalog.reset()
         cleanDirectory(SparkWarehouse)
+        cleanDirectory(Resources.path.OutputBasePath)
     }
 
     override def beforeAll(): Unit = {

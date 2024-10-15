@@ -2,7 +2,7 @@ package com.intoParquet.model.enumeration
 
 sealed trait WriteMode {
 
-    override def toString: String = getClass.toString
+    override def toString: String = getClass.getSimpleName.replace("$", "")
 }
 
 object Raw extends WriteMode

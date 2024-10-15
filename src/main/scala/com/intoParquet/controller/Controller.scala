@@ -6,7 +6,7 @@ import com.intoParquet.model.{ParsedObject, ParsedObjectWrapper}
 import com.intoParquet.service.Converter
 import com.intoParquet.utils.AppLogger
 
-import scala.util.Try
+import scala.util.{Success, Try}
 
 class Controller(_basePaths: BasePaths, _writeMode: WriteMode, _wrapper: ParsedObjectWrapper)
     extends AppLogger {
@@ -15,18 +15,13 @@ class Controller(_basePaths: BasePaths, _writeMode: WriteMode, _wrapper: ParsedO
     private val wrapper: ParsedObjectWrapper = _wrapper
     private val converter: Converter         = new Converter(_basePaths)
 
-    def routeOnWriteMode(
-        value: WriteMode,
-        wrapper: ParsedObjectWrapper
-    ): Unit = {
-        wrapper.elements.foreach(e => {
-            logInfo(s"Start job for: ${e.id}")
-            value match {
-                case Raw         => converter.executeRaw(e.id)
-                case InferSchema => converter.executeInferSchema(e.id)
-                case ReadSchema  => readFromSchema(e)
-            }
-        })
+    private def castElement(e: ParsedObject): Unit = {
+        logInfo(s"Start job for: ${e.id}")
+        this.writeMode match {
+            case Raw         => converter.executeRaw(e.id)
+            case InferSchema => converter.executeInferSchema(e.id)
+            case ReadSchema  => readFromSchema(e)
+        }
     }
 
     private def readFromSchema(element: ParsedObject): Unit = {
@@ -37,11 +32,11 @@ class Controller(_basePaths: BasePaths, _writeMode: WriteMode, _wrapper: ParsedO
     }
 
     def execution: Try[Unit] = {
-        Try(
-          routeOnWriteMode(
-            this.writeMode,
-            this.wrapper
-          )
-        )
+        Success(this.wrapper.elements.foreach(e => {
+            try { castElement(e) }
+            catch {
+                case ex: Exception => logError(ex.getMessage)
+            }
+        }))
     }
 }

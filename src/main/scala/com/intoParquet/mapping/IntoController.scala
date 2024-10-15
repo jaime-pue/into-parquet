@@ -28,6 +28,6 @@ object IntoController extends AppLogger {
             }
         }
         val files: ParsedObjectWrapper = IntoParsedObjectWrapper.castTo(csv, fileLoader)
-        Try(new Controller(basePaths, args.writeMethod, files))
+        Success(new Controller(basePaths, args.writeMethod, files))
     }
 }
