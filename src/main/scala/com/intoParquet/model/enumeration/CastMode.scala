@@ -1,12 +1,12 @@
 package com.intoParquet.model.enumeration
 
-sealed trait WriteMode {
+sealed trait CastMode {
 
     override def toString: String = getClass.getSimpleName.replace("$", "")
 }
 
-object Raw extends WriteMode
+object Raw extends CastMode
 
-object InferSchema extends WriteMode
+object InferSchema extends CastMode
 
-object ReadSchema extends WriteMode
+object ReadSchema extends CastMode

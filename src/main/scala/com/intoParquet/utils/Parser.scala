@@ -1,20 +1,20 @@
 package com.intoParquet.utils
 
-import com.intoParquet.model.enumeration.{InferSchema, Raw, ReadSchema, WriteMode}
+import com.intoParquet.model.enumeration.{InferSchema, Raw, ReadSchema, CastMode}
 import scopt.OptionParser
 
 object Parser {
 
     case class InputArgs(
-        csvFile: Option[String],
-        writeMethod: WriteMode = ReadSchema,
-        recursive: Boolean = true,
-        directory: String = "./data"
+                            csvFile: Option[String],
+                            castMethod: CastMode = ReadSchema,
+                            recursive: Boolean = true,
+                            directory: String = "./data"
     ) {
         override def toString: String = {
             s"""Configuration:
                |>>> Recursive mode: ${recursive.toString}
-               |>>> Write method: ${writeMethod.toString}
+               |>>> Cast method: ${castMethod.toString}
                |""".stripMargin
         }
     }
@@ -35,10 +35,10 @@ object Parser {
             })
             .text("csv files for processing, separated by ';'")
         opt[String]('m', "mode").optional
-            .action((writeMethod, c) => c.copy(writeMethod = parseWriteMethod(writeMethod)))
+            .action((castMethod, c) => c.copy(castMethod = parseCastMethod(castMethod)))
             .validate(m =>
                 if (isValidMethod(m)) success
-                else failure("Write mode should be one of the following: [R]aw, [I]nfer, [P]arse")
+                else failure("Cast mode should be one of the following: [R]aw, [I]nfer, [P]arse")
             )
             .text("Choose one of the following: [R]aw, [I]nfer, [P]arse")
         opt[String]('p', "path").optional
@@ -53,7 +53,7 @@ object Parser {
         note("""
               |Default options:
               |>>> Recursive method is true.
-              |>>> Write method set to ReadSchema.
+              |>>> Cast method set to ReadSchema.
               |""".stripMargin)
     }
 
@@ -66,7 +66,7 @@ object Parser {
         validMethods.contains(method.toLowerCase())
     }
 
-    private def parseWriteMethod(value: String): WriteMode = {
+    private def parseCastMethod(value: String): CastMode = {
         value.toLowerCase() match {
             case "raw"   => Raw
             case "r"     => Raw
