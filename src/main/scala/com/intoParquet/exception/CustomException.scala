@@ -17,5 +17,10 @@ class WrongInputArgsException extends CustomException {
 
 class NoFileFoundException(file: String) extends CustomException {
 
-    override val message: String = s"File not found: <$file>"
+    override val message: String = s"No csv files found in: <$file>"
+}
+
+class NoCSVException extends CustomException {
+
+    override val message: String = "At least one file is needed"
 }

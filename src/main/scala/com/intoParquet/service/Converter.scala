@@ -8,10 +8,10 @@ import com.intoParquet.utils.AppLogger
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.{DataFrame, SaveMode}
 
-object Converter extends AppLogger {
+class Converter(basePaths: BasePaths) extends AppLogger {
 
-    private val InputBasePath: String  = BasePaths().InputRawPath
-    private val OutputBasePath: String = BasePaths().OutputBasePath
+    private val InputBasePath: String  = basePaths.InputRawPath
+    private val OutputBasePath: String = basePaths.OutputBasePath
 
     private def filepath(filename: String) = {
         s"$InputBasePath${filename}.csv"
@@ -84,7 +84,8 @@ object Converter extends AppLogger {
     def executeWithTableDescription(id: String, tableDescription: TableDescription): Unit = {
         val raw    = readRawCSV(id)
         val fields = IntoFieldDescriptors.fromDescription(tableDescription)
-        applySchema(raw, fields)
+        val schema = applySchema(raw, fields)
+        writeTo(schema, id)
     }
 
     def executeRaw(id: String): Unit = {

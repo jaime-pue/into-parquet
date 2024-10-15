@@ -32,7 +32,7 @@ class FileLoader(paths: BasePaths) extends AppLogger {
             file.close()
             Success(lines)
         } catch {
-            case _: Exception => Failure(new NoFileFoundException(filePath))
+            case _: Exception => Failure(new Exception())
         }
     }
 

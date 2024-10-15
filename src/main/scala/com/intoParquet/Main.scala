@@ -1,6 +1,8 @@
 package com.intoParquet
 
+import com.intoParquet.controller.Controller
 import com.intoParquet.exception.WrongInputArgsException
+import com.intoParquet.mapping.IntoController
 import com.intoParquet.service.SparkBuilder
 import com.intoParquet.utils.AppLogger
 import com.intoParquet.utils.Parser.{InputArgs, parseSystemArgs}
@@ -16,16 +18,22 @@ object Main extends AppLogger {
 
         SparkBuilder.beforeAll()
 
-        val inputArgs: InputArgs =
+        val inputArgs: InputArgs = {
             parseSystemArgs(args).getOrElse(throw new WrongInputArgsException)
-        Controller.inputArgController(inputArgs) match {
-            case Failure(exception) =>
-                logError(
-                    s"""Job fail with exception
+        }
+        logInfo(inputArgs.toString)
+        val controller: Controller = IntoController.castTo(inputArgs) match {
+            case Failure(exception) => throw exception
+            case Success(value)     => value
+        }
+        controller.execution match {
+            case Failure(exception) => {
+                logError(s"""Something went wrong
                       |${exception.getMessage}
                       |""".stripMargin)
                 throw exception
-            case Success(_) => logInfo("Everything ok")
+            }
+            case Success(_) => logInfo("Job ended Ok!")
         }
         SparkBuilder.afterAll()
 

@@ -10,7 +10,14 @@ object Parser {
         writeMethod: WriteMode = ReadSchema,
         recursive: Boolean = true,
         directory: String = "./data"
-    )
+    ) {
+        override def toString: String = {
+            s"""Configuration:
+               |>>> Recursive mode: ${recursive.toString}
+               |>>> Write method: ${writeMethod.toString}
+               |""".stripMargin
+        }
+    }
 
     private final val parser = new OptionParser[InputArgs]("into-parquet") {
         head("Cast csv files to parquet format", "v0.0.1")

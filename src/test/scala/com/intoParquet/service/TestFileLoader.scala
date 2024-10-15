@@ -1,11 +1,11 @@
 package com.intoParquet.service
 
-import com.intoParquet.common.ConstantsForTests
+import com.intoParquet.common.Resources
 import com.intoParquet.configuration.BasePaths
 import org.scalatest.funsuite.AnyFunSuite
 
 class TestFileLoader extends AnyFunSuite {
-    lazy val fileLoader: FileLoader = new FileLoader(ConstantsForTests.path)
+    lazy val fileLoader: FileLoader = new FileLoader(Resources.path)
 
     test("Should read from data/input/schema") {
         val file = fileLoader.readFile("exampleTable")
