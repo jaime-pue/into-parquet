@@ -23,7 +23,7 @@ object Parser {
     private final val parser = new OptionParser[InputArgs]("into-parquet") {
         head(
           "Cast csv files to parquet format",
-          "version 0.0.1",
+          "version 0.0.2",
           "\ninto-parquet  Copyright (C) 2024  Jaime Álvarez Fernández"
         )
         opt[String]('f', "files").optional

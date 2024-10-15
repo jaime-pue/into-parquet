@@ -22,7 +22,7 @@ Root/
 Compiles to jar type:
 
 ```shell
-java -jar into-parquet-0.0.1-jar-with-dependencies.jar --optional-flags
+java -jar into-parquet-0.0.2-jar-with-dependencies.jar --optional-flags
 ```
 
 ### Input Folder
