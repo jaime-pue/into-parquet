@@ -15,13 +15,10 @@ object Main extends AppLogger {
     Logger.getLogger("org.spark-project").setLevel(Level.WARN)
 
     def main(args: Array[String]): Unit = {
-
-        SparkBuilder.beforeAll()
-
         val inputArgs: InputArgs = {
             parseSystemArgs(args).getOrElse(throw new WrongInputArgsException)
         }
-        logInfo(inputArgs.toString)
+        SparkBuilder.beforeAll()
         val controller: Controller = IntoController.castTo(inputArgs) match {
             case Failure(exception) => throw exception
             case Success(value)     => value
