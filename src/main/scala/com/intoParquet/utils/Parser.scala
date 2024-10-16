@@ -73,11 +73,10 @@ object Parser {
                 failure("Recursive flag and files are mutually exclusive options")
             else success
         )
-        note(
-            """
+        note("""
               |Other options:
               |""".stripMargin)
-        help("help").text("prints this usage text")
+        help('h', "help").text("prints this usage text")
         version('v', "version").text("prints program version")
     }
 
