@@ -5,6 +5,22 @@ import scopt.OptionParser
 
 object Parser {
 
+    private val PacketDescription: String =
+        "Converts csv format files into parquet files, and can apply a schema when transforming them."
+
+    private val Version: String =
+        s"""into-parquet 0.0.2
+          |
+          |$PacketDescription
+          |
+          |Copyright (C) 2024 Free Software Foundation, Inc.
+          |License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+          |This is free software: you are free to change and redistribute it.
+          |There is NO WARRANTY, to the extent permitted by law.
+          |
+          |Written by Jaime Alvarez Fernandez.
+          |""".stripMargin
+
     case class InputArgs(
         csvFile: Option[String],
         castMethod: CastMode = ParseSchema,
@@ -22,11 +38,7 @@ object Parser {
     }
 
     private final val parser = new OptionParser[InputArgs]("into-parquet") {
-        head(
-          "Cast csv files to parquet format",
-          "version 0.0.2",
-          "\ninto-parquet  Copyright (C) 2024  Jaime Álvarez Fernández"
-        )
+        head(Version)
         opt[String]('f', "files").optional
             .action((inputFiles, c) => {
                 if (isEmpty(inputFiles)) {
@@ -40,9 +52,13 @@ object Parser {
             .action((castMethod, c) => c.copy(castMethod = parseCastMethod(castMethod)))
             .validate(m =>
                 if (isValidMethod(m)) success
-                else failure("Cast mode should be one of the following: [R]aw, [I]nfer, [P]arse")
+                else failure("Cast mode should be one of the following: raw, r; infer, i; parse, p")
             )
-            .text("Choose one of the following: [R]aw, [I]nfer, [P]arse")
+            .text("""Choose one of the following: [R]aw, [I]nfer, [P]arse
+                  | > Raw: read csv fields as String
+                  | > Infer: infer schema from fields (May yield wrong types)
+                  | > Parse: apply schema if found in adjacent text file
+                  |""".stripMargin)
         opt[String]('p', "path").optional
             .action((path, c) => c.copy(inputDir = if (isEmpty(path)) None else Some(path)))
             .text("Path to input folder")
@@ -51,18 +67,18 @@ object Parser {
             .text("Path to output folder")
         opt[Unit]("fail-fast").optional
             .action((_, c) => c.copy(failFast = true))
-            .text("Fail and exit if any process fails")
+            .text("Fail and exit if any transformation fails")
         checkConfig(c =>
             if (c.recursive && c.csvFile.isDefined)
                 failure("Recursive flag and files are mutually exclusive options")
             else success
         )
-        help("help").text("prints this usage text")
-        note("""
-              |Default options:
-              |>>> Recursive method is true.
-              |>>> Cast method set to ParseSchema.
+        note(
+            """
+              |Other options:
               |""".stripMargin)
+        help("help").text("prints this usage text")
+        version('v', "version").text("prints program version")
     }
 
     def parseSystemArgs(args: Array[String]): Option[InputArgs] = {

@@ -66,4 +66,14 @@ class TestParser extends AnyFunSuite {
         assert(args.isEmpty)
     }
 
+    ignore("Should display version info") {
+        val input = Array("--version")
+        assert(Parser.parseSystemArgs(input).isDefined)
+    }
+
+    ignore("Should display help info") {
+        val input = Array("--help")
+        assert(Parser.parseSystemArgs(input).isDefined)
+    }
+
 }
