@@ -20,6 +20,10 @@ class BasePaths(
     }
 
     def outputBasePath: String = {
-        outputDir.getOrElse(DefaultOutput)
+        if (inputDir.isDefined && outputDir.isEmpty) {
+            s"${inputBasePath}output/"
+        } else {
+            outputDir.getOrElse(DefaultOutput)
+        }
     }
 }
