@@ -23,7 +23,7 @@ object IntoController extends AppLogger {
             }
         } else {
             args.csvFile match {
-                case Some(value) => value.split(";").map(_.trim)
+                case Some(value) => value.split(",").map(_.trim)
                 case None        => return Failure(new NoCSVException)
             }
         }

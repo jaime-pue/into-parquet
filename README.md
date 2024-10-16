@@ -25,7 +25,7 @@ mvn clean package
 Compiles to jar type:
 
 ```shell
-java -jar into-parquet-0.0.2-jar-with-dependencies.jar --optional-flags
+java -jar target/into-parquet-0.0.2-jar-with-dependencies.jar --optional-flags
 ```
 
 ## Folder structure
@@ -98,15 +98,21 @@ Root/
 
 ## CLI Options
 
-| Name          | Shortcut | Comment                                        | Type   | Example                        |
-|---------------|----------|------------------------------------------------|--------|--------------------------------|
-| `--files`     | `-f`     | List of files for processing, separated by `;` | String | `--file fileOne;fileTwo;fileN` |
-| `--mode`      | `-m`     | Cast method                                    | String | `--mode raw`                   |
-| `--path`      | `-p`     | Path where csv files are                       | String | `--path ./path/to/input/`      |
-| `--output`    | `-o`     | Where to put parquet files                     | String | `-output ~/output/dir/`        | 
-| `--fail-fast` |          | Fail if any error found                        | Flag   | `--fail-fast`                  |
-| `--version`   | `-v`     | Show current script version                    | Flag   | `--version`                    |
-| `--help`      | `-h`     | Show help context                              | Flag   | `--help`                       |
+| Name          | Shortcut | Comment                                        | Type   | Example                         |
+|---------------|----------|------------------------------------------------|--------|---------------------------------|
+| `--files`     | `-f`     | List of files for processing, separated by `,` | String | `--files fileOne,fileTwo,fileN` |
+| `--mode`      | `-m`     | Cast method                                    | String | `--mode raw`                    |
+| `--path`      | `-p`     | Path where csv files are                       | String | `--path ./path/to/input/`       |
+| `--output`    | `-o`     | Where to put parquet files                     | String | `-output ~/output/dir/`         | 
+| `--fail-fast` |          | Fail if any error found                        | Flag   | `--fail-fast`                   |
+| `--version`   | `-v`     | Show current script version                    | Flag   | `--version`                     |
+| `--help`      | `-h`     | Show help context                              | Flag   | `--help`                        |
+
+### Example
+
+```shell
+java -jar target/target/into-parquet-0.0.2-jar-with-dependencies.jar --files fileOne,fileTwo --output /home/user/
+```
 
 ### Cast method options
 

@@ -47,7 +47,7 @@ object Parser {
                     c.copy(csvFile = Some(inputFiles), recursive = false)
                 }
             })
-            .text("csv files for processing, separated by ';'")
+            .text("csv files for processing, separated by ','")
         opt[String]('m', "mode").optional
             .action((castMethod, c) => c.copy(castMethod = parseCastMethod(castMethod)))
             .validate(m =>
