@@ -12,7 +12,7 @@ class TestMain extends SparkTestBuilder with BeforeAndAfterEach {
     }
 
     private def buildTestArgs(files: Option[String] = None): Array[String] = {
-        val input = Array("-p", Resources.ResourceFolder, "-f", files.getOrElse(""))
+        val input = Array("-p", Resources.InputTestFolder, "-o", Resources.OutputTestFolder, "-f", files.getOrElse(""))
         input
     }
 
@@ -44,7 +44,7 @@ class TestMain extends SparkTestBuilder with BeforeAndAfterEach {
     }
 
     test("Should fail with fail-fast Mode") {
-        val args = Array("-p", Resources.ResourceFolder, "--fail-fast", "-f", "exampleTable;badRecord")
+        val args = Array("--fail-fast", "-f", "badRecord")
         intercept[Exception](Main.main(args))
     }
 }

@@ -12,7 +12,7 @@ class BasePaths(
     private val DefaultOutput: String = "./data/output/"
 
     def this(base: String) = {
-        this(Some(s"$base/input/"), Some(s"$base/output/"))
+        this(Some(s"${base}input/"), Some(s"${base}output/"))
     }
 
     def inputBasePath: String = {
