@@ -44,7 +44,12 @@ class TestMain extends SparkTestBuilder with BeforeAndAfterEach {
     }
 
     test("Should fail with fail-fast Mode") {
-        val args = Array("--fail-fast", "-f", "badRecord")
+        val args = Array("--fail-fast", "-f", "badRecord", "-fb", "fail")
+        intercept[Exception](Main.main(args))
+    }
+
+    test("Should fail with fail-fast") {
+        val args = Array("--fail-fast", "-f", "badRecord", "-m", "raw")
         intercept[Exception](Main.main(args))
     }
 }

@@ -1,6 +1,7 @@
 package com.intoParquet.controller
 
 import com.intoParquet.configuration.BasePaths
+import com.intoParquet.exception.NoSchemaFoundException
 import com.intoParquet.model.enumeration.{
     CastMode,
     FallBack,
@@ -42,12 +43,15 @@ class Controller(
     }
 
     private def applyFallbackMethodTo(element: ParsedObject, fallBack: FallBack): Try[Unit] = {
-        logInfo(s"Apply ${fallBack.toString} method as fallback")
         fallBack match {
             case FallBackRaw   => converter.executeRaw(element.id)
             case FallBackInfer => converter.executeInferSchema(element.id)
-            case FallBackFail  => Failure(new Exception())
-            case FallBackNone  => Success()
+            case FallBackFail => {
+                Failure(new NoSchemaFoundException(element))
+            }
+            case FallBackNone =>
+                logWarning(s"No schema found for ${element.id}")
+                Success()
         }
     }
 

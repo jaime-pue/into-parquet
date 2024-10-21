@@ -1,5 +1,7 @@
 package com.intoParquet.exception
 
+import com.intoParquet.model.ParsedObject
+
 sealed trait AppException extends Exception {
     self: Throwable =>
     val message: String
@@ -23,4 +25,9 @@ class NoFileFoundException(file: String) extends AppException {
 class NoCSVException extends AppException {
 
     override val message: String = "At least one file is needed"
+}
+
+class NoSchemaFoundException(e: ParsedObject) extends AppException {
+
+    override val message: String = s"No schema found for ${e.id}"
 }

@@ -17,7 +17,8 @@ object IntoController extends AppLogger {
         val basePaths  = intoBasePaths(args)
         val castMethod = intoCastMethod(args)
         val files: ParsedObjectWrapper = intoFiles(args) match {
-            case Failure(exception) => return Failure(exception)
+            case Failure(exception) =>
+                return Failure(exception)
             case Success(value) => value
         }
         Success(new Controller(basePaths, castMethod, files, args.failFast))
