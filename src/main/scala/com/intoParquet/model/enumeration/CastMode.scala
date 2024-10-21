@@ -9,4 +9,8 @@ object Raw extends CastMode
 
 object InferSchema extends CastMode
 
-object ParseSchema extends CastMode
+class ParseSchema(val fallBack: Option[FallBack] = Some(FallBackRaw)) extends CastMode {
+    def this(fallBack: FallBack) = {
+        this(Some(fallBack))
+    }
+}

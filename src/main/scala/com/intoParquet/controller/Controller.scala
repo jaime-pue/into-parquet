@@ -1,7 +1,17 @@
 package com.intoParquet.controller
 
 import com.intoParquet.configuration.BasePaths
-import com.intoParquet.model.enumeration.{CastMode, InferSchema, ParseSchema, Raw}
+import com.intoParquet.model.enumeration.{
+    CastMode,
+    FallBack,
+    FallBackFail,
+    FallBackInfer,
+    FallBackNone,
+    FallBackRaw,
+    InferSchema,
+    ParseSchema,
+    Raw
+}
 import com.intoParquet.model.{ParsedObject, ParsedObjectWrapper}
 import com.intoParquet.service.Converter
 import com.intoParquet.utils.AppLogger
@@ -19,19 +29,25 @@ class Controller(
     private val wrapper: ParsedObjectWrapper = _wrapper
     private val converter: Converter         = new Converter(_basePaths)
 
-    private def castElement(e: ParsedObject): Unit = {
-        logInfo(s"Start job for: ${e.id}")
+    private def castElement(element: ParsedObject): Try[Unit] = {
+        logInfo(s"Start job for: ${element.id}")
         this.castMode match {
-            case Raw         => converter.executeRaw(e.id)
-            case InferSchema => converter.executeInferSchema(e.id)
-            case ParseSchema => readFromSchema(e)
+            case Raw         => converter.executeRaw(element.id)
+            case InferSchema => converter.executeInferSchema(element.id)
+            case castMode: ParseSchema =>
+                if (element.schema.isEmpty) {
+                    applyFallbackMethodTo(element, castMode.fallBack.get)
+                } else { converter.executeWithTableDescription(element.id, element.schema.get) }
         }
     }
 
-    private def readFromSchema(element: ParsedObject): Unit = {
-        element.schema match {
-            case Some(value) => converter.executeWithTableDescription(element.id, value)
-            case None        => converter.executeRaw(element.id)
+    private def applyFallbackMethodTo(element: ParsedObject, fallBack: FallBack): Try[Unit] = {
+        logInfo(s"Apply ${fallBack.toString} method as fallback")
+        fallBack match {
+            case FallBackRaw   => converter.executeRaw(element.id)
+            case FallBackInfer => converter.executeInferSchema(element.id)
+            case FallBackFail  => Failure(new Exception())
+            case FallBackNone  => Success()
         }
     }
 
@@ -43,19 +59,20 @@ class Controller(
 
     private def ignoreErrorMode: Try[Unit] = {
         Success(this.wrapper.elements.foreach(e => {
-            try { castElement(e) }
-            catch {
-                case ex: Exception => logError(ex.getMessage)
+            castElement(e) match {
+                case Failure(exception) => logError(exception.getMessage)
+                case Success(_)         =>
             }
         }))
     }
 
     private def failFastMode: Try[Unit] = {
         this.wrapper.elements.foreach(e => {
-            try { castElement(e) }
-            catch {
-                case ex: Exception => return Failure(ex)
+            castElement(e) match {
+                case Failure(exception) => return Failure(exception)
+                case Success(_)         =>
             }
+
         })
         Success()
     }

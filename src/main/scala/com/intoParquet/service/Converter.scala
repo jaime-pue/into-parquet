@@ -8,6 +8,8 @@ import com.intoParquet.utils.AppLogger
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.{DataFrame, SaveMode}
 
+import scala.util.{Failure, Success, Try}
+
 class Converter(basePaths: BasePaths) extends AppLogger {
 
     private val inputBasePath: String  = basePaths.inputBasePath
@@ -53,11 +55,11 @@ class Converter(basePaths: BasePaths) extends AppLogger {
             .csv(filepath(filename))
     }
 
-    private def writeTo(df: DataFrame, path: String): Unit = {
+    private def writeTo(df: DataFrame, path: String): Try[Unit] = {
         logInfo(s"Writing dataframe to $outputBasePath$path")
 
         logInfo(s"Dataframe: $path, rows: ${df.cache().count()}")
-        df.repartition(1).write.mode(SaveMode.Overwrite).parquet({ s"${outputBasePath}$path" })
+        Try(df.repartition(1).write.mode(SaveMode.Overwrite).parquet({ s"${outputBasePath}$path" }))
     }
 
     def applyTableDescription(
@@ -82,20 +84,32 @@ class Converter(basePaths: BasePaths) extends AppLogger {
         writeTo(df, input)
     }
 
-    def executeWithTableDescription(id: String, tableDescription: TableDescription): Unit = {
-        val raw    = readRawCSV(id)
-        val fields = IntoFieldDescriptors.fromDescription(tableDescription)
-        val schema = applySchema(raw, fields)
-        writeTo(schema, id)
+    def executeWithTableDescription(id: String, tableDescription: TableDescription): Try[Unit] = {
+        try {
+            val raw    = readRawCSV(id)
+            val fields = IntoFieldDescriptors.fromDescription(tableDescription)
+            val schema = applySchema(raw, fields)
+            writeTo(schema, id)
+        } catch {
+            case e: Exception => Failure(e)
+        }
     }
 
-    def executeRaw(id: String): Unit = {
-        val raw = readRawCSV(id)
-        writeTo(raw, id)
+    def executeRaw(id: String): Try[Unit] = {
+        try {
+            val raw = readRawCSV(id)
+            writeTo(raw, id)
+        } catch {
+            case e: Exception => Failure(e)
+        }
     }
 
-    def executeInferSchema(id: String): Unit = {
-        val inferredSchema = readInferSchema(id)
-        writeTo(inferredSchema, id)
+    def executeInferSchema(id: String): Try[Unit] = {
+        try {
+            val inferredSchema = readInferSchema(id)
+            writeTo(inferredSchema, id)
+        } catch {
+            case e: Exception => Failure(e)
+        }
     }
 }
