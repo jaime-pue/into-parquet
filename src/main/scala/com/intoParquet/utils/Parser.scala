@@ -27,14 +27,7 @@ object Parser {
         inputDir: Option[String] = None,
         outputDir: Option[String] = None,
         failFast: Boolean = false
-    ) {
-        override def toString: String = {
-            s"""Configuration:
-               |>>> Recursive mode: ${recursive.toString}
-               |>>> Cast method: ${castMethod.toString}
-               |""".stripMargin
-        }
-    }
+    )
 
     private final val parser = new OptionParser[InputArgs]("into-parquet") {
         head(Version)
@@ -83,6 +76,7 @@ object Parser {
               |Other options:""".stripMargin)
         help('h', "help").text("prints this usage text")
         version('v', "version").text("prints program version")
+        note(AppInfo.Example)
         checkConfig(c =>
             if (c.fallBack.isDefined && !c.castMethod.isInstanceOf[ParseSchema]) {
                 failure("Fallback can only be defined for parse schema method")

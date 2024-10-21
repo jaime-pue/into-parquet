@@ -4,11 +4,17 @@ import scala.io.Source
 
 object AppInfo {
 
-    private lazy val version: String = readVersion
+    private val version: String = readVersion
     private val PacketDescription: String = {
         "Converts csv format files into parquet files, and can apply a schema when transforming them."
     }
-    lazy val license: String =
+
+    private def readVersion: String = {
+        val file = Source.fromResource("info").mkString
+        file.split("=").tail.head
+    }
+
+    val license: String =
         s"""into-parquet $version
            |
            |$PacketDescription
@@ -21,8 +27,22 @@ object AppInfo {
            |Written by Jaime Alvarez Fernandez.
            |""".stripMargin
 
-    private def readVersion: String = {
-        val file = Source.fromResource("info").mkString
-        file.split("=").tail.head
-    }
+    val Example: String =
+        s"""
+          |[How to]
+          |Create a directory structure as follows:
+          |  ./data/input/
+          |  ./data/output/
+          |Add csv files inside ./data/input/ together with a text file with the same name that contains the schema.
+          |Execute the app within the shell
+          |java -jar target/into-parquet-$version-jar-with-dependencies.jar
+          |Parquet files will appear inside ./data/output/ directory with the same name as the csv file
+          |
+          |Default options:
+          | > Read all csv files from ./data/input/
+          | > Output path ./data/output/
+          | > Cast method parse schema
+          | > Fallback method None
+          | > Fail-fast set to false
+          |""".stripMargin
 }
