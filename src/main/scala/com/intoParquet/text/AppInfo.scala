@@ -1,12 +1,14 @@
 package com.intoParquet.text
 
+import scala.io.Source
+
 object AppInfo {
 
-    private val version: String = "0.0.3"
+    private lazy val version: String = readVersion
     private val PacketDescription: String = {
         "Converts csv format files into parquet files, and can apply a schema when transforming them."
     }
-    val license: String =
+    lazy val license: String =
         s"""into-parquet $version
            |
            |$PacketDescription
@@ -18,4 +20,9 @@ object AppInfo {
            |
            |Written by Jaime Alvarez Fernandez.
            |""".stripMargin
+
+    private def readVersion: String = {
+        val file = Source.fromResource("info").mkString
+        file.split("=").tail.head
+    }
 }
