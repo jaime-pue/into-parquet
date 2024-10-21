@@ -16,6 +16,7 @@ Root/
     ├── input/
     └── output/
 ```
+
 Compile with [maven](https://maven.apache.org/):
 
 ```shell
@@ -95,15 +96,15 @@ Root/
             └── part-hash-snappy.parquet
 ```
 
-
 ## CLI Options
 
 | Name          | Shortcut | Comment                                        | Type   | Example                         |
 |---------------|----------|------------------------------------------------|--------|---------------------------------|
 | `--files`     | `-f`     | List of files for processing, separated by `,` | String | `--files fileOne,fileTwo,fileN` |
-| `--mode`      | `-m`     | Cast method                                    | String | `--mode raw`                    |
 | `--path`      | `-p`     | Path where csv files are                       | String | `--path ./path/to/input/`       |
-| `--output`    | `-o`     | Where to put parquet files                     | String | `-output ~/output/dir/`         | 
+| `--output`    | `-o`     | Where to put parquet files                     | String | `-output ~/output/dir/`         |
+| `--mode`      | `-m`     | Cast method                                    | String | `--mode raw`                    |
+| `--fallback`  | `-fb`    | Fallback method                                | String | `--fallback fail`               |
 | `--fail-fast` |          | Fail if any error found                        | Flag   | `--fail-fast`                   |
 | `--version`   | `-v`     | Show current script version                    | Flag   | `--version`                     |
 | `--help`      | `-h`     | Show help context                              | Flag   | `--help`                        |
@@ -111,14 +112,18 @@ Root/
 ### Example
 
 ```shell
-java -jar target/target/into-parquet-0.0.2-jar-with-dependencies.jar --files fileOne,fileTwo --output /home/user/
+java -jar target/target/into-parquet-0.0.3-jar-with-dependencies.jar --files fileOne,fileTwo --output /home/user/
 ```
 
 ### Cast method options
 
+Try to apply these transformations
+
 #### Raw Schema
 
 Read all fields as String and don't perform any inference or cast to anything
+
+`--mode raw`
 
 #### Infer Schema
 
@@ -126,7 +131,41 @@ Infer schema automatically and try casting each column to appropriate type.
 
 May infer types wrong, such as inferring a String field as an Integer. "00002" could be cast to 2
 
-#### Parse Schema
+`--mode infer`
+
+#### Parse Schema (Default)
 
 Apply a given schema from a text file with the same name as the processed csv file
+
+`--mode parse`
+
+### Fallback method options
+
+If there are no correspondent txt files inside `input` folder, try to apply some other operation
+
+#### Raw
+
+Read all fields as String and don't perform any inference or cast to anything
+
+`--fallback raw`
+
+#### Infer Schema
+
+Infer schema automatically and try casting each column to appropriate type.
+
+May infer types wrong, such as inferring a String field as an Integer. "00002" could be cast to 2
+
+`--fallback infer`
+
+#### Pass (Default)
+
+Do nothing with the current file and skip to the next one
+
+`--fallback pass`
+
+#### Fail
+
+Fail with an exception if no schema file found, if fail-fast mode set, will force an exit
+
+`--fallback fail`
 
