@@ -1,14 +1,10 @@
 package com.github.jaime.intoParquet
 
-import com.github.jaime.intoParquet.mapping.IntoController
-import com.github.jaime.intoParquet.service.SparkBuilder
-import com.github.jaime.intoParquet.utils.AppLogger
-import com.github.jaime.intoParquet.utils.Parser.InputArgs
+import com.github.jaime.intoParquet.app.SparkBuilder
+import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.github.jaime.intoParquet.controller.Controller
 import com.github.jaime.intoParquet.exception.WrongInputArgsException
 import com.github.jaime.intoParquet.mapping.IntoController
-import com.github.jaime.intoParquet.service.SparkBuilder
-import com.github.jaime.intoParquet.utils.AppLogger
 import com.github.jaime.intoParquet.utils.Parser.{InputArgs, parseSystemArgs}
 import org.apache.log4j.{Level, Logger}
 

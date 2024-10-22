@@ -1,5 +1,6 @@
 package com.github.jaime.intoParquet.utils
 
+import com.github.jaime.intoParquet.behaviour.AppLogger
 import org.scalatest.funsuite.AnyFunSuite
 
 class TestLogger extends AnyFunSuite with AppLogger {

@@ -1,9 +1,8 @@
-package com.github.jaime.intoParquet.service
+package com.github.jaime.intoParquet.app
 
-import com.github.jaime.intoParquet.utils.AppLogger
-import com.github.jaime.intoParquet.utils.AppLogger
-import org.apache.spark.sql.SparkSession
+import com.github.jaime.intoParquet.behaviour.AppLogger
 import org.apache.spark.SparkContext
+import org.apache.spark.sql.SparkSession
 
 object SparkBuilder extends AppLogger {
 

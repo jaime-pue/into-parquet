@@ -1,10 +1,9 @@
 package com.github.jaime.intoParquet.service
 
+import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.github.jaime.intoParquet.configuration.BasePaths
-import com.github.jaime.intoParquet.utils.AppLogger
 import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.exception.NoFileFoundException
-import com.github.jaime.intoParquet.utils.AppLogger
 
 import java.nio.file.{Files, NoSuchFileException, Paths}
 import scala.collection.JavaConverters.asScalaIteratorConverter

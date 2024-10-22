@@ -1,6 +1,6 @@
-package com.github.jaime.intoParquet.utils
+package com.github.jaime.intoParquet.behaviour
 
-import org.apache.log4j.{Level, LogManager}
+import org.apache.log4j.LogManager
 
 trait AppLogger {
     private val log = LogManager.getLogger(getClass.getName)

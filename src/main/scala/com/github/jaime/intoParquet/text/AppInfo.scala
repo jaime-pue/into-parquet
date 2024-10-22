@@ -32,14 +32,15 @@ object AppInfo {
           |[How to]
           |Create a directory structure as follows:
           |  ./data/input/
-          |  ./data/output/
+          |Script will automatically create output folder inside ./data/
           |Add csv files inside ./data/input/ together with a text file with the same name that contains the schema.
           |Execute the app within the shell
           |java -jar target/into-parquet-$version-jar-with-dependencies.jar
           |Parquet files will appear inside ./data/output/ directory with the same name as the csv file
           |
           |Default options:
-          | > Read all csv files from ./data/input/
+          | > Read all csv files found
+          | > Input path ./data/input/
           | > Output path ./data/output/
           | > Cast method parse schema
           | > Fallback method None

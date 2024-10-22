@@ -1,16 +1,10 @@
 package com.github.jaime.intoParquet.controller
 
+import com.github.jaime.intoParquet.behaviour.{AppLogger, Executor}
 import com.github.jaime.intoParquet.configuration.BasePaths
+import com.github.jaime.intoParquet.model.enumeration._
+import com.github.jaime.intoParquet.model.execution.{Raw, _}
 import com.github.jaime.intoParquet.model.{ParsedObject, ParsedObjectWrapper}
-import com.github.jaime.intoParquet.model.enumeration.{CastMode, FallBack, FallBackFail, FallBackInfer, FallBackNone, FallBackRaw, InferSchema, ParseSchema, Raw}
-import com.github.jaime.intoParquet.service.Converter
-import com.github.jaime.intoParquet.utils.AppLogger
-import com.github.jaime.intoParquet.configuration.BasePaths
-import com.github.jaime.intoParquet.exception.NoSchemaFoundException
-import com.github.jaime.intoParquet.model.enumeration.{CastMode, FallBack, FallBackFail, FallBackInfer, FallBackNone, FallBackRaw, InferSchema, ParseSchema, Raw}
-import com.github.jaime.intoParquet.model.{ParsedObject, ParsedObjectWrapper}
-import com.github.jaime.intoParquet.service.Converter
-import com.github.jaime.intoParquet.utils.AppLogger
 
 import scala.util.{Failure, Success, Try}
 
@@ -23,30 +17,25 @@ class Controller(
 
     private val castMode: CastMode           = _castMode
     private val wrapper: ParsedObjectWrapper = _wrapper
-    private val converter: Converter         = new Converter(_basePaths)
 
-    private def castElement(element: ParsedObject): Try[Unit] = {
+    private def castElement(element: ParsedObject): Executor = {
         logInfo(s"Start job for: ${element.id}")
         this.castMode match {
-            case Raw         => converter.executeRaw(element.id)
-            case InferSchema => converter.executeInferSchema(element.id)
+            case Raw         => new Raw(element, _basePaths)
+            case InferSchema => new Infer(element, _basePaths)
             case castMode: ParseSchema =>
                 if (element.schema.isEmpty) {
                     applyFallbackMethodTo(element, castMode.fallBack.get)
-                } else { converter.executeWithTableDescription(element.id, element.schema.get) }
+                } else { new Parse(element, _basePaths) }
         }
     }
 
-    private def applyFallbackMethodTo(element: ParsedObject, fallBack: FallBack): Try[Unit] = {
+    private def applyFallbackMethodTo(element: ParsedObject, fallBack: FallBack): Executor = {
         fallBack match {
-            case FallBackRaw   => converter.executeRaw(element.id)
-            case FallBackInfer => converter.executeInferSchema(element.id)
-            case FallBackFail => {
-                Failure(new NoSchemaFoundException(element))
-            }
-            case FallBackNone =>
-                logWarning(s"No schema found for ${element.id}")
-                Success()
+            case FallBackRaw   => new Raw(element, _basePaths)
+            case FallBackInfer => new Infer(element, _basePaths)
+            case FallBackFail  => new Fail(element)
+            case FallBackNone  => new Pass(element)
         }
     }
 
@@ -58,7 +47,7 @@ class Controller(
 
     private def ignoreErrorMode: Try[Unit] = {
         Success(this.wrapper.elements.foreach(e => {
-            castElement(e) match {
+            castElement(e).cast match {
                 case Failure(exception) => logError(exception.getMessage)
                 case Success(_)         =>
             }
@@ -67,7 +56,7 @@ class Controller(
 
     private def failFastMode: Try[Unit] = {
         this.wrapper.elements.foreach(e => {
-            castElement(e) match {
+            castElement(e).cast match {
                 case Failure(exception) => return Failure(exception)
                 case Success(_)         =>
             }
