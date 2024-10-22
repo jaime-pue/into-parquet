@@ -19,7 +19,7 @@
         </layout>
     </appender>
 
-    <logger name="com.intoParquet" additivity="false">
+    <logger name="com.github.jaime.intoParquet" additivity="false">
         <level value="INFO"/>
         <appender-ref ref="app"/>
     </logger>
