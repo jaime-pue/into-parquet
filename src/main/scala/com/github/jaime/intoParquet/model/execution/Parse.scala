@@ -6,7 +6,7 @@ import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.mapping.IntoFieldDescriptors
 import com.github.jaime.intoParquet.model.ParsedObject
 
-import scala.util.{Failure, Try}
+import scala.util.{Failure, Success, Try}
 
 class Parse(_element: ParsedObject, _paths: BasePaths) extends Executor with IOOperation {
 
@@ -20,6 +20,7 @@ class Parse(_element: ParsedObject, _paths: BasePaths) extends Executor with IOO
             val fields = IntoFieldDescriptors.fromDescription(element.schema.get)
             val schema = applySchema(raw, fields)
             writeTo(schema, absoluteOutputPath)
+            Success()
         } catch {
             case e: Exception => Failure(e)
         }

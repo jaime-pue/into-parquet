@@ -5,7 +5,7 @@ import com.github.jaime.intoParquet.behaviour.{Executor, IOOperation}
 import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.model.ParsedObject
 
-import scala.util.{Failure, Try}
+import scala.util.{Failure, Success, Try}
 
 class Raw(_element: ParsedObject, _paths: BasePaths) extends Executor with IOOperation {
 
@@ -17,6 +17,7 @@ class Raw(_element: ParsedObject, _paths: BasePaths) extends Executor with IOOpe
         try {
             val raw = readRawCSV(absoluteInputPath)
             writeTo(raw, absoluteOutputPath)
+            Success()
         } catch {
             case e: Exception => Failure(e)
         }
