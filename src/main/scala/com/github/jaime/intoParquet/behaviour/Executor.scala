@@ -8,5 +8,9 @@ trait Executor {
 
     protected val element: ParsedObject
 
-    def cast: Try[Unit]
+    final def cast: Try[Unit] = {
+        Try(execution())
+    }
+
+    protected def execution(): Unit
 }
