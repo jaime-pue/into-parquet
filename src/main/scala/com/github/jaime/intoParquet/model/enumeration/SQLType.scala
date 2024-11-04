@@ -33,16 +33,24 @@ object LongType extends SQLType {
     override val value: DataType = types.LongType
 }
 
-class DecimalType(precision: Int, scale: Int) extends SQLType {
+class DecimalType(val precision: Int, val scale: Int) extends SQLType {
 
     override val value: DataType = types.DecimalType(precision, scale)
+}
 
+object DecimalType {
+    protected[enumeration] def fromString(value: String): List[Int] = {
+        value.filter(c => c.isDigit || c.equals(',')).split(",").map(i => i.toInt).toList
+    }
+
+    def apply(value: String): DecimalType = {
+        val values = fromString(value)
+        new DecimalType(values.head, values.tail.head)
+    }
 }
 
 object ShortType extends SQLType {
 
-  override val value: DataType = types.ShortType
-
+    override val value: DataType = types.ShortType
 
 }
-

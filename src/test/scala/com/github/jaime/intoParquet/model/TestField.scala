@@ -18,6 +18,27 @@ class TestField extends AnyFunSuite {
         assert(Field.intoSQLType("decimal(38,2)").value.isInstanceOf[types.DecimalType])
     }
 
+    test("Should work with a generic decimal type") {
+        assert(Field.intoSQLType("decimal(8,2)").isInstanceOf[DecimalType])
+        assert(Field.intoSQLType("decimal(8,2)").value.isInstanceOf[types.DecimalType])
+    }
+
+    test("Should keep precision and scale values") {
+        val t = Field.intoSQLType("decimal(38,2)")
+        assume(t.isInstanceOf[DecimalType])
+        val casted = t.asInstanceOf[DecimalType]
+        assertResult(38)(casted.precision)
+        assertResult(2)(casted.scale)
+    }
+
+    test("Should keep precision and scale values, round #2") {
+        val t = Field.intoSQLType("decimal(8,4)")
+        assume(t.isInstanceOf[DecimalType])
+        val casted = t.asInstanceOf[DecimalType]
+        assertResult(8)(casted.precision)
+        assertResult(4)(casted.scale)
+    }
+
     test("Should lowercase string") {
         assertResult("string")(Field.sanitizeString("STRING"))
     }
