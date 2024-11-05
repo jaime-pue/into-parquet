@@ -1,3 +1,7 @@
+/*
+ * IntoParquet Copyright (c) 2024 Jaime Alvarez
+ */
+
 package com.github.jaime.intoParquet.common
 
 import com.holdenkarau.spark.testing.DataFrameSuiteBase

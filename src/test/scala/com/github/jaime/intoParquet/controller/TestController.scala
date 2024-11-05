@@ -1,3 +1,7 @@
+/*
+ * IntoParquet Copyright (c) 2024 Jaime Alvarez
+ */
+
 package com.github.jaime.intoParquet.controller
 
 import com.github.jaime.intoParquet.common.{Resources, SparkTestBuilder}

@@ -1,3 +1,7 @@
+/*
+ * IntoParquet Copyright (c) 2024 Jaime Alvarez
+ */
+
 package com.github.jaime.intoParquet.utils
 
 import com.github.jaime.intoParquet.model.enumeration.{FallBackFail, FallBackInfer, ParseSchema, Raw}

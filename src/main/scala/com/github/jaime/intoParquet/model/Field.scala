@@ -1,3 +1,7 @@
+/*
+ * IntoParquet Copyright (c) 2024 Jaime Alvarez
+ */
+
 package com.github.jaime.intoParquet.model
 
 import com.github.jaime.intoParquet.exception.NotImplementedTypeException
