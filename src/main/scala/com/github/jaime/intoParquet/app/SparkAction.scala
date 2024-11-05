@@ -11,8 +11,13 @@ import org.apache.spark.sql.{DataFrame, SaveMode}
 
 object SparkAction extends AppLogger {
 
-    def applySchema(df: DataFrame, description: FieldWrapper): DataFrame = {
-        logInfo(s"Apply schema to dataframe")
+    def readApplySchema(filename: String, description: FieldWrapper): DataFrame = {
+        val raw = readRawCSV(filename)
+        applySchema(raw, description)
+    }
+
+    protected[app] def applySchema(df: DataFrame, description: FieldWrapper): DataFrame = {
+        logInfo(s"Apply schema to current data")
         description.fields.foldLeft(df) { (temp, field) =>
             temp.withColumn(field.fieldName, field.colExpression)
         }
@@ -21,7 +26,7 @@ object SparkAction extends AppLogger {
     def writeTo(df: DataFrame, path: String): Unit = {
         logInfo(s"Writing dataframe to ${path}")
 
-        logInfo(s"Row count: ${df.cache().count()}")
+        logDebug(s"Row count: ${df.cache().count()}")
         df.repartition(1).write.mode(SaveMode.Overwrite).parquet(path)
     }
 
