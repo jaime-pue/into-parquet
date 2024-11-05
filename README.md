@@ -39,7 +39,7 @@ mvn clean package
 2. Once compiled. Execute jar with the following command:
 
 ```shell
-java -jar target/into-parquet-0.0.5-jar-with-dependencies.jar --optional-flags
+java -jar target/into-parquet-cli.jar --optional-flags
 ```
 
 Ensure that all your CSV files are placed in the `/data/input` folder, which should be in the same directory as this JAR
@@ -135,7 +135,7 @@ Root/
 ### Example
 
 ```shell
-java -jar target/target/into-parquet-0.0.3-jar-with-dependencies.jar --files fileOne,fileTwo --output /home/user/
+java -jar target/into-parquet-cli.jar --files fileOne,fileTwo --output /home/user/
 ```
 
 ### Cast method options
