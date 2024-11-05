@@ -5,7 +5,7 @@
 package com.github.jaime.intoParquet.model
 
 import com.github.jaime.intoParquet.exception.NotImplementedTypeException
-import com.github.jaime.intoParquet.model.enumeration.DecimalType
+import com.github.jaime.intoParquet.model.enumeration.DecimalDataType
 import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.{Column, types}
 import org.scalatest.funsuite.AnyFunSuite
@@ -18,27 +18,27 @@ class TestField extends AnyFunSuite {
     }
 
     test("Should work with decimal types") {
-        assert(Field.intoSQLType("decimal(38,2)").isInstanceOf[DecimalType])
+        assert(Field.intoSQLType("decimal(38,2)").isInstanceOf[DecimalDataType])
         assert(Field.intoSQLType("decimal(38,2)").value.isInstanceOf[types.DecimalType])
     }
 
     test("Should work with a generic decimal type") {
-        assert(Field.intoSQLType("decimal(8,2)").isInstanceOf[DecimalType])
+        assert(Field.intoSQLType("decimal(8,2)").isInstanceOf[DecimalDataType])
         assert(Field.intoSQLType("decimal(8,2)").value.isInstanceOf[types.DecimalType])
     }
 
     test("Should keep precision and scale values") {
         val t = Field.intoSQLType("decimal(38,2)")
-        assume(t.isInstanceOf[DecimalType])
-        val casted = t.asInstanceOf[DecimalType]
+        assume(t.isInstanceOf[DecimalDataType])
+        val casted = t.asInstanceOf[DecimalDataType]
         assertResult(38)(casted.precision)
         assertResult(2)(casted.scale)
     }
 
     test("Should keep precision and scale values, round #2") {
         val t = Field.intoSQLType("decimal(8,4)")
-        assume(t.isInstanceOf[DecimalType])
-        val casted = t.asInstanceOf[DecimalType]
+        assume(t.isInstanceOf[DecimalDataType])
+        val casted = t.asInstanceOf[DecimalDataType]
         assertResult(8)(casted.precision)
         assertResult(4)(casted.scale)
     }

@@ -13,17 +13,17 @@ class TestDecimalType extends AnyFunSuite {
     }
 
     test("Should work with a string constructor") {
-        val a = DecimalType.fromString(composeDecimal(8, 2))
+        val a = DecimalDataType.fromString(composeDecimal(8, 2))
         assertResult((8, 2))((a(0), a(1)))
     }
 
     test("Should build a new class") {
-        val a = DecimalType(composeDecimal(38, 4))
+        val a = DecimalDataType(composeDecimal(38, 4))
         assertResult(38)(a.precision)
         assertResult(4)(a.scale)
     }
 
     test("Should work with different spacing") {
-        assertResult(List(10, 4))(DecimalType.fromString("decimal(10, 4)"))
+        assertResult(List(10, 4))(DecimalDataType.fromString("decimal(10, 4)"))
     }
 }
