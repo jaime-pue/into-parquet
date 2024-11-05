@@ -1,3 +1,5 @@
 name,id
 John,0
 admin,1
+empty,
+NULL,3

@@ -69,9 +69,10 @@ Csv files with header
 
 ##### Note on `Null` values
 
-By default, the into-parquet script handles null values in the input CSV files. To ensure proper handling, it is
-important that any null values in the CSV are represented as NULL in uppercase. This ensures consistency and allows the
-script to correctly recognise and convert these null values into the Parquet format.
+By default, the into-parquet script handles null values in the input CSV files. Any missing or empty values in the CSV
+will be interpreted as nulls during the conversion process. To ensure proper handling, it is important that any null
+values in the CSV are represented as NULL in uppercase. This ensures consistency and allows the script to correctly
+recognise and convert these null values into the Parquet format.
 
 #### Table description
 

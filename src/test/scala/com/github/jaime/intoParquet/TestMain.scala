@@ -42,6 +42,11 @@ class TestMain extends SparkTestBuilder with BeforeAndAfterEach {
         runMain(args)
     }
 
+    test("Should finish and pass if no schema found") {
+        val args = buildTestArgs("timestampConversion")
+        runMain(args)
+    }
+
     test("Should fail if inputDir path is wrong") {
         val args = Array("-p", "imagine")
         intercept[NoFileFoundException](Main.main(args))
