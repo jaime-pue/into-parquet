@@ -1,7 +1,6 @@
 package com.github.jaime.intoParquet.exception
 
 import com.github.jaime.intoParquet.model.ParsedObject
-import com.github.jaime.intoParquet.model.ParsedObject
 
 sealed trait AppException extends Exception {
     self: Throwable =>

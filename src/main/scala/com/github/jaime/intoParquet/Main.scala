@@ -18,21 +18,29 @@ object Main extends AppLogger {
         val inputArgs: InputArgs = {
             parseSystemArgs(args).getOrElse(throw new WrongInputArgsException)
         }
+
         SparkBuilder.beforeAll()
-        val controller: Controller = IntoController.castTo(inputArgs) match {
-            case Failure(exception) => throw exception
-            case Success(value)     => value
+
+        IntoController.castTo(inputArgs) match {
+            case Failure(exception) =>
+                logError(exception)
+                throw exception
+            case Success(value) => launchConversion(value)
         }
+
+        SparkBuilder.afterAll()
+
+    }
+
+    private def launchConversion(controller: Controller): Unit = {
         controller.execution match {
             case Failure(exception) => {
                 logError(s"""Something went wrong
-                      |${exception.getMessage}
-                      |""".stripMargin)
+                            |${exception.getMessage}
+                            |""".stripMargin)
                 throw exception
             }
             case Success(_) => logInfo("Job ended Ok!")
         }
-        SparkBuilder.afterAll()
-
     }
 }
