@@ -1,10 +1,21 @@
 # into-parquet
 
-CLI tool for giving .csv files a schema and cast them to .parquet.
+This command-line tool is designed to convert CSV files into the efficient Parquet format.
+It automatically scans the specified input directory for all CSV files, processes them, and saves the converted
+Parquet files in a target location.
 
 By default, will read all files recursively from `./data/input/`
 
-It will overwrite previous parquet files.
+It will overwrite previous Parquet files.
+
+This utility is particularly useful for users who need to efficiently store and query large datasets.
+The conversion process preserves column names, and the structure of the original CSV files while transforming them
+into Parquet format with new data types defined by the user.
+
+## Requirements
+
+- Java 1.8
+- Maven 3
 
 ## Usage
 
@@ -17,17 +28,22 @@ Root/
     └── output/
 ```
 
-Compile with [maven](https://maven.apache.org/):
+To run the script, execute the following commands:
+
+1. Compile with [maven](https://maven.apache.org/):
 
 ```shell
 mvn clean package
 ```
 
-Compiles to jar type:
+2. Once compiled. Execute jar with the following command:
 
 ```shell
-java -jar target/into-parquet-0.0.2-jar-with-dependencies.jar --optional-flags
+java -jar target/into-parquet-0.0.5-jar-with-dependencies.jar --optional-flags
 ```
+
+Ensure that all your CSV files are placed in the `/data/input` folder, which should be in the same directory as this JAR
+file. The tool will automatically read all CSV files from this folder and convert them into Parquet format.
 
 ## Folder structure
 
@@ -50,6 +66,12 @@ Root/
 #### Csv files
 
 Csv files with header
+
+##### Note on `Null` values
+
+By default, the into-parquet script handles null values in the input CSV files. To ensure proper handling, it is
+important that any null values in the CSV are represented as NULL in uppercase. This ensures consistency and allows the
+script to correctly recognise and convert these null values into the Parquet format.
 
 #### Table description
 
