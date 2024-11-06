@@ -60,7 +60,7 @@ class TestSparkReadingCSV extends SparkTestBuilder with GivenWhenThen {
     test("Should read in raw format") {
         Given("a raw csv file with both string and int")
         When("read in raw format")
-        val df = SparkAction.readRawCSV(file)
+        val df = SparkReader.readRawCSV(file)
         Then("schema should be string & string")
         val expectedSchema = StructType(
           Seq(
@@ -72,14 +72,14 @@ class TestSparkReadingCSV extends SparkTestBuilder with GivenWhenThen {
     }
 
     test("Should handle null values when reading raw") {
-        val df = SparkAction.readRawCSV(file)
+        val df = SparkReader.readRawCSV(file)
         assertDataFrameNoOrderEquals(buildRawData, df)
     }
 
     test("Should infer the schema") {
         Given("a raw csv file with both string and int")
         When("read inferring the schema")
-        val df = SparkAction.readInferSchema(file)
+        val df = SparkReader.readInferSchema(file)
         Then("schema should be string & int")
         val expectedSchema = StructType(
           Seq(
@@ -91,7 +91,7 @@ class TestSparkReadingCSV extends SparkTestBuilder with GivenWhenThen {
     }
 
     test("Should handle null values when inferring the schema") {
-        val df = SparkAction.readInferSchema(file)
+        val df = SparkReader.readInferSchema(file)
         assertDataFrameNoOrderEquals(expectedData, df)
     }
 
@@ -104,12 +104,12 @@ class TestSparkReadingCSV extends SparkTestBuilder with GivenWhenThen {
         )
 
         val rawData   = buildRawData
-        val converted = SparkAction.applySchema(rawData, wrapper)
+        val converted = SparkReader.applySchema(rawData, wrapper)
         assertDataFrameNoOrderEquals(expectedData, converted)
     }
 
     test("Should infer the schema with decimals") {
-        val df = SparkAction.readInferSchema(s"$FilePath$TimestampFile")
+        val df = SparkReader.readInferSchema(s"$FilePath$TimestampFile")
         val expectedSchema = StructType(
           List(
             StructField("id", IntegerType),

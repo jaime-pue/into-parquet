@@ -4,7 +4,7 @@
 
 package com.github.jaime.intoParquet.model.execution
 
-import com.github.jaime.intoParquet.app.SparkAction.readApplySchema
+import com.github.jaime.intoParquet.app.SparkReader.readApplySchema
 import com.github.jaime.intoParquet.behaviour.ReadAndWrite
 import com.github.jaime.intoParquet.behaviour.Executor
 import com.github.jaime.intoParquet.behaviour.IOOperation

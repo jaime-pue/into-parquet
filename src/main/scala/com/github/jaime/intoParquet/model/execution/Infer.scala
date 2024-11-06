@@ -4,7 +4,7 @@
 
 package com.github.jaime.intoParquet.model.execution
 
-import com.github.jaime.intoParquet.app.SparkAction.{readInferSchema, writeTo}
+import com.github.jaime.intoParquet.app.SparkReader.readInferSchema
 import com.github.jaime.intoParquet.behaviour.ReadAndWrite
 import com.github.jaime.intoParquet.behaviour.{Executor, IOOperation}
 import com.github.jaime.intoParquet.configuration.BasePaths

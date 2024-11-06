@@ -7,9 +7,9 @@ package com.github.jaime.intoParquet.app
 import com.github.jaime.intoParquet.app.SparkBuilder.spark
 import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.github.jaime.intoParquet.model.FieldWrapper
-import org.apache.spark.sql.{DataFrame, SaveMode}
+import org.apache.spark.sql.DataFrame
 
-object SparkAction extends AppLogger {
+object SparkReader extends AppLogger {
 
     def readApplySchema(filename: String, description: FieldWrapper): DataFrame = {
         val raw = readRawCSV(filename)
@@ -21,13 +21,6 @@ object SparkAction extends AppLogger {
         description.fields.foldLeft(df) { (temp, field) =>
             temp.withColumn(field.fieldName, field.colExpression)
         }
-    }
-
-    def writeTo(df: DataFrame, path: String): Unit = {
-        logInfo(s"Writing dataframe to ${path}")
-
-        logDebug(s"Row count: ${df.cache().count()}")
-        df.repartition(1).write.mode(SaveMode.Overwrite).parquet(path)
     }
 
     def readInferSchema(filename: String): DataFrame = {

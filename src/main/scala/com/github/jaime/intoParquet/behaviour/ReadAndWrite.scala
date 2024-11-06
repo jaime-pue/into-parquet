@@ -4,7 +4,7 @@
 
 package com.github.jaime.intoParquet.behaviour
 
-import com.github.jaime.intoParquet.app.SparkAction.writeTo
+import com.github.jaime.intoParquet.app.SparkWriter.writeTo
 import org.apache.spark.sql.DataFrame
 
 trait ReadAndWrite {
