@@ -9,7 +9,7 @@ sealed trait CastMode {
     override def toString: String = getClass.getSimpleName.replace("$", "")
 }
 
-object Raw extends CastMode
+object RawSchema extends CastMode
 
 object InferSchema extends CastMode
 

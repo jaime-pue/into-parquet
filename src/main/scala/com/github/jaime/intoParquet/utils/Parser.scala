@@ -5,7 +5,7 @@
 package com.github.jaime.intoParquet.utils
 
 import com.github.jaime.intoParquet.text.AppInfo
-import com.github.jaime.intoParquet.model.enumeration.{CastMode, FallBack, FallBackFail, FallBackInfer, FallBackNone, FallBackRaw, InferSchema, ParseSchema, Raw}
+import com.github.jaime.intoParquet.model.enumeration.{CastMode, FallBack, FallBackFail, FallBackInfer, FallBackNone, FallBackRaw, InferSchema, ParseSchema, RawSchema}
 import com.github.jaime.intoParquet.text.AppInfo
 import com.github.jaime.intoParquet.utils.Common.sanitizeString
 import scopt.OptionParser
@@ -92,8 +92,8 @@ object Parser {
 
     private def parseCastMethod(value: String): CastMode = {
         sanitizeString(value) match {
-            case "raw"   => Raw
-            case "r"     => Raw
+            case "raw"   => RawSchema
+            case "r"     => RawSchema
             case "infer" => InferSchema
             case "i"     => InferSchema
             case "parse" => new ParseSchema()

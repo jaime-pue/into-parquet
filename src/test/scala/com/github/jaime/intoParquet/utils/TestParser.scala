@@ -4,7 +4,7 @@
 
 package com.github.jaime.intoParquet.utils
 
-import com.github.jaime.intoParquet.model.enumeration.{FallBackFail, FallBackInfer, ParseSchema, Raw}
+import com.github.jaime.intoParquet.model.enumeration.{FallBackFail, FallBackInfer, ParseSchema, RawSchema}
 import org.scalatest.funsuite.AnyFunSuite
 
 class TestParser extends AnyFunSuite {
@@ -74,7 +74,7 @@ class TestParser extends AnyFunSuite {
     test("Should parse to another parser method") {
         val input = Array("-m", "raw")
         val args = Parser.parseSystemArgs(input)
-        assertResult(Raw)(args.get.castMethod)
+        assertResult(RawSchema)(args.get.castMethod)
     }
 
     ignore("Should display version info") {

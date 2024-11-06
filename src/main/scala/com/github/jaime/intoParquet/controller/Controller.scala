@@ -4,13 +4,29 @@
 
 package com.github.jaime.intoParquet.controller
 
-import com.github.jaime.intoParquet.behaviour.{AppLogger, Executor}
+import com.github.jaime.intoParquet.behaviour.AppLogger
+import com.github.jaime.intoParquet.behaviour.Executor
 import com.github.jaime.intoParquet.configuration.BasePaths
-import com.github.jaime.intoParquet.model.enumeration._
-import com.github.jaime.intoParquet.model.execution.{Raw, _}
-import com.github.jaime.intoParquet.model.{ParsedObject, ParsedObjectWrapper}
+import com.github.jaime.intoParquet.model.enumeration.CastMode
+import com.github.jaime.intoParquet.model.enumeration.FallBack
+import com.github.jaime.intoParquet.model.enumeration.FallBackFail
+import com.github.jaime.intoParquet.model.enumeration.FallBackInfer
+import com.github.jaime.intoParquet.model.enumeration.FallBackNone
+import com.github.jaime.intoParquet.model.enumeration.FallBackRaw
+import com.github.jaime.intoParquet.model.enumeration.InferSchema
+import com.github.jaime.intoParquet.model.enumeration.ParseSchema
+import com.github.jaime.intoParquet.model.enumeration.RawSchema
+import com.github.jaime.intoParquet.model.execution.Fail
+import com.github.jaime.intoParquet.model.execution.Infer
+import com.github.jaime.intoParquet.model.execution.Parse
+import com.github.jaime.intoParquet.model.execution.Pass
+import com.github.jaime.intoParquet.model.execution.Raw
+import com.github.jaime.intoParquet.model.ParsedObject
+import com.github.jaime.intoParquet.model.ParsedObjectWrapper
 
-import scala.util.{Failure, Success, Try}
+import scala.util.Failure
+import scala.util.Success
+import scala.util.Try
 
 class Controller(
     _basePaths: BasePaths,
@@ -25,7 +41,7 @@ class Controller(
     private def castElement(element: ParsedObject): Executor = {
         logInfo(s"Start job for: ${element.id}")
         this.castMode match {
-            case Raw         => new Raw(element, _basePaths)
+            case RawSchema   => new Raw(element, _basePaths)
             case InferSchema => new Infer(element, _basePaths)
             case castMode: ParseSchema =>
                 if (element.schema.isEmpty) {
