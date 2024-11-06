@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.jaime-alv</groupId>
     <artifactId>into-parquet</artifactId>
@@ -76,7 +76,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-</dependencies>
+    </dependencies>
     <build>
         <finalName>${project.artifactId}</finalName>
         <sourceDirectory>src/main/scala</sourceDirectory>
@@ -88,14 +88,14 @@
                 <version>${mvn.assembly}</version>
                 <configuration>
                     <descriptors>
-                        <descriptor>./assembly.xml</descriptor>
+                        <descriptor>${project.basedir}/build/assembly.xml</descriptor>
                     </descriptors>
                     <archive>
                         <manifest>
                             <mainClass>com.github.jaime.intoParquet.Main</mainClass>
                         </manifest>
                     </archive>
-<!--                    <outputDirectory>.</outputDirectory>-->
+                    <!--                    <outputDirectory>.</outputDirectory>-->
                 </configuration>
                 <executions>
                     <execution>
@@ -122,17 +122,17 @@
                 <artifactId>scalatest-maven-plugin</artifactId>
                 <version>2.2.0</version>
                 <configuration>
-                  <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
-                  <junitxml>.</junitxml>
-                  <filereports>WDF TestSuite.txt</filereports>
+                    <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+                    <junitxml>.</junitxml>
+                    <filereports>WDF TestSuite.txt</filereports>
                 </configuration>
                 <executions>
-                  <execution>
-                    <id>test</id>
-                    <goals>
-                      <goal>test</goal>
-                    </goals>
-                  </execution>
+                    <execution>
+                        <id>test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
