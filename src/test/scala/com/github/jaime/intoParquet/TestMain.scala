@@ -6,17 +6,24 @@ package com.github.jaime.intoParquet
 
 import com.github.jaime.intoParquet.common.{Resources, SparkTestBuilder}
 import com.github.jaime.intoParquet.exception.NoFileFoundException
+import com.github.jaime.intoParquet.exception.WrongInputArgsException
 import org.scalatest.BeforeAndAfterEach
 
 class TestMain extends SparkTestBuilder with BeforeAndAfterEach {
-
 
     override protected def afterEach(): Unit = {
         Resources.cleanDirectory
     }
 
     private def buildTestArgs(files: Option[String] = None): Array[String] = {
-        val input = Array("-p", Resources.InputTestFolder, "-o", Resources.OutputTestFolder, "-f", files.getOrElse(""))
+        val input = Array(
+          "-p",
+          Resources.InputTestFolder,
+          "-o",
+          Resources.OutputTestFolder,
+          "-f",
+          files.getOrElse("")
+        )
         input
     }
 
@@ -60,5 +67,23 @@ class TestMain extends SparkTestBuilder with BeforeAndAfterEach {
     test("Should fail with fail-fast") {
         val args = Array("--fail-fast", "-f", "badRecord", "-m", "raw")
         intercept[Exception](Main.main(args))
+    }
+
+    test("Should throw exception if args are wrong") {
+        val args = Array("--random", "m")
+        assertThrows[WrongInputArgsException](Main.main(args))
+    }
+
+    test("Should infer all files with recursive mode") {
+        val args = Array(
+          "--mode",
+          "infer",
+          "-p",
+          Resources.InputTestFolder,
+          "-o",
+          Resources.OutputTestFolder,
+          "--fail-fast"
+        )
+        runMain(args)
     }
 }
