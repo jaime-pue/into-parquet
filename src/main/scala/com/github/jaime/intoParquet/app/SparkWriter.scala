@@ -10,11 +10,28 @@ import org.apache.spark.sql.SaveMode
 
 object SparkWriter extends AppLogger {
 
+    private val LinesForSplitting: Int = 50000
+
     def writeTo(df: DataFrame, path: String): Unit = {
         logInfo(s"Writing dataframe to ${path}")
+        setNumberOfPartitions(df).write
+            .mode(SaveMode.Overwrite)
+            .parquet(path)
+    }
 
-        logDebug(s"Row count: ${df.cache().count()}")
-        df.repartition(1).write.mode(SaveMode.Overwrite).parquet(path)
+    private def setNumberOfPartitions(df: DataFrame): DataFrame = {
+        val rows = df.cache().count()
+        logDebug(s"Row count: ${rows}")
+        val partitions = calculateNumberOfPartitions(rows)
+        partitions match {
+            case 0 => df.repartition(1)
+            case 1 => df.repartition(1)
+            case _ => df.coalesce(partitions)
+        }
+    }
+
+    protected[app] def calculateNumberOfPartitions(dataFrameRows: Long): Int = {
+        (dataFrameRows.toDouble / LinesForSplitting.toDouble).ceil.toInt
     }
 
 }
