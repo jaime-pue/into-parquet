@@ -21,9 +21,9 @@ class WrongInputArgsException extends AppException {
     override val message: String = s"Input args parameters exception"
 }
 
-class NoFileFoundException(file: String) extends AppException {
+class NoFileFoundException(directory: String) extends AppException {
 
-    override val message: String = s"No csv files found in: <$file>"
+    override val message: String = s"No csv files found in: <$directory>"
 }
 
 class NoCSVException extends AppException {

@@ -6,18 +6,27 @@ package com.github.jaime.intoParquet.service
 
 import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.github.jaime.intoParquet.configuration.BasePaths
-import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.exception.NoFileFoundException
 
-import java.nio.file.{Files, NoSuchFileException, Paths}
+import java.nio.file.Files
+import java.nio.file.NoSuchFileException
+import java.nio.file.Path
+import java.nio.file.Paths
 import scala.collection.JavaConverters.asScalaIteratorConverter
 import scala.io.Source
-import scala.util.{Failure, Success, Try}
+import scala.util.Failure
+import scala.util.Success
+import scala.util.Try
 
 class FileLoader(paths: BasePaths) extends AppLogger {
 
     private val InputSchemaPath: String = paths.inputBasePath
     private val InputRawPath: String    = paths.inputBasePath
+
+    override def toString: String = {
+        s"""> Input path: $InputRawPath
+           |""".stripMargin
+    }
 
     def readFile(fileName: String): Option[List[String]] = {
         readFromDataFolder(fileName) match {
@@ -47,19 +56,26 @@ class FileLoader(paths: BasePaths) extends AppLogger {
 
     def readAllFilesFromRaw: Try[Array[String]] = {
         val filePath = Paths.get(s"$InputRawPath").toAbsolutePath
+        logDebug(s"read from $InputRawPath")
         try {
-            val csv = Files
+            val csvFiles = Files
                 .list(filePath)
                 .iterator()
                 .asScala
-                .filter(Files.isRegularFile(_))
-                .filter(_.getFileName.toString.endsWith(".csv"))
+                .filter(file => isCSV(file))
                 .map(_.getFileName.toString.replace(".csv", ""))
                 .toArray
-            Success(csv)
+            csvFiles.length match {
+                case 0 => Failure(new NoFileFoundException(filePath.toString))
+                case _ => Success(csvFiles)
+            }
         } catch {
             case _: NoSuchFileException => Failure(new NoFileFoundException(filePath.toString))
         }
+    }
+
+    private def isCSV(f: Path): Boolean = {
+        Files.isRegularFile(f) && f.getFileName.toString.endsWith(".csv")
     }
 
 }

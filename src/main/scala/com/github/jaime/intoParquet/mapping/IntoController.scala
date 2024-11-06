@@ -14,49 +14,54 @@ import com.github.jaime.intoParquet.model.enumeration.ParseSchema
 import com.github.jaime.intoParquet.service.FileLoader
 import com.github.jaime.intoParquet.utils.Parser.InputArgs
 
-import scala.util.{Failure, Success, Try}
+import scala.util.Failure
+import scala.util.Success
 
-object IntoController extends AppLogger {
+class IntoController(args: InputArgs) extends AppLogger {
 
-    def castTo(args: InputArgs): Try[Controller] = {
-        val basePaths  = intoBasePaths(args)
-        val castMethod = intoCastMethod(args)
-        val files: ParsedObjectWrapper = intoFiles(args) match {
-            case Failure(exception) =>
-                return Failure(exception)
-            case Success(value) => value
-        }
-        Success(new Controller(basePaths, castMethod, files, args.failFast))
+    private val inputArgs              = args
+    private val recursiveRead: Boolean = inputArgs.recursive
+    private val basePaths: BasePaths   = intoBasePaths
+    private val fileLoader: FileLoader = new FileLoader(basePaths)
+    private val failFast: Boolean      = inputArgs.failFast
+
+    private def intoBasePaths: BasePaths = {
+        new BasePaths(inputArgs.inputDir, inputArgs.outputDir)
     }
 
-    private def intoCastMethod(args: InputArgs): CastMode = {
-        args.fallBack match {
+    private def intoCastMethod: CastMode = {
+        inputArgs.fallBack match {
             case Some(value) => new ParseSchema(value)
-            case None        => args.castMethod
+            case None        => inputArgs.castMethod
         }
     }
 
-    private def intoFiles(args: InputArgs): Try[ParsedObjectWrapper] = {
-        val basePaths  = intoBasePaths(args)
-        val fileLoader = new FileLoader(basePaths)
-        val csv = if (args.recursive) {
-            logInfo(s"Read all csv files from ${basePaths.inputBasePath}")
-            fileLoader.readAllFilesFromRaw match {
-                case Failure(exception) => return Failure(exception)
-                case Success(value)     => value
-            }
+    def castTo: Controller = {
+        new Controller(basePaths, intoCastMethod, intoParsedObjectWrapper, failFast)
+    }
+
+    private def intoParsedObjectWrapper: ParsedObjectWrapper = {
+        val filenames = obtainAllFileNames
+        IntoParsedObjectWrapper.castTo(filenames, fileLoader)
+    }
+
+    private def obtainAllFileNames: Array[String] = {
+        if (recursiveRead) {
+            getAllFilenamesFromFolder
         } else {
-            args.csvFile match {
-                case Some(value) => value.split(",").map(_.trim)
-                case None        => return Failure(new NoCSVException)
-            }
+            getFilenamesFromInputLine
         }
-        val files: ParsedObjectWrapper = IntoParsedObjectWrapper.castTo(csv, fileLoader)
-        Success(files)
     }
 
-    private def intoBasePaths(args: InputArgs): BasePaths = {
-        new BasePaths(args.inputDir, args.outputDir)
+    protected[mapping] def getAllFilenamesFromFolder: Array[String] = {
+        fileLoader.readAllFilesFromRaw match {
+            case Failure(exception) => throw exception
+            case Success(filenames) => filenames
+        }
+    }
+
+    protected[mapping] def getFilenamesFromInputLine: Array[String] = {
+        inputArgs.csvFile.getOrElse(throw new NoCSVException).split(",").map(_.trim).distinct
     }
 
 }

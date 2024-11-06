@@ -27,10 +27,13 @@ import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.github.jaime.intoParquet.controller.Controller
 import com.github.jaime.intoParquet.exception.WrongInputArgsException
 import com.github.jaime.intoParquet.mapping.IntoController
-import com.github.jaime.intoParquet.utils.Parser.{InputArgs, parseSystemArgs}
-import org.apache.log4j.{Level, Logger}
+import com.github.jaime.intoParquet.utils.Parser.InputArgs
+import com.github.jaime.intoParquet.utils.Parser.parseSystemArgs
+import org.apache.log4j.Level
+import org.apache.log4j.Logger
 
-import scala.util.{Failure, Success}
+import scala.util.Failure
+import scala.util.Success
 
 object Main extends AppLogger {
     Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
@@ -43,12 +46,10 @@ object Main extends AppLogger {
 
         SparkBuilder.beforeAll()
 
-        IntoController.castTo(inputArgs) match {
-            case Failure(exception) =>
-                logError(exception)
-                throw exception
-            case Success(value) => launchConversion(value)
-        }
+        val intoController: IntoController = new IntoController(inputArgs)
+        val controller: Controller = Controller(intoController)
+
+        launchConversion(controller)
 
         SparkBuilder.afterAll()
 

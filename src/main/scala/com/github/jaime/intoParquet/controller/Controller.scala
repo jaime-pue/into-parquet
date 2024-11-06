@@ -7,6 +7,7 @@ package com.github.jaime.intoParquet.controller
 import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.github.jaime.intoParquet.behaviour.Executor
 import com.github.jaime.intoParquet.configuration.BasePaths
+import com.github.jaime.intoParquet.mapping.IntoController
 import com.github.jaime.intoParquet.model.enumeration.CastMode
 import com.github.jaime.intoParquet.model.enumeration.FallBack
 import com.github.jaime.intoParquet.model.enumeration.FallBackFail
@@ -83,5 +84,11 @@ class Controller(
 
         })
         Success()
+    }
+}
+
+object Controller {
+    def apply(intoController: IntoController): Controller = {
+        intoController.castTo
     }
 }
