@@ -4,8 +4,9 @@
 
 package com.github.jaime.intoParquet.mapping
 
-import com.github.jaime.intoParquet.model.{ParsedObjectWrapper, TableDescription}
-import com.github.jaime.intoParquet.model.{ParsedObject, ParsedObjectWrapper, TableDescription}
+import com.github.jaime.intoParquet.model.ParsedObject
+import com.github.jaime.intoParquet.model.ParsedObjectWrapper
+import com.github.jaime.intoParquet.model.TableDescription
 import com.github.jaime.intoParquet.service.FileLoader
 
 object IntoParsedObjectWrapper {

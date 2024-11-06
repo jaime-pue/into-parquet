@@ -5,7 +5,6 @@
 package com.github.jaime.intoParquet.mapping
 
 import com.github.jaime.intoParquet.model.TableDescription
-import com.github.jaime.intoParquet.model.TableDescription
 
 import scala.util.matching.Regex
 

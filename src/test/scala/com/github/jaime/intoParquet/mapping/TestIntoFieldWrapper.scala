@@ -4,7 +4,8 @@
 
 package com.github.jaime.intoParquet.mapping
 
-import com.github.jaime.intoParquet.model.{Field, FieldWrapper, TableDescription}
+import com.github.jaime.intoParquet.model.Field
+import com.github.jaime.intoParquet.model.FieldWrapper
 import org.scalatest.funsuite.AnyFunSuite
 
 class TestIntoFieldWrapper extends AnyFunSuite {
