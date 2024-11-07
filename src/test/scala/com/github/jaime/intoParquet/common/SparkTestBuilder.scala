@@ -15,8 +15,6 @@ import scala.reflect.io.Directory
 
 trait SparkTestBuilder extends AnyFunSuite with DataFrameSuiteBase {
 
-    private val SparkWarehouse: String = "./spark-warehouse"
-
     override implicit def reuseContextIfPossible: Boolean = true
 
     private def cleanDirectory(path: String): Boolean = {
@@ -37,10 +35,8 @@ trait SparkTestBuilder extends AnyFunSuite with DataFrameSuiteBase {
 
     protected def deactivateScLog(): Unit = sc.setLogLevel("ERROR")
 
-    override def afterAll(): Unit = {
+    final override def afterAll(): Unit = {
         super.afterAll()
-        spark.sessionState.catalog.reset()
-        cleanDirectory(SparkWarehouse)
         cleanDirectory(Resources.path.outputBasePath)
     }
 
