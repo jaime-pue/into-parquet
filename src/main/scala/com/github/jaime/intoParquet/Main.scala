@@ -29,15 +29,11 @@ import com.github.jaime.intoParquet.exception.WrongInputArgsException
 import com.github.jaime.intoParquet.mapping.IntoController
 import com.github.jaime.intoParquet.utils.Parser.InputArgs
 import com.github.jaime.intoParquet.utils.Parser.parseSystemArgs
-import org.apache.log4j.Level
-import org.apache.log4j.Logger
 
 import scala.util.Failure
 import scala.util.Success
 
 object Main extends AppLogger {
-    Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
-    Logger.getLogger("org.spark-project").setLevel(Level.WARN)
 
     def main(args: Array[String]): Unit = {
         val inputArgs: InputArgs = {

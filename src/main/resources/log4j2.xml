@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ IntoParquet Copyright (c) 2024 Jaime Alvarez
+  -->
+
+<Configuration>
+    <Appenders>
+        <Console name="console" target="System.err">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p [%t] %C{1} - %m%n"/>
+        </Console>
+
+        <Console name="app" target="System.out">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} - %m%n"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Root level="error">
+            <AppenderRef ref="console"/>
+        </Root>
+        <Logger name="com.github.jaime.intoParquet" level="info" additivity="false">
+            <AppenderRef ref="app"/>
+        </Logger>
+    </Loggers>
+</Configuration>

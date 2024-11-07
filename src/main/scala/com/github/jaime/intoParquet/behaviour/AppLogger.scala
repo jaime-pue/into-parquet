@@ -4,7 +4,7 @@
 
 package com.github.jaime.intoParquet.behaviour
 
-import org.apache.log4j.LogManager
+import org.apache.logging.log4j.LogManager
 
 trait AppLogger {
     private val log = LogManager.getLogger(getClass.getName)
