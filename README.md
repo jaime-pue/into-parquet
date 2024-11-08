@@ -14,7 +14,7 @@ into Parquet format with new data types defined by the user.
 
 ## Requirements
 
-- Java 1.8
+- Java 1.11
 - Maven 3
 
 ## Usage
