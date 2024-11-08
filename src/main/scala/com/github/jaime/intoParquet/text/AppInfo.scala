@@ -8,6 +8,8 @@ import scala.io.Source
 
 object AppInfo {
 
+    final val AppName: String = "into-parquet"
+
     private val version: String = readVersion
     private val PacketDescription: String = {
         """Converts csv format files into parquet files,
@@ -20,7 +22,7 @@ object AppInfo {
     }
 
     val license: String =
-        s"""into-parquet $version
+        s"""$AppName $version
            |
            |$PacketDescription
            |
