@@ -24,7 +24,7 @@ import com.github.jaime.intoParquet.model.execution.Infer
 import com.github.jaime.intoParquet.model.execution.Parse
 import com.github.jaime.intoParquet.model.execution.Pass
 import com.github.jaime.intoParquet.model.execution.Raw
-import com.github.jaime.intoParquet.model.ParsedObject
+import com.github.jaime.intoParquet.model.PairCSVAndTableDescription
 import com.github.jaime.intoParquet.model.ParsedObjectWrapper
 
 import scala.util.Failure
@@ -41,7 +41,7 @@ class Controller(
     private val castMode: CastMode           = _castMode
     private val wrapper: ParsedObjectWrapper = _wrapper
 
-    private def castElement(element: ParsedObject): Executor = {
+    private def castElement(element: PairCSVAndTableDescription): Executor = {
         logInfo(s"Start job for: ${element.id}")
         this.castMode match {
             case RawSchema   => new Raw(element, _basePaths)
@@ -53,7 +53,7 @@ class Controller(
         }
     }
 
-    private def applyFallbackMethodTo(element: ParsedObject, fallBack: FallBack): Executor = {
+    private def applyFallbackMethodTo(element: PairCSVAndTableDescription, fallBack: FallBack): Executor = {
         fallBack match {
             case FallBackRaw   => new Raw(element, _basePaths)
             case FallBackInfer => new Infer(element, _basePaths)

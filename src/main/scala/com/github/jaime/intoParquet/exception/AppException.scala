@@ -4,7 +4,7 @@
 
 package com.github.jaime.intoParquet.exception
 
-import com.github.jaime.intoParquet.model.ParsedObject
+import com.github.jaime.intoParquet.model.PairCSVAndTableDescription
 
 sealed trait AppException extends Exception {
     self: Throwable =>
@@ -31,7 +31,7 @@ class NoCSVException extends AppException {
     override val message: String = "At least one file is needed"
 }
 
-class NoSchemaFoundException(e: ParsedObject) extends AppException {
+class NoSchemaFoundException(e: PairCSVAndTableDescription) extends AppException {
 
     override val message: String = s"No schema found for ${e.id}"
 }

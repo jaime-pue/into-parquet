@@ -4,13 +4,13 @@
 
 package com.github.jaime.intoParquet.behaviour
 
-import com.github.jaime.intoParquet.model.ParsedObject
+import com.github.jaime.intoParquet.model.PairCSVAndTableDescription
 
 import scala.util.Try
 
 trait Executor {
 
-    protected val element: ParsedObject
+    protected val element: PairCSVAndTableDescription
 
     final def cast: Try[Unit] = {
         Try(execution())
