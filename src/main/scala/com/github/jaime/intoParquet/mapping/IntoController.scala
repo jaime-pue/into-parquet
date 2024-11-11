@@ -42,7 +42,7 @@ class IntoController(args: InputArgs) extends AppLogger {
 
     private def intoParsedObjectWrapper: ParsedObjectWrapper = {
         val filenames = obtainAllFileNames
-        IntoParsedObjectWrapper.castTo(filenames, fileLoader)
+        new ParsedObjectWrapper(filenames, fileLoader)
     }
 
     private def obtainAllFileNames: Array[String] = {

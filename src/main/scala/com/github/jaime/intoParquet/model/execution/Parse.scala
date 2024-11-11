@@ -5,11 +5,10 @@
 package com.github.jaime.intoParquet.model.execution
 
 import com.github.jaime.intoParquet.app.SparkReader.readApplySchema
-import com.github.jaime.intoParquet.behaviour.ReadAndWrite
 import com.github.jaime.intoParquet.behaviour.Executor
 import com.github.jaime.intoParquet.behaviour.IOOperation
+import com.github.jaime.intoParquet.behaviour.ReadAndWrite
 import com.github.jaime.intoParquet.configuration.BasePaths
-import com.github.jaime.intoParquet.mapping.IntoFieldDescriptors
 import com.github.jaime.intoParquet.model.ParsedObject
 import org.apache.spark.sql.DataFrame
 
@@ -23,7 +22,6 @@ class Parse(_element: ParsedObject, _paths: BasePaths)
     override val id: String                      = element.id
 
     override def readFrom: DataFrame = {
-        val fields = IntoFieldDescriptors.fromDescription(element.schema.get)
-        readApplySchema(absoluteInputPath, fields)
+        readApplySchema(absoluteInputPath, element.schema.get)
     }
 }

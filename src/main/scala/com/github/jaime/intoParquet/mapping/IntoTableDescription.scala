@@ -4,7 +4,7 @@
 
 package com.github.jaime.intoParquet.mapping
 
-import com.github.jaime.intoParquet.model.TableDescription
+import com.github.jaime.intoParquet.model.Field
 
 import scala.util.matching.Regex
 
@@ -17,7 +17,7 @@ object IntoTableDescription {
         }
     }
 
-    protected[mapping] def cleanLines(lines: List[String]): List[String] = {
+    private def cleanLines(lines: List[String]): List[String] = {
         lines.map(l => l.trim()).filterNot(l => l.equals(""))
     }
 
@@ -25,13 +25,12 @@ object IntoTableDescription {
         lines.filterNot(l => matchCase(l))
     }
 
-    def castTo(value: List[String]): TableDescription = {
-        val fileLines = deleteFirstLine(cleanLines(value))
-        new TableDescription(fileLines)
+    def mapFrom(lines: List[String]): List[Field] = {
+        val fileLines = deleteFirstLine(cleanLines(lines)).toList
+        intoFields(fileLines)
     }
 
-    def castTo(value: String): TableDescription = {
-        val fileLines = deleteFirstLine(cleanLines(value.split("\n").toList))
-        new TableDescription(fileLines)
+    private def intoFields(lines: List[String]): List[Field] = {
+        lines.map(i => IntoFieldMapper.fromDescription(i))
     }
 }

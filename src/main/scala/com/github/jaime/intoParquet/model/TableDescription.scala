@@ -4,8 +4,20 @@
 
 package com.github.jaime.intoParquet.model
 
-class TableDescription(_fields: Seq[String]) {
+import com.github.jaime.intoParquet.mapping.IntoTableDescription
 
-    val fields: Seq[String] = _fields
+class TableDescription(_fields: List[Field]) {
 
+    val fields: List[Field] = _fields
+
+    override def equals(obj: Any): Boolean = {
+        obj match {
+            case f: TableDescription => f.fields.equals(this.fields)
+            case _                   => false
+        }
+    }
+
+    def this(lines: Seq[String]) = {
+        this(IntoTableDescription.mapFrom(lines.toList))
+    }
 }

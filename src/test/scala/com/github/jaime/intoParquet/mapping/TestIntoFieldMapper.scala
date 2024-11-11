@@ -5,6 +5,7 @@
 package com.github.jaime.intoParquet.mapping
 
 import com.github.jaime.intoParquet.model.Field
+import com.github.jaime.intoParquet.model.enumeration.StringDataType
 import org.scalatest.funsuite.AnyFunSuite
 
 class TestIntoFieldMapper extends AnyFunSuite {
@@ -23,7 +24,7 @@ class TestIntoFieldMapper extends AnyFunSuite {
 
     test("Should create a new field") {
         val sample = "field_name string"
-        val expected = new Field("field_name", "string")
+        val expected = new Field("field_name", StringDataType)
         assertResult(expected)(IntoFieldMapper.fromDescription(sample))
     }
 }

@@ -56,17 +56,17 @@ class TestMain extends SparkTestBuilder with BeforeAndAfterEach {
 
     test("Should fail if inputDir path is wrong") {
         val args = Array("-p", "imagine")
-        intercept[NoFileFoundException](Main.main(args))
+        assertThrows[NoFileFoundException](Main.main(args))
     }
 
     test("Should fail with fail-fast Mode") {
         val args = Array("--fail-fast", "-f", "badRecord", "-fb", "fail")
-        intercept[Exception](Main.main(args))
+        assertThrows[Exception](Main.main(args))
     }
 
     test("Should fail with fail-fast") {
         val args = Array("--fail-fast", "-f", "badRecord", "-m", "raw")
-        intercept[Exception](Main.main(args))
+        assertThrows[Exception](Main.main(args))
     }
 
     test("Should throw exception if args are wrong") {

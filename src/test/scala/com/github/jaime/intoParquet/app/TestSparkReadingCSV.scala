@@ -6,9 +6,9 @@ package com.github.jaime.intoParquet.app
 
 import com.github.jaime.intoParquet.common.Resources
 import com.github.jaime.intoParquet.common.SparkTestBuilder
-import com.github.jaime.intoParquet.model.enumeration
 import com.github.jaime.intoParquet.model.Field
-import com.github.jaime.intoParquet.model.FieldWrapper
+import com.github.jaime.intoParquet.model.TableDescription
+import com.github.jaime.intoParquet.model.enumeration
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types.IntegerType
@@ -96,8 +96,8 @@ class TestSparkReadingCSV extends SparkTestBuilder with GivenWhenThen {
     }
 
     test("Should apply a schema to an all string dataframe") {
-        val wrapper = new FieldWrapper(
-          Seq(
+        val wrapper = new TableDescription(
+          List(
             new Field("name", enumeration.StringDataType),
             new Field("id", enumeration.IntegerDataType)
           )

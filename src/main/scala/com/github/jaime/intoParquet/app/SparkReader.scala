@@ -6,17 +6,17 @@ package com.github.jaime.intoParquet.app
 
 import com.github.jaime.intoParquet.app.SparkBuilder.spark
 import com.github.jaime.intoParquet.behaviour.AppLogger
-import com.github.jaime.intoParquet.model.FieldWrapper
+import com.github.jaime.intoParquet.model.TableDescription
 import org.apache.spark.sql.DataFrame
 
 object SparkReader extends AppLogger {
 
-    def readApplySchema(filename: String, description: FieldWrapper): DataFrame = {
+    def readApplySchema(filename: String, description: TableDescription): DataFrame = {
         val raw = readRawCSV(filename)
         applySchema(raw, description)
     }
 
-    protected[app] def applySchema(df: DataFrame, description: FieldWrapper): DataFrame = {
+    protected[app] def applySchema(df: DataFrame, description: TableDescription): DataFrame = {
         logInfo(s"Apply schema to current data")
         description.fields.foldLeft(df) { (temp, field) =>
             temp.withColumn(field.fieldName, field.colExpression)
