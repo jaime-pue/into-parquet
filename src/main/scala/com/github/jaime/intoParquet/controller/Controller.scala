@@ -4,9 +4,11 @@
 
 package com.github.jaime.intoParquet.controller
 
+import com.github.jaime.intoParquet.app.SparkBuilder
 import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.github.jaime.intoParquet.behaviour.Executor
 import com.github.jaime.intoParquet.configuration.BasePaths
+import com.github.jaime.intoParquet.configuration.SparkConfiguration.configuration
 import com.github.jaime.intoParquet.mapping.IntoController
 import com.github.jaime.intoParquet.model.enumeration.CastMode
 import com.github.jaime.intoParquet.model.enumeration.FallBack
@@ -64,6 +66,21 @@ class Controller(
         if (failFast) {
             failFastMode
         } else { ignoreErrorMode }
+    }
+
+    final def buildSparkAndRun(): Unit = {
+        SparkBuilder.beforeAll(configuration)
+        execution match {
+            case Success(_) =>
+                logInfo("Job ended Ok!")
+                SparkBuilder.afterAll()
+            case Failure(exception) =>
+                logError(s"""Something went wrong
+                            |${exception.getMessage}
+                            |""".stripMargin)
+                throw exception
+        }
+
     }
 
     private def ignoreErrorMode: Try[Unit] = {

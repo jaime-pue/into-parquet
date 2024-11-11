@@ -22,7 +22,6 @@
 
 package com.github.jaime.intoParquet
 
-import com.github.jaime.intoParquet.app.SparkBuilder
 import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.github.jaime.intoParquet.controller.Controller
 import com.github.jaime.intoParquet.exception.WrongInputArgsException
@@ -30,36 +29,17 @@ import com.github.jaime.intoParquet.mapping.IntoController
 import com.github.jaime.intoParquet.utils.Parser.InputArgs
 import com.github.jaime.intoParquet.utils.Parser.parseSystemArgs
 
-import scala.util.Failure
-import scala.util.Success
-
 object Main extends AppLogger {
 
     def main(args: Array[String]): Unit = {
+        logDebug("Start new session")
         val inputArgs: InputArgs = {
             parseSystemArgs(args).getOrElse(throw new WrongInputArgsException)
         }
-
-        SparkBuilder.beforeAll()
-
+        logDebug("Input arguments seems Ok")
         val intoController: IntoController = new IntoController(inputArgs)
-        val controller: Controller = Controller(intoController)
-
-        launchConversion(controller)
-
-        SparkBuilder.afterAll()
-
-    }
-
-    private def launchConversion(controller: Controller): Unit = {
-        controller.execution match {
-            case Failure(exception) => {
-                logError(s"""Something went wrong
-                            |${exception.getMessage}
-                            |""".stripMargin)
-                throw exception
-            }
-            case Success(_) => logInfo("Job ended Ok!")
-        }
+        logDebug("Build new controller instance")
+        val controller: Controller         = Controller(intoController)
+        controller.buildSparkAndRun()
     }
 }
