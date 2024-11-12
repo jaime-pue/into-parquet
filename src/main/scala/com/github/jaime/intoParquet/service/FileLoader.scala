@@ -5,72 +5,48 @@
 package com.github.jaime.intoParquet.service
 
 import com.github.jaime.intoParquet.behaviour.AppLogger
-import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.exception.NoFileFoundException
 
 import java.nio.file.Files
 import java.nio.file.NoSuchFileException
 import java.nio.file.Path
 import java.nio.file.Paths
-import scala.collection.JavaConverters.asScalaIteratorConverter
 import scala.io.Source
-import scala.util.Failure
-import scala.util.Success
-import scala.util.Try
+import scala.jdk.CollectionConverters.IteratorHasAsScala
 
-class FileLoader(paths: BasePaths) extends AppLogger {
+object FileLoader extends AppLogger {
 
-    private val InputSchemaPath: String = paths.inputBasePath
-    private val InputRawPath: String    = paths.inputBasePath
-
-    override def toString: String = {
-        s"""> Input path: $InputRawPath
-           |""".stripMargin
-    }
-
-    def readFile(fileName: String): Option[List[String]] = {
-        readFromDataFolder(fileName) match {
-            case Failure(_) =>
-                logWarning(s"No configuration file for $fileName")
-                None
-            case Success(value) => Some(value)
-        }
-    }
-
-    private def readFromDataFolder(fileName: String): Try[List[String]] = {
-        val filePath = resolveFilePath(fileName)
+    def readFile(filepath: String, filename: String): Option[List[String]] = {
+        val filePath = resolveFilePath(filepath, filename)
         try {
             val file = Source.fromFile(filePath)
             file.bufferedReader().lines()
             val lines = file.getLines().toList
             file.close()
-            Success(lines)
+            Some(lines)
         } catch {
-            case _: Exception => Failure(new Exception())
+            case _: Exception =>
+                None
         }
     }
 
-    private def resolveFilePath(fileName: String): String = {
-        Paths.get(s"$InputSchemaPath$fileName").toAbsolutePath.toString
+    private def resolveFilePath(filepath: String, filename: String): String = {
+        Paths.get(s"$filepath$filename").toAbsolutePath.toString
     }
 
-    def readAllFilesFromRaw: Try[Array[String]] = {
-        val filePath = Paths.get(s"$InputRawPath").toAbsolutePath
-        logDebug(s"read from $InputRawPath")
+    def readAllFilesFromRaw(filepath: String): Array[String] = {
+        val filePath = Paths.get(s"$filepath").toAbsolutePath
+        logDebug(s"read from $filepath")
         try {
-            val csvFiles = Files
+            Files
                 .list(filePath)
                 .iterator()
                 .asScala
-                .filter(file => isCSV(file))
-                .map(_.getFileName.toString.replace(".csv", ""))
+                .filter(isCSV)
+                .map(grabFilename)
                 .toArray
-            csvFiles.length match {
-                case 0 => Failure(new NoFileFoundException(filePath.toString))
-                case _ => Success(csvFiles)
-            }
         } catch {
-            case _: NoSuchFileException => Failure(new NoFileFoundException(filePath.toString))
+            case _: NoSuchFileException => throw new NoFileFoundException(filePath.toString)
         }
     }
 
@@ -78,4 +54,12 @@ class FileLoader(paths: BasePaths) extends AppLogger {
         Files.isRegularFile(f) && f.getFileName.toString.endsWith(".csv")
     }
 
+    def filesExists(filepath: String, files: Array[String]): Array[String] = {
+        val allFiles = readAllFilesFromRaw(filepath)
+        allFiles.filter(f => files.contains(f))
+    }
+
+    private def grabFilename(file: Path): String = {
+        file.getFileName.toString.replace(".csv", "")
+    }
 }

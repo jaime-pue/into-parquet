@@ -6,6 +6,7 @@ package com.github.jaime.intoParquet
 
 import com.github.jaime.intoParquet.common.{Resources, SparkTestBuilder}
 import com.github.jaime.intoParquet.exception.NoFileFoundException
+import com.github.jaime.intoParquet.exception.NoSchemaFoundException
 import com.github.jaime.intoParquet.exception.WrongInputArgsException
 import org.scalatest.BeforeAndAfterEach
 
@@ -54,19 +55,27 @@ class TestMain extends SparkTestBuilder with BeforeAndAfterEach {
         runMain(args)
     }
 
-    test("Should fail if inputDir path is wrong") {
+    test("Should not fail if inputDir path is wrong") {
         val args = Array("-p", "imagine")
-        assertThrows[NoFileFoundException](Main.main(args))
+        runMain(args)
     }
 
-    test("Should fail with fail-fast Mode") {
-        val args = Array("--fail-fast", "-f", "badRecord", "-fb", "fail")
-        assertThrows[Exception](Main.main(args))
+    test("Should fail with fail-fast Mode and trying to apply to an unknown file") {
+        val args = Array(
+          "--fail-fast",
+          "-f",
+          "timestampConversion",
+          "-fb",
+          "fail",
+          "-p",
+          Resources.InputTestFolder
+        )
+        assertThrows[NoSchemaFoundException](Main.main(args))
     }
 
-    test("Should fail with fail-fast") {
+    test("Should not fail if can't file the file") {
         val args = Array("--fail-fast", "-f", "badRecord", "-m", "raw")
-        assertThrows[Exception](Main.main(args))
+        runMain(args)
     }
 
     test("Should throw exception if args are wrong") {

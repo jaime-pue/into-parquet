@@ -20,4 +20,10 @@ object Resources {
         val directory = new Directory(new File(path.outputBasePath))
         directory.deleteRecursively()
     }
+
+    val goodFile: String      = "exampleTable"
+    val onlyCSV: String       = "timestampConversion"
+    val wrongTypeFile: String = "wrongType"
+
+    val AllFiles: Array[String] = Array(wrongTypeFile, goodFile, onlyCSV)
 }

@@ -6,11 +6,10 @@ package com.github.jaime.intoParquet.model.execution
 
 import com.github.jaime.intoParquet.behaviour.Executor
 import com.github.jaime.intoParquet.exception.NoSchemaFoundException
-import com.github.jaime.intoParquet.model.PairCSVAndTableDescription
 
-class Fail(_element: PairCSVAndTableDescription) extends Executor {
+class Fail(_file: String) extends Executor {
 
-    override protected val element: PairCSVAndTableDescription = _element
+    override protected val file: String = _file
 
-    override protected def execution(): Unit = throw new NoSchemaFoundException(element)
+    override def execution(): Unit = throw new NoSchemaFoundException(file)
 }

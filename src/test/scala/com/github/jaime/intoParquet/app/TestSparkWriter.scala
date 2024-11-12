@@ -23,5 +23,4 @@ class TestSparkWriter extends AnyFunSuite {
     test("Should not throw exception if zero rows") {
         assertResult(0)(SparkWriter.calculateNumberOfPartitions(0L))
     }
-
 }

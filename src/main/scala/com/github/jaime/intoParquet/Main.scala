@@ -23,9 +23,8 @@
 package com.github.jaime.intoParquet
 
 import com.github.jaime.intoParquet.behaviour.AppLogger
-import com.github.jaime.intoParquet.controller.Controller
 import com.github.jaime.intoParquet.exception.WrongInputArgsException
-import com.github.jaime.intoParquet.mapping.IntoController
+import com.github.jaime.intoParquet.router.Router
 import com.github.jaime.intoParquet.utils.Parser.InputArgs
 import com.github.jaime.intoParquet.utils.Parser.parseSystemArgs
 
@@ -37,9 +36,7 @@ object Main extends AppLogger {
             parseSystemArgs(args).getOrElse(throw new WrongInputArgsException)
         }
         logDebug("Input arguments seems Ok")
-        val intoController: IntoController = new IntoController(inputArgs)
-        logDebug("Build new controller instance")
-        val controller: Controller         = Controller(intoController)
-        controller.buildSparkAndRun()
+        val router = new Router(inputArgs)
+        router.route()
     }
 }

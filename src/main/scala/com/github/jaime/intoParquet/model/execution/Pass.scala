@@ -4,12 +4,12 @@
 
 package com.github.jaime.intoParquet.model.execution
 
-import com.github.jaime.intoParquet.behaviour.{AppLogger, Executor}
-import com.github.jaime.intoParquet.model.PairCSVAndTableDescription
+import com.github.jaime.intoParquet.behaviour.AppLogger
+import com.github.jaime.intoParquet.behaviour.Executor
 
-class Pass(_element: PairCSVAndTableDescription) extends Executor with AppLogger {
+class Pass(_file: String) extends Executor with AppLogger {
 
-    override protected val element: PairCSVAndTableDescription = _element
+    override protected val file: String = _file
 
-    override protected def execution(): Unit = logWarning(s"No schema found for ${element.id}")
+    override def execution(): Unit = logWarning(s"No schema found for ${file}")
 }

@@ -7,7 +7,6 @@ package com.github.jaime.intoParquet.model.execution
 import com.github.jaime.intoParquet.common.Resources
 import com.github.jaime.intoParquet.common.SparkTestBuilder
 import com.github.jaime.intoParquet.configuration.BasePaths
-import com.github.jaime.intoParquet.model.PairCSVAndTableDescription
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types.IntegerType
 import org.apache.spark.sql.types.StringType
@@ -20,8 +19,7 @@ class TestInferMode extends SparkTestBuilder {
     private val basePaths: BasePaths = new BasePaths(Resources.ResourceFolder)
 
     private def newInfer(file: String): Infer = {
-        val parsedObject = new PairCSVAndTableDescription(file, None)
-        val infer        = new Infer(parsedObject, basePaths)
+        val infer        = new Infer(file, basePaths)
         infer
     }
 

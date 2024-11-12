@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.jaime-alv</groupId>
     <artifactId>into-parquet</artifactId>
-    <version>0.0.9</version>
+    <version>0.0.10</version>
     <packaging>jar</packaging>
-    <name>"Cast csv files to parquet format"</name>
+    <name>"Cast csv files to parquet format and apply a used defined schema"</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

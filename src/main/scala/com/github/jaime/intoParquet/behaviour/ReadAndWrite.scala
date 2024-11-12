@@ -12,11 +12,11 @@ trait ReadAndWrite {
 
     def readFrom: DataFrame
 
-    private def writeResult(): Unit = {
+    protected def writeResult(): Unit = {
         writeTo(readFrom, self.absoluteOutputPath)
     }
 
-    final override def execution(): Unit = {
+    override def execution(): Unit = {
         writeResult()
     }
 }

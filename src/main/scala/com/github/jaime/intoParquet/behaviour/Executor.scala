@@ -4,17 +4,15 @@
 
 package com.github.jaime.intoParquet.behaviour
 
-import com.github.jaime.intoParquet.model.PairCSVAndTableDescription
-
 import scala.util.Try
 
 trait Executor {
 
-    protected val element: PairCSVAndTableDescription
+    protected val file: String
 
     final def cast: Try[Unit] = {
         Try(execution())
     }
 
-    protected def execution(): Unit
+    def execution(): Unit
 }

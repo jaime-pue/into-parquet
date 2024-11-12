@@ -8,10 +8,6 @@ class BasePaths(
     inputDir: Option[String] = None,
     outputDir: Option[String] = None
 ) {
-    private val InputRawPath: String    = s"$inputDir/input/raw/"
-    private val InputSchemaPath: String = s"$inputDir/input/schema/"
-    private val OutputBasePath: String  = s"$inputDir/output/"
-
     private val DefaultInput: String  = "./data/input/"
     private val DefaultOutput: String = "./data/output/"
 
