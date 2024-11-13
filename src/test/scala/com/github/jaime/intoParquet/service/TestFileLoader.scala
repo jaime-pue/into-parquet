@@ -14,21 +14,21 @@ import com.github.jaime.intoParquet.service.FileLoader.readFile
 
 class TestFileLoader extends AnyFunSuite {
 
-    private val inputPath = Resources.path.inputBasePath
+    private val path = Resources.path
 
-    test("Should read from data/input/schema") {
-        val file = readFile(inputPath, "exampleTable")
+    test("Should read from data/input/exampleTable") {
+        val file = readFile(path.absoluteInputTableDescriptionPath("exampleTable"))
         assume(file.isDefined)
         assertResult(List("name type comment", "name string", "id int"))(file.get)
     }
 
     test("Should return None if no file found") {
-        val file = readFile(inputPath, "imagine")
+        val file = readFile(path.absoluteInputTableDescriptionPath("imagine"))
         assert(file.isEmpty)
     }
 
     test("Should return a list of files from raw") {
-        val f = readAllFilesFromRaw(inputPath)
+        val f = readAllFilesFromRaw(path.inputBasePath)
         assert(f.length > 0)
     }
 
@@ -44,12 +44,12 @@ class TestFileLoader extends AnyFunSuite {
 
     test("Should return all existing csv files") {
         val files   = Array("exampleTable", "random")
-        val outcome = filesExists(inputPath, files)
+        val outcome = filesExists(path.inputBasePath, files)
         assertResult(Array("exampleTable"))(outcome)
     }
 
     test("Should return an empty array if no file coincidence") {
         val files = Array("E", "A")
-        assertResult(Array[String]())(filesExists(inputPath, files))
+        assertResult(Array[String]())(filesExists(path.inputBasePath, files))
     }
 }

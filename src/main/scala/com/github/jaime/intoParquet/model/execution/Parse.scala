@@ -7,7 +7,6 @@ package com.github.jaime.intoParquet.model.execution
 import com.github.jaime.intoParquet.app.SparkReader.readApplySchema
 import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.github.jaime.intoParquet.behaviour.Executor
-import com.github.jaime.intoParquet.behaviour.IOOperation
 import com.github.jaime.intoParquet.behaviour.ReadAndWrite
 import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.exception.EnrichNotImplementedTypeException
@@ -23,7 +22,6 @@ import org.apache.spark.sql.DataFrame
 
 class Parse(_file: String, _paths: BasePaths, fallBack: FallBack)
     extends Executor
-    with IOOperation
     with ReadAndWrite
     with AppLogger {
 
@@ -33,7 +31,7 @@ class Parse(_file: String, _paths: BasePaths, fallBack: FallBack)
 
     override def readFrom: DataFrame = {
         logDebug("Load table description")
-        readApplySchema(absoluteInputPath, tableDescription.get)
+        readApplySchema(absoluteInputCSVPath, tableDescription.get)
     }
 
     override def execution(): Unit = {
@@ -45,7 +43,7 @@ class Parse(_file: String, _paths: BasePaths, fallBack: FallBack)
     }
 
     private def loadTableDescription: Option[TableDescription] = {
-        readFile(paths.inputBasePath, file) match {
+        readFile(paths.absoluteInputTableDescriptionPath(file)) match {
             case Some(value) => Some(intoTableDescription(value))
             case None =>
                 logDebug(s"No configuration file for $file")

@@ -16,10 +16,9 @@ import scala.jdk.CollectionConverters.IteratorHasAsScala
 
 object FileLoader extends AppLogger {
 
-    def readFile(filepath: String, filename: String): Option[List[String]] = {
-        val filePath = resolveFilePath(filepath, filename)
+    def readFile(filepath: String): Option[List[String]] = {
         try {
-            val file = Source.fromFile(filePath)
+            val file = Source.fromFile(filepath)
             file.bufferedReader().lines()
             val lines = file.getLines().toList
             file.close()
@@ -28,10 +27,6 @@ object FileLoader extends AppLogger {
             case _: Exception =>
                 None
         }
-    }
-
-    private def resolveFilePath(filepath: String, filename: String): String = {
-        Paths.get(s"$filepath$filename").toAbsolutePath.toString
     }
 
     def readAllFilesFromRaw(filepath: String): Array[String] = {

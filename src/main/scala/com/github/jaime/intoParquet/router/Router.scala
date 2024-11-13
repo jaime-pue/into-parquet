@@ -16,7 +16,7 @@ class Router(inputArgs: InputArgs) extends AppLogger {
     final def route(): Unit = {
         intoFileController.files match {
             case Some(csvFiles) => intoExecutionController(csvFiles).buildSparkAndRun()
-            case None        => logInfo(s"No file found in ${basePaths.inputBasePath}. Skip")
+            case None           => logInfo(s"No file found in ${basePaths.inputBasePath}. Skip")
         }
     }
 
@@ -30,8 +30,8 @@ class Router(inputArgs: InputArgs) extends AppLogger {
 
     private def intoCastMethod: CastMode = {
         inputArgs.fallBack match {
-            case Some(value) => new ParseSchema(value)
-            case None        => inputArgs.castMethod
+            case Some(fallBackValue) => new ParseSchema(fallBackValue)
+            case None                => inputArgs.castMethod
         }
     }
 

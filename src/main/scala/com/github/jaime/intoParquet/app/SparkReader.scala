@@ -24,7 +24,6 @@ object SparkReader extends AppLogger {
     }
 
     def readInferSchema(filename: String): DataFrame = {
-        logInfo(s"Read data & infer schema from $filename")
         spark.read
             .option("mode", "DROPMALFORMED")
             .option("columnNameOfCorruptRecord", "ERROR")
@@ -37,7 +36,6 @@ object SparkReader extends AppLogger {
     }
 
     def readRawCSV(filename: String): DataFrame = {
-        logInfo(s"Read raw data from $filename")
         spark.read
             .option("header", true)
             .option("inferSchema", false)

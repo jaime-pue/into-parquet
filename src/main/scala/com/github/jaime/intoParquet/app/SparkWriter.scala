@@ -13,7 +13,7 @@ object SparkWriter extends AppLogger {
     private val LinesForSplitting: Int = 50000
 
     def writeTo(df: DataFrame, path: String): Unit = {
-        logInfo(s"Writing dataframe to ${path}")
+        logInfo("Write parquet file")
         val rows = df.cache().count()
         logDebug(s"Row count: ${rows}")
         val partitions = calculateNumberOfPartitions(rows)
