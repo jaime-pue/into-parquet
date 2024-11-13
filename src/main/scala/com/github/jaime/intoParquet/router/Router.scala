@@ -36,6 +36,7 @@ class Router(inputArgs: InputArgs) extends AppLogger {
     }
 
     private def fileController: FileController = {
+        logDebug("Create new File Controller class")
         new FileController(
           basePaths = basePaths,
           recursiveRead = recursiveRead,
@@ -44,6 +45,7 @@ class Router(inputArgs: InputArgs) extends AppLogger {
     }
 
     private def into(files: Array[String]): ExecutionController = {
+        logDebug("Create new Execution Controller class")
         new ExecutionController(
           files = files,
           _basePaths = basePaths,

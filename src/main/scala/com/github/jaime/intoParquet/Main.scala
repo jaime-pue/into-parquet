@@ -38,5 +38,6 @@ object Main extends AppLogger {
         logDebug("Input arguments seems Ok")
         val router = new Router(inputArgs)
         router.route()
+        logDebug("Close application")
     }
 }
