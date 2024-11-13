@@ -11,5 +11,5 @@ class Pass(_file: String) extends Executor with AppLogger {
 
     override protected val file: String = _file
 
-    override def execution(): Unit = logWarning(s"No schema found for ${file}")
+    override def execution(): Unit = logWarning(s"No table description found for ${file}")
 }
