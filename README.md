@@ -12,11 +12,12 @@ This utility is particularly useful for users who need to work with local datase
 The conversion process preserves column names, and the structure of the original CSV files while transforming them
 into Parquet format with new data types defined by the user.
 
-By default, when the script encounters an exception, it will attempt to skip to the next CSV file and continue the transformation process.
+By default, when the script encounters an exception, it will attempt to skip to the next CSV file and continue the
+transformation process.
 This behaviour ensures that the script can process multiple files in one go even if one file contains issues.
 A log message will be rendered to the user, so it can take future actions with said file.
 
-However, if the `fail-fast` mode is enabled, the script will immediately stop its execution upon encountering any error, 
+However, if the `fail-fast` mode is enabled, the script will immediately stop its execution upon encountering any error,
 rather than proceeding with the next file. A full traceback will be displayed back to the user.
 
 ## Requirements
@@ -61,7 +62,8 @@ The data types should correspond to standard SQL types, such as `STRING`, `INT`,
 Unsupported data types will trigger an exception, which will specify the file containing the unsupported type.
 
 If the "fail-fast" mode is enabled, the application will immediately terminate upon encountering an unsupported type,
-and throw the correspondent exception \[NotImplementedTypeException\].
+and throw the correspondent
+exception [[NotImplementedTypeException](src/main/scala/com/github/jaime/intoParquet/exception/AppException.scala)].
 On the contrary, if "fail-fast" is not enabled, the script will skip to the next CSV file and attempt to process it,
 continuing the transformation process for the remaining files.
 
