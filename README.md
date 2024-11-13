@@ -1,6 +1,6 @@
 # into-parquet
 
-This command-line tool is designed to convert CSV files into the efficient Parquet format.
+This command-line tool is designed to convert CSV files into the Parquet format.
 It automatically scans the specified input directory for all CSV files, processes them, and saves the converted
 Parquet files in a target location.
 
@@ -8,9 +8,9 @@ By default, will read all files recursively from `./data/input/`
 
 It will overwrite previous Parquet files.
 
-This utility is particularly useful for users who need to efficiently store and query large datasets.
+This utility is particularly useful for users who need to work with local datasets.
 The conversion process preserves column names, and the structure of the original CSV files while transforming them
-into Parquet format with new data types defined by the user.
+into Parquet format with new data types defined by the user. Parquet format 
 
 ## Requirements
 
@@ -192,3 +192,60 @@ Fail with an exception if no schema file found, if fail-fast mode set, will forc
 
 `--fallback fail`
 
+## Debug Mode
+
+### Enabling Debug Mode in the Application
+
+To enable debug mode for the application, you will need to modify a specific parameter in the `log4j2.xml` configuration
+file. This file is located in the `src/main/resources` directory of your project.
+
+1. Locate the `log4j2.xml` file:
+
+Navigate to the src/main/resources folder in your project directory and open the `log4j2.xml` file.
+
+2. Modify the Log Level:
+
+In the `log4j2.xml` file, you will find a <Logger> element that controls the logging level. To enable debug logging,
+change the level attribute to debug. It should look something like this:
+
+```xml
+
+<Loggers>
+    ...
+    <Logger name="com.github.jaime.intoParquet" level="debug" additivity="false">
+        <AppenderRef ref="app"/>
+    </Logger>
+</Loggers>
+```
+
+This will configure the application to log detailed debug information, which can help with troubleshooting and
+monitoring.
+
+3. Save and Restart:
+
+After saving the changes to the `log4j2.xml` file, recompile the application and start once again.
+
+### Customising Log Rendering
+
+Additionally, you can customise how the logs are rendered to suit your needs. The log4j2.xml file allows you to modify
+the layout and format of log messages. For example, you can change the log format to include timestamps, log levels, or
+thread information, depending on what you need to track.
+
+Here is an example of how to customise the log format:
+
+```xml
+
+<Appenders>
+    ...
+    <Console name="app" target="System.out">
+        <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] [%-5p] %c{1} - %m%n"/>
+    </Console>
+</Appenders>
+```
+
+This will render the log output in a more readable format, including the date, thread name, log level, logger name, and
+the actual log message.
+
+Feel free to explore further customisation options based on your logging requirements. You can refer to [the official
+Log4j2 documentation](https://logging.apache.org/log4j/2.x/manual/layouts.html) for more detailed configuration
+possibilities.
