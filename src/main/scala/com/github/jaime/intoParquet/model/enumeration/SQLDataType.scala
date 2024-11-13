@@ -58,3 +58,17 @@ object ShortDataType extends SQLDataType {
     override val value: DataType = types.ShortType
 
 }
+
+object DateDataType extends SQLDataType {
+
+    override val value: DataType = types.DateType
+}
+
+object FloatDataType extends SQLDataType {
+
+    override val value: DataType = types.FloatType
+}
+
+object ByteDataType extends SQLDataType {
+    override val value: DataType = types.ByteType
+}

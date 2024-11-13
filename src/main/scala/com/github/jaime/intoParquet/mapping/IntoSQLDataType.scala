@@ -5,15 +5,7 @@
 package com.github.jaime.intoParquet.mapping
 
 import com.github.jaime.intoParquet.exception.NotImplementedTypeException
-import com.github.jaime.intoParquet.model.enumeration.BooleanDataType
-import com.github.jaime.intoParquet.model.enumeration.DecimalDataType
-import com.github.jaime.intoParquet.model.enumeration.DoubleDataType
-import com.github.jaime.intoParquet.model.enumeration.IntegerDataType
-import com.github.jaime.intoParquet.model.enumeration.LongDataType
-import com.github.jaime.intoParquet.model.enumeration.SQLDataType
-import com.github.jaime.intoParquet.model.enumeration.ShortDataType
-import com.github.jaime.intoParquet.model.enumeration.StringDataType
-import com.github.jaime.intoParquet.model.enumeration.TimeStampDataType
+import com.github.jaime.intoParquet.model.enumeration._
 
 object IntoSQLDataType {
 
@@ -47,14 +39,25 @@ object IntoSQLDataType {
 
     private def resolveCaseStatement(cleanString: String): SQLDataType = {
         cleanString match {
-            case "string"    => StringDataType
-            case "int"       => IntegerDataType
-            case "boolean"   => BooleanDataType
+            case "string"  => StringDataType
+            case "boolean" => BooleanDataType
+            // date types
             case "timestamp" => TimeStampDataType
-            case "double"    => DoubleDataType
-            case "bigint"    => LongDataType
-            case "tinyint"   => ShortDataType
-            case e           => throw new NotImplementedTypeException(e)
+            case "date"      => DateDataType
+            // numeric types
+            case "byte"     => ByteDataType
+            case "tinyint"  => ByteDataType
+            case "smallint" => ShortDataType
+            case "short"    => ShortDataType
+            case "int"      => IntegerDataType
+            case "integer"  => IntegerDataType
+            case "bigint"   => LongDataType
+            case "long"     => LongDataType
+            // decimal types
+            case "double" => DoubleDataType
+            case "float"  => FloatDataType
+            case "real"   => FloatDataType
+            case e        => throw new NotImplementedTypeException(e)
         }
     }
 }

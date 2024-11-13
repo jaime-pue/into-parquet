@@ -10,7 +10,14 @@ It will overwrite previous Parquet files.
 
 This utility is particularly useful for users who need to work with local datasets.
 The conversion process preserves column names, and the structure of the original CSV files while transforming them
-into Parquet format with new data types defined by the user. Parquet format 
+into Parquet format with new data types defined by the user.
+
+By default, when the script encounters an exception, it will attempt to skip to the next CSV file and continue the transformation process.
+This behaviour ensures that the script can process multiple files in one go even if one file contains issues.
+A log message will be rendered to the user, so it can take future actions with said file.
+
+However, if the `fail-fast` mode is enabled, the script will immediately stop its execution upon encountering any error, 
+rather than proceeding with the next file. A full traceback will be displayed back to the user.
 
 ## Requirements
 
@@ -43,7 +50,37 @@ java -jar target/into-parquet-cli.jar --optional-flags
 ```
 
 Ensure that all your CSV files are placed in the `/data/input` folder, which should be in the same directory as this JAR
-file. The tool will automatically read all CSV files from this folder and convert them into Parquet format.
+file.
+The tool will automatically read all CSV files from this folder and convert them into Parquet format.
+
+## Supported data types
+
+This script only supports flat, non-nested data structures.
+Please ensure that the data provided is not hierarchical or nested in any way, as it cannot be processed.
+The data types should correspond to standard SQL types, such as `STRING`, `INT`, `DATE`, and so on.
+Unsupported data types will trigger an exception, which will specify the file containing the unsupported type.
+
+If the "fail-fast" mode is enabled, the application will immediately terminate upon encountering an unsupported type,
+and throw the correspondent exception \[NotImplementedTypeException\].
+On the contrary, if "fail-fast" is not enabled, the script will skip to the next CSV file and attempt to process it,
+continuing the transformation process for the remaining files.
+
+### SQL Supported data types
+
+The next table shows the currently supported data types:
+
+| SQL name        |
+|-----------------|
+| string          |
+| boolean         |
+| timestamp       |
+| date            |
+| byte, tinyint   |
+| smallint, short |
+| int, integer    |
+| bigint, long    |
+| double          |
+| float, real     |
 
 ## Folder structure
 
@@ -70,9 +107,10 @@ Csv files with header
 ##### Note on `Null` values
 
 By default, the into-parquet script handles null values in the input CSV files. Any missing or empty values in the CSV
-will be interpreted as nulls during the conversion process. To ensure proper handling, it is important that any null
-values in the CSV are represented as NULL in uppercase. This ensures consistency and allows the script to correctly
-recognise and convert these null values into the Parquet format.
+will be interpreted as nulls during the conversion process.
+To ensure proper handling, it is important that any null values in the CSV are represented as NULL in uppercase.
+This ensures consistency and allows the script to correctly recognise and convert these null values into the Parquet
+format.
 
 #### Table description
 
@@ -205,8 +243,8 @@ Navigate to the src/main/resources folder in your project directory and open the
 
 2. Modify the Log Level:
 
-In the `log4j2.xml` file, you will find a <Logger> element that controls the logging level. To enable debug logging,
-change the level attribute to debug. It should look something like this:
+In the `log4j2.xml` file, you will find a <Logger> element that controls the logging level.
+To enable debug logging, change the level attribute to debug. It should look something like this:
 
 ```xml
 
@@ -227,9 +265,10 @@ After saving the changes to the `log4j2.xml` file, recompile the application and
 
 ### Customising Log Rendering
 
-Additionally, you can customise how the logs are rendered to suit your needs. The log4j2.xml file allows you to modify
-the layout and format of log messages. For example, you can change the log format to include timestamps, log levels, or
-thread information, depending on what you need to track.
+Additionally, you can customise how the logs are rendered to suit your needs.
+The log4j2.xml file allows you to modify the layout and format of log messages.
+For example, you can change the log format to include timestamps, log levels, or thread information, depending on what
+you need to track.
 
 Here is an example of how to customise the log format:
 
@@ -246,6 +285,7 @@ Here is an example of how to customise the log format:
 This will render the log output in a more readable format, including the date, thread name, log level, logger name, and
 the actual log message.
 
-Feel free to explore further customisation options based on your logging requirements. You can refer to [the official
-Log4j2 documentation](https://logging.apache.org/log4j/2.x/manual/layouts.html) for more detailed configuration
+Feel free to explore further customisation options based on your logging requirements.
+You can refer to [the official Log4j2 documentation](https://logging.apache.org/log4j/2.x/manual/layouts.html) for more
+detailed configuration
 possibilities.
