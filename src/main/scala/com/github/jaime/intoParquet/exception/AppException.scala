@@ -24,11 +24,6 @@ class NoFileFoundException(directory: String) extends AppException {
     override val message: String = s"No csv files found in: <$directory>"
 }
 
-class NoCSVException extends AppException {
-
-    override val message: String = "At least one file is needed"
-}
-
 class NoSchemaFoundException(e: String) extends AppException {
 
     override val message: String = s"No schema found for ${e}"

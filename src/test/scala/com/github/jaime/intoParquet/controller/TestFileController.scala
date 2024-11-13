@@ -7,8 +7,6 @@ package com.github.jaime.intoParquet.controller
 import com.github.jaime.intoParquet.common.Resources
 import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.controller.FileController.splitFiles
-import com.github.jaime.intoParquet.exception.NoCSVException
-import com.github.jaime.intoParquet.exception.NoFileFoundException
 import org.scalatest.funsuite.AnyFunSuite
 
 class TestFileController extends AnyFunSuite {

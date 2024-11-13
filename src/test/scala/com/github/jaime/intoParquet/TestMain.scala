@@ -4,8 +4,8 @@
 
 package com.github.jaime.intoParquet
 
-import com.github.jaime.intoParquet.common.{Resources, SparkTestBuilder}
-import com.github.jaime.intoParquet.exception.NoFileFoundException
+import com.github.jaime.intoParquet.common.Resources
+import com.github.jaime.intoParquet.common.SparkTestBuilder
 import com.github.jaime.intoParquet.exception.NoSchemaFoundException
 import com.github.jaime.intoParquet.exception.WrongInputArgsException
 import org.scalatest.BeforeAndAfterEach

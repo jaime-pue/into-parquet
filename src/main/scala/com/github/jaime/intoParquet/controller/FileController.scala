@@ -17,19 +17,25 @@ import scala.util.Try
 class FileController(basePaths: BasePaths, recursiveRead: Boolean, csvFiles: Option[String])
     extends AppLogger {
 
-    private val inputBasePath: String     = basePaths.inputBasePath
-    private val emptyArray: Array[String] = Array()
+    private val inputBasePath: String        = basePaths.inputBasePath
+    private val emptyArray: Array[String]    = Array()
+    private lazy val endFiles: Array[String] = unpackPossibleFiles
 
     def files: Option[Array[String]] = {
-        val csvFiles = Try(loadFiles) match {
+        if (endFiles.isEmpty) {
+            None
+        } else {
+            logDebug(s"Files for processing: [${endFiles.mkString("; ")}]")
+            Some(endFiles)
+        }
+    }
+
+    private def unpackPossibleFiles: Array[String] = {
+        Try(loadFiles) match {
             case Success(value) => value
             case Failure(exception) =>
                 logError(exception.getMessage)
-                return None
-        }
-        csvFiles.length match {
-            case 0 => None
-            case _ => Some(csvFiles)
+                emptyArray
         }
     }
 
