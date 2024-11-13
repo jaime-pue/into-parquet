@@ -46,12 +46,14 @@ class ExecutionController(
     }
 
     protected[controller] def execution: Try[Unit] = {
+        logDebug(s"Apply cast mode ${_castMode.toString}")
         if (failFast) {
             failFastMode
         } else { ignoreErrorMode }
     }
 
     private def ignoreErrorMode: Try[Unit] = {
+        logDebug("Skip errors if any")
         Success(this.files.foreach(e => {
             castElement(e).cast match {
                 case Failure(exception) => logError(exception.getMessage)

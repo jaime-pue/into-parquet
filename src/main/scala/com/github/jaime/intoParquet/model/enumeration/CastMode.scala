@@ -17,4 +17,6 @@ class ParseSchema(val fallBack: Option[FallBack] = Some(FallBackNone)) extends C
     def this(fallBack: FallBack) = {
         this(Some(fallBack))
     }
+
+    override def toString: String = s"${super.toString} with fallback: ${fallBack.get.toString}"
 }
