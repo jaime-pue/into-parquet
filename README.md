@@ -87,8 +87,8 @@ The next table shows the currently supported data types:
 
 #### Note on Decimal type
 
-The decimal type requires both the precission and the scale magnitudes.
-Scale magnitude can't be higher than precission magnitude.
+The decimal type requires both the precision and the scale magnitudes.
+Scale magnitude can't be higher than precision magnitude.
 
 Examples: `Decimal(38,2)`, `decimal(10, 4)` 
 
