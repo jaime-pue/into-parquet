@@ -29,7 +29,16 @@ object IntoSQLDataType {
     }
 
     protected[mapping] def sanitizeString(value: String): String = {
-        value.trim().toLowerCase().replaceAll(PunctuationSigns, "")
+        val raw = value.trim().toLowerCase()
+        if (hasPunctuationSign(raw)) {
+            raw.dropRight(1)
+        } else {
+            raw
+        }
+    }
+
+    private def hasPunctuationSign(stringValue: String): Boolean = {
+        PunctuationSigns.contains(stringValue.reverse.head)
     }
 
     private def isDecimal(value: String): Boolean = {

@@ -5,6 +5,7 @@
 package com.github.jaime.intoParquet.mapping
 
 import com.github.jaime.intoParquet.exception.NotImplementedTypeException
+import com.github.jaime.intoParquet.mapping.IntoSQLDataType.sanitizeString
 import com.github.jaime.intoParquet.model.enumeration.DecimalDataType
 import com.github.jaime.intoParquet.model.enumeration.IntegerDataType
 import com.github.jaime.intoParquet.model.enumeration.StringDataType
@@ -63,6 +64,18 @@ class TestIntoSQLDataType extends AnyFunSuite{
 
     test("Should clear punctuation signs") {
         assertResult(StringDataType)(IntoSQLDataType.mapFrom("string;"))
+    }
+
+    test("Should return the same string") {
+        assertResult("string")(sanitizeString("string,"))
+    }
+
+    test("Should return decimal as it was") {
+        assertResult("decimal(38,2)")(sanitizeString("Decimal(38,2):"))
+    }
+
+    test("Should work with decimal type") {
+        assertResult("decimal(38,2)")(sanitizeString("Decimal(38,2)"))
     }
 
 }
