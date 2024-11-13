@@ -6,6 +6,8 @@ package com.github.jaime.intoParquet.mapping
 
 import com.github.jaime.intoParquet.exception.NotImplementedTypeException
 import com.github.jaime.intoParquet.model.enumeration.DecimalDataType
+import com.github.jaime.intoParquet.model.enumeration.IntegerDataType
+import com.github.jaime.intoParquet.model.enumeration.StringDataType
 import org.apache.spark.sql.types
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -55,5 +57,12 @@ class TestIntoSQLDataType extends AnyFunSuite{
         assertResult("int")(IntoSQLDataType.sanitizeString(" Int"))
     }
 
+    test("Should clear commas") {
+        assertResult(IntegerDataType)(IntoSQLDataType.mapFrom("int,"))
+    }
+
+    test("Should clear punctuation signs") {
+        assertResult(StringDataType)(IntoSQLDataType.mapFrom("string;"))
+    }
 
 }

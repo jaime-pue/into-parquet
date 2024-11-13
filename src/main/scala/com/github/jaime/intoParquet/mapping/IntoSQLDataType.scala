@@ -17,6 +17,8 @@ import com.github.jaime.intoParquet.model.enumeration.TimeStampDataType
 
 object IntoSQLDataType {
 
+    private val PunctuationSigns = "[,;.:]"
+
     def mapFrom(value: String): SQLDataType = {
         val sanitizedString = sanitizeString(value)
         if (isDecimal(sanitizedString)) {
@@ -27,7 +29,7 @@ object IntoSQLDataType {
     }
 
     protected[mapping] def sanitizeString(value: String): String = {
-        value.trim().toLowerCase()
+        value.trim().toLowerCase().replaceAll(PunctuationSigns, "")
     }
 
     private def isDecimal(value: String): Boolean = {
