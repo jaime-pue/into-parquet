@@ -14,8 +14,8 @@ import com.github.jaime.intoParquet.utils.Parser.InputArgs
 
 class Router(inputArgs: InputArgs) extends AppLogger {
     final def route(): Unit = {
-        fileController.files match {
-            case Some(value) => into(value).buildSparkAndRun()
+        intoFileController.files match {
+            case Some(csvFiles) => intoExecutionController(csvFiles).buildSparkAndRun()
             case None        => logInfo(s"No file found in ${basePaths.inputBasePath}. Skip")
         }
     }
@@ -35,7 +35,7 @@ class Router(inputArgs: InputArgs) extends AppLogger {
         }
     }
 
-    private def fileController: FileController = {
+    private def intoFileController: FileController = {
         logDebug("Create new File Controller class")
         new FileController(
           basePaths = basePaths,
@@ -44,12 +44,12 @@ class Router(inputArgs: InputArgs) extends AppLogger {
         )
     }
 
-    private def into(files: Array[String]): ExecutionController = {
+    private def intoExecutionController(files: Array[String]): ExecutionController = {
         logDebug("Create new Execution Controller class")
         new ExecutionController(
-          files = files,
-          _basePaths = basePaths,
-          _castMode = intoCastMethod,
+          csvFiles = files,
+          basePaths = basePaths,
+          castMode = intoCastMethod,
           failFast = failFast
         )
     }

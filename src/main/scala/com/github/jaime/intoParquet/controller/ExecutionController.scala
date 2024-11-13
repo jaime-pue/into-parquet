@@ -22,13 +22,11 @@ import scala.util.Success
 import scala.util.Try
 
 class ExecutionController(
-    files: Array[String],
-    _basePaths: BasePaths,
-    _castMode: CastMode,
+    csvFiles: Array[String],
+    basePaths: BasePaths,
+    castMode: CastMode,
     failFast: Boolean
 ) extends AppLogger {
-
-    private val castMode: CastMode = _castMode
 
     final def buildSparkAndRun(): Unit = {
         SparkBuilder.beforeAll(configuration)
@@ -46,7 +44,7 @@ class ExecutionController(
     }
 
     protected[controller] def execution: Try[Unit] = {
-        logDebug(s"Apply cast mode ${_castMode.toString}")
+        logDebug(s"Apply cast mode ${castMode.toString}")
         if (failFast) {
             failFastMode
         } else { ignoreErrorMode }
@@ -54,7 +52,7 @@ class ExecutionController(
 
     private def ignoreErrorMode: Try[Unit] = {
         logDebug("Skip errors if any")
-        Success(this.files.foreach(e => {
+        Success(this.csvFiles.foreach(e => {
             castElement(e).cast match {
                 case Failure(exception) => logError(exception.getMessage)
                 case Success(_)         =>
@@ -63,7 +61,7 @@ class ExecutionController(
     }
 
     private def failFastMode: Try[Unit] = {
-        this.files.foreach(e => {
+        this.csvFiles.foreach(e => {
             castElement(e).cast match {
                 case Failure(exception) => return Failure(exception)
                 case Success(_)         =>
@@ -76,9 +74,9 @@ class ExecutionController(
     private def castElement(element: String): Executor = {
         logInfo(s"Start job for: ${element}")
         this.castMode match {
-            case RawSchema      => new Raw(element, _basePaths)
-            case InferSchema    => new Infer(element, _basePaths)
-            case e: ParseSchema => new Parse(element, _basePaths, e.fallBack.get)
+            case RawSchema      => new Raw(element, basePaths)
+            case InferSchema    => new Infer(element, basePaths)
+            case e: ParseSchema => new Parse(element, basePaths, e.fallBack.get)
         }
     }
 }
