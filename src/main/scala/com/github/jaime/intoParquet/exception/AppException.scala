@@ -11,8 +11,15 @@ sealed trait AppException extends Exception {
     override def getMessage: String = message
 }
 
-class NotImplementedTypeException(invalidType: String) extends AppException {
+class NotImplementedTypeException(val invalidType: String) extends AppException {
     override val message: String = s"Not recognized type conversion for $invalidType"
+}
+
+class EnrichNotImplementedTypeException(file: String, invalidType: String)
+    extends NotImplementedTypeException(invalidType) {
+    override def getMessage: String =
+        s"""There is a problem with table description for file <$file>:
+           |${super.getMessage}""".stripMargin
 }
 
 class WrongInputArgsException extends AppException {

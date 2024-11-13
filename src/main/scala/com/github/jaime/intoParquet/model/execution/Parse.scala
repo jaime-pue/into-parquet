@@ -10,6 +10,8 @@ import com.github.jaime.intoParquet.behaviour.Executor
 import com.github.jaime.intoParquet.behaviour.IOOperation
 import com.github.jaime.intoParquet.behaviour.ReadAndWrite
 import com.github.jaime.intoParquet.configuration.BasePaths
+import com.github.jaime.intoParquet.exception.EnrichNotImplementedTypeException
+import com.github.jaime.intoParquet.exception.NotImplementedTypeException
 import com.github.jaime.intoParquet.model.TableDescription
 import com.github.jaime.intoParquet.model.enumeration.FallBack
 import com.github.jaime.intoParquet.model.enumeration.FallBackFail
@@ -30,6 +32,7 @@ class Parse(_file: String, _paths: BasePaths, fallBack: FallBack)
     private lazy val tableDescription: Option[TableDescription] = loadTableDescription
 
     override def readFrom: DataFrame = {
+        logDebug("Load table description")
         readApplySchema(absoluteInputPath, tableDescription.get)
     }
 
@@ -55,6 +58,11 @@ class Parse(_file: String, _paths: BasePaths, fallBack: FallBack)
             new TableDescription(tableLines)
         } catch {
             case e: Exception => throw e
+            case sqlError: NotImplementedTypeException =>
+                throw new EnrichNotImplementedTypeException(
+                  file = _file,
+                  invalidType = sqlError.invalidType
+                )
         }
     }
 
