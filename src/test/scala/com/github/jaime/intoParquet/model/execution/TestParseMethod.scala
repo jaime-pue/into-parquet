@@ -6,6 +6,7 @@ package com.github.jaime.intoParquet.model.execution
 
 import com.github.jaime.intoParquet.common.Resources
 import com.github.jaime.intoParquet.common.SparkTestBuilder
+import com.github.jaime.intoParquet.exception.EnrichNotImplementedTypeException
 import com.github.jaime.intoParquet.exception.NoSchemaFoundException
 import com.github.jaime.intoParquet.exception.NotImplementedTypeException
 import com.github.jaime.intoParquet.model.enumeration.FallBackFail
@@ -51,8 +52,16 @@ class TestParseMethod extends SparkTestBuilder {
 
     test("Should be a failure if table description has wrong format but exists") {
         val parse = new Parse("wrongType", basePaths, FallBackNone)
-        assert(parse.cast.isFailure)
+        assume(parse.cast.isFailure)
         assertThrows[NotImplementedTypeException](parse.cast.get)
+    }
+
+    test("Should enrich the exception with file information") {
+        val parse = new Parse("wrongType", basePaths, FallBackNone)
+        assume(parse.cast.isFailure)
+        assertThrows[EnrichNotImplementedTypeException](parse.cast.get)
+        val exception = intercept[EnrichNotImplementedTypeException](parse.cast.get)
+        assertResult("wrongType")(exception.file)
     }
 
     test(

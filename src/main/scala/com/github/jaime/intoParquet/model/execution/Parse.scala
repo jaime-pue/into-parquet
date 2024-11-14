@@ -55,12 +55,12 @@ class Parse(_file: String, _paths: BasePaths, fallBack: FallBack)
         try {
             new TableDescription(tableLines)
         } catch {
-            case e: Exception => throw e
             case sqlError: NotImplementedTypeException =>
                 throw new EnrichNotImplementedTypeException(
                   file = _file,
                   invalidType = sqlError.invalidType
                 )
+            case e: Exception => throw e
         }
     }
 
