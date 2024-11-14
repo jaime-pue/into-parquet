@@ -6,6 +6,7 @@ package com.github.jaime.intoParquet.controller
 
 import com.github.jaime.intoParquet.common.Resources
 import com.github.jaime.intoParquet.configuration.BasePaths
+import com.github.jaime.intoParquet.controller.FileController.isBlank
 import com.github.jaime.intoParquet.controller.FileController.splitFiles
 import com.github.jaime.intoParquet.mapping.IntoBasePaths
 import org.scalatest.funsuite.AnyFunSuite
@@ -44,9 +45,8 @@ class TestFileController extends AnyFunSuite {
         assertResult(Array("file"))(splitFiles(files))
     }
 
-    test("Should return empty Array if input is an empty Array") {
-        val files = ""
-        assertResult(Array[String]())(splitFiles(files))
+    test("Should return Array if input is a blank string") {
+        assertResult(Array[String](""))(splitFiles(""))
     }
 
     test("Should return None if no files found") {
@@ -69,4 +69,33 @@ class TestFileController extends AnyFunSuite {
         assert(controller.files.isEmpty)
     }
 
+    test("Should return true if is None") {
+        assert(isBlank(None))
+    }
+
+    test("Should return true if empty") {
+        assert(isBlank(Some("")))
+    }
+
+    test("Should return true if only whitespaces") {
+        assert(isBlank(Some("   ")))
+    }
+
+    private def newController(files: Option[String]): FileController = {
+        new FileController(basePaths, recursiveRead = false, csvFiles =files)
+    }
+
+    private val Empty: Array[String] = Array()
+
+    test("Should return empty array if empty csvFiles") {
+        assertResult(Empty)(newController(None).getFilenamesFromInputLine)
+    }
+
+    test("Should return empty array if csvFiles is empty string") {
+        assertResult(Empty)(newController(Some("")).getFilenamesFromInputLine)
+    }
+
+    test("Should return an empty array if csvFiles contains only whitespaces") {
+        assertResult(Empty)(newController(Some("     ")).getFilenamesFromInputLine)
+    }
 }

@@ -6,6 +6,7 @@ package com.github.jaime.intoParquet.controller
 
 import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.github.jaime.intoParquet.configuration.BasePaths
+import com.github.jaime.intoParquet.controller.FileController.isBlank
 import com.github.jaime.intoParquet.controller.FileController.splitFiles
 import com.github.jaime.intoParquet.service.FileLoader
 import com.github.jaime.intoParquet.service.FileLoader.readAllFilesFromRaw
@@ -52,20 +53,21 @@ class FileController(basePaths: BasePaths, recursiveRead: Boolean, csvFiles: Opt
     }
 
     protected[controller] def getFilenamesFromInputLine: Array[String] = {
-        csvFiles match {
-            case Some(value) =>
-                FileLoader.filesExists(inputBasePath, splitFiles(value))
-            case None => emptyArray
+        if (isBlank(csvFiles)) {
+            emptyArray
+        } else {
+            FileLoader.filesExists(inputBasePath, splitFiles(csvFiles.get))
         }
     }
 }
 
 object FileController {
     protected[controller] def splitFiles(inputLine: String): Array[String] = {
-        if (inputLine.isBlank) {
-            Array()
-        } else {
-            inputLine.split(",").map(_.trim).distinct
-        }
+        inputLine.split(",").map(_.trim).distinct
+    }
+
+    // java String isBlank method is java 11
+    protected[controller] def isBlank(line: Option[String]): Boolean = {
+        line.isEmpty || line.get.trim.isEmpty
     }
 }
