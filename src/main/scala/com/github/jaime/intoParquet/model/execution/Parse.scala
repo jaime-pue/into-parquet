@@ -46,7 +46,7 @@ class Parse(_file: String, _paths: BasePaths, fallBack: FallBack)
         readFile(paths.absoluteInputTableDescriptionPath(file)) match {
             case Some(value) => Some(intoTableDescription(value))
             case None =>
-                logDebug(s"No configuration file for $file")
+                logWarning(s"No table description file for $file")
                 None
         }
     }

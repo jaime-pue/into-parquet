@@ -29,13 +29,14 @@ class ExecutionController(
 ) extends AppLogger {
 
     final def buildSparkAndRun(): Unit = {
+        logInfo("Start batch")
         SparkBuilder.beforeAll(configuration)
         execution match {
             case Success(_) =>
                 logInfo("Job ended Ok!")
                 SparkBuilder.afterAll()
             case Failure(exception) =>
-                logError(s"""Something went wrong
+                logError(s"""Something went wrong:
                             |${exception.getMessage}
                             |""".stripMargin)
                 throw exception
@@ -44,7 +45,7 @@ class ExecutionController(
     }
 
     protected[controller] def execution: Try[Unit] = {
-        logDebug(s"Apply cast mode ${castMode.toString}")
+        logInfo(s"Apply cast mode ${castMode.toString}")
         if (failFast) {
             failFastMode
         } else { ignoreErrorMode }

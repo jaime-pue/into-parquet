@@ -7,6 +7,7 @@ package com.github.jaime.intoParquet.app
 import com.github.jaime.intoParquet.app.SparkBuilder.spark
 import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.github.jaime.intoParquet.model.TableDescription
+import com.github.jaime.intoParquet.service.Common.renderPath
 import org.apache.spark.sql.DataFrame
 
 object SparkReader extends AppLogger {
@@ -24,6 +25,7 @@ object SparkReader extends AppLogger {
     }
 
     def readInferSchema(filename: String): DataFrame = {
+        renderReadMessage(filename)
         spark.read
             .option("mode", "DROPMALFORMED")
             .option("columnNameOfCorruptRecord", "ERROR")
@@ -36,10 +38,15 @@ object SparkReader extends AppLogger {
     }
 
     def readRawCSV(filename: String): DataFrame = {
+        renderReadMessage(filename)
         spark.read
             .option("header", true)
             .option("inferSchema", false)
             .option("nullValue", "NULL")
             .csv(filename)
+    }
+
+    private def renderReadMessage(path: String): Unit = {
+        logDebug(s"Read data from ${renderPath(path)}")
     }
 }

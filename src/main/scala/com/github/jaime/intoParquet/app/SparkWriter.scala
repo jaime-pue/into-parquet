@@ -5,6 +5,7 @@
 package com.github.jaime.intoParquet.app
 
 import com.github.jaime.intoParquet.behaviour.AppLogger
+import com.github.jaime.intoParquet.service.Common.renderPath
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.SaveMode
 
@@ -14,6 +15,7 @@ object SparkWriter extends AppLogger {
 
     def writeTo(df: DataFrame, path: String): Unit = {
         logInfo("Write parquet file")
+        logDebug(s"Write data to: ${renderPath(path)}")
         val rows = df.cache().count()
         logDebug(s"Row count: ${rows}")
         val partitions = calculateNumberOfPartitions(rows)
