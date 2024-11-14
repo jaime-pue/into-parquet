@@ -8,6 +8,7 @@ import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.controller.ExecutionController
 import com.github.jaime.intoParquet.controller.FileController
+import com.github.jaime.intoParquet.mapping.IntoBasePaths
 import com.github.jaime.intoParquet.model.enumeration.CastMode
 import com.github.jaime.intoParquet.model.enumeration.ParseSchema
 import com.github.jaime.intoParquet.utils.Parser.InputArgs
@@ -25,7 +26,7 @@ class Router(inputArgs: InputArgs) extends AppLogger {
     private val failFast: Boolean      = inputArgs.failFast
 
     private def intoBasePaths: BasePaths = {
-        new BasePaths(inputArgs.inputDir, inputArgs.outputDir)
+        new BasePaths(new IntoBasePaths(inputArgs.inputDir, inputArgs.outputDir))
     }
 
     private def intoCastMethod: CastMode = {

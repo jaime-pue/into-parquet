@@ -7,6 +7,7 @@ package com.github.jaime.intoParquet.controller
 import com.github.jaime.intoParquet.common.Resources
 import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.controller.FileController.splitFiles
+import com.github.jaime.intoParquet.mapping.IntoBasePaths
 import org.scalatest.funsuite.AnyFunSuite
 
 class TestFileController extends AnyFunSuite {
@@ -55,7 +56,7 @@ class TestFileController extends AnyFunSuite {
 
     test("Should return None if point to empty directory, but log message") {
         val controller = new FileController(
-          new BasePaths(Some(Resources.ResourceFolder)),
+          new BasePaths(new IntoBasePaths(Some(Resources.ResourceFolder))),
           recursiveRead = true,
           csvFiles = None
         )

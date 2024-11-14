@@ -7,6 +7,7 @@ package com.github.jaime.intoParquet.service
 import com.github.jaime.intoParquet.common.Resources
 import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.exception.NoFileFoundException
+import com.github.jaime.intoParquet.mapping.IntoBasePaths
 import com.github.jaime.intoParquet.service.FileLoader.filesExists
 import com.github.jaime.intoParquet.service.FileLoader.readAllFilesFromRaw
 import org.scalatest.funsuite.AnyFunSuite
@@ -38,7 +39,7 @@ class TestFileLoader extends AnyFunSuite {
     }
 
     test("Should not fail if no csv files found") {
-        val wrongDirectory = new BasePaths(Some(Resources.ResourceFolder)).inputBasePath
+        val wrongDirectory = new BasePaths(new IntoBasePaths(Some(Resources.ResourceFolder))).inputBasePath
         assertResult(Array[String]())(readAllFilesFromRaw(wrongDirectory))
     }
 

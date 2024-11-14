@@ -4,33 +4,20 @@
 
 package com.github.jaime.intoParquet.configuration
 
+import com.github.jaime.intoParquet.mapping.transformer.AsBasePath
+
 import java.nio.file.Paths
 
 class BasePaths(
-    inputDir: Option[String] = None,
-    outputDir: Option[String] = None
+    val inputBasePath: String,
+    val outputBasePath: String
 ) {
-    private val DefaultInput: String  = "./data/input/"
-    private val DefaultOutput: String = "./data/output/"
+    def this(mapper: AsBasePath) = {
+        this(mapper.inputBasePath, mapper.outputBasePath)
+    }
 
     def this(base: String) = {
-        this(Some(s"${base}input/"), Some(s"${base}output/"))
-    }
-
-    def inputBasePath: String = {
-        inputDir.getOrElse(DefaultInput)
-    }
-
-    def outputBasePath: String = {
-        if (isNewDirectory) {
-            s"${inputBasePath}output/"
-        } else {
-            outputDir.getOrElse(DefaultOutput)
-        }
-    }
-
-    private def isNewDirectory: Boolean = {
-        inputDir.isDefined && outputDir.isEmpty
+        this(s"${base}input/", s"${base}output/")
     }
 
     def absoluteInputCSVPath(file: String): String = {
@@ -46,6 +33,6 @@ class BasePaths(
     }
 
     private def asAbsolute(relativePath: String): String = {
-        Paths.get(relativePath).toAbsolutePath().toString
+        Paths.get(relativePath).toAbsolutePath.toString
     }
 }
