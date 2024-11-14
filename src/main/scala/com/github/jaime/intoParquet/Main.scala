@@ -23,21 +23,17 @@
 package com.github.jaime.intoParquet
 
 import com.github.jaime.intoParquet.behaviour.AppLogger
-import com.github.jaime.intoParquet.exception.WrongInputArgsException
-import com.github.jaime.intoParquet.router.Router
-import com.github.jaime.intoParquet.service.Parser.InputArgs
-import com.github.jaime.intoParquet.service.Parser.parseSystemArgs
+import com.github.jaime.intoParquet.controller.Controller
+import com.github.jaime.intoParquet.mapping.IntoController
 
 object Main extends AppLogger {
 
     def main(args: Array[String]): Unit = {
         logDebug("Start new session")
-        val inputArgs: InputArgs = {
-            parseSystemArgs(args).getOrElse(throw new WrongInputArgsException)
-        }
+        val inputArgs: IntoController = new IntoController(args)
         logDebug("Input arguments seems Ok")
-        val router = new Router(inputArgs)
-        router.route()
+        val controller = new Controller(inputArgs)
+        controller.route()
         logDebug("Close application")
     }
 }
