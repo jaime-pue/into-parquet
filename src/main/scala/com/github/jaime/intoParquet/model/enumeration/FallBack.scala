@@ -8,6 +8,8 @@ sealed trait FallBack {
     override def toString: String = {
         getClass.getSimpleName.toLowerCase.replace("$", "").replace("fallback", "").capitalize
     }
+
+    override def equals(obj: Any): Boolean = super.equals(obj)
 }
 
 object FallBackRaw extends FallBack

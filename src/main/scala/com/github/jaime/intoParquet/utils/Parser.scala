@@ -23,7 +23,7 @@ object Parser {
 
     case class InputArgs(
         csvFile: Option[String],
-        castMethod: CastMode = new ParseSchema(),
+        castMethod: Option[CastMode] = None,
         fallBack: Option[FallBack] = None,
         recursive: Boolean = true,
         inputDir: Option[String] = None,
@@ -52,7 +52,7 @@ object Parser {
         note("""
               |Transformation options:""".stripMargin)
         opt[String]('m', "mode").optional
-            .action((castMethod, c) => c.copy(castMethod = parseCastMethod(castMethod)))
+            .action((castMethod, c) => c.copy(castMethod = Some(parseCastMethod(castMethod))))
             .validate(m =>
                 if (isValidMethod(m)) success
                 else failure("Cast mode should be one of the following: raw, r; infer, i; parse, p")
@@ -79,13 +79,6 @@ object Parser {
         help('h', "help").text("prints this usage text")
         version('v', "version").text("prints program version")
         note(AppInfo.Example)
-        checkConfig(c =>
-            if (c.fallBack.isDefined && !c.castMethod.isInstanceOf[ParseSchema]) {
-                failure("Fallback can only be defined for parse schema method")
-            } else {
-                success
-            }
-        )
     }
 
     def parseSystemArgs(args: Array[String]): Option[InputArgs] = {

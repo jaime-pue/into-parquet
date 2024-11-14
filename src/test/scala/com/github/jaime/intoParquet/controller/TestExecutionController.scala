@@ -41,7 +41,7 @@ class TestExecutionController extends SparkTestBuilder {
         val files = Array(Resources.onlyCSV)
         val paths = Resources.path
         val executionController =
-            new ExecutionController(files, paths, new ParseSchema(Some(FallBackFail)), true)
+            new ExecutionController(files, paths, new ParseSchema(FallBackFail), true)
         val process = executionController.execution
         assert(process.isFailure)
         assertThrows[NoSchemaFoundException](process.get)

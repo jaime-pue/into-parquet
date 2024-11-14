@@ -76,7 +76,7 @@ class ExecutionController(
         this.castMode match {
             case RawSchema      => new Raw(element, basePaths)
             case InferSchema    => new Infer(element, basePaths)
-            case e: ParseSchema => new Parse(element, basePaths, e.fallBack.get)
+            case e: ParseSchema => new Parse(element, basePaths, e.fallBack)
         }
     }
 }
