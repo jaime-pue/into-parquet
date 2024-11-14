@@ -29,6 +29,11 @@ class TestField extends AnyFunSuite {
         assert(!b.equals(expected))
     }
 
+    test("Should not be equal if different Type") {
+        val a = new Field("a", StringDataType)
+        assert(!a.equals("HELLO"))
+    }
+
     test("Should conform a column expression") {
         val a = new Field("a", BooleanDataType)
         val expected = col("a").cast(types.BooleanType)

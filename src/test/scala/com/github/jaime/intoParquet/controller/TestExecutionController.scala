@@ -10,6 +10,7 @@ import com.github.jaime.intoParquet.exception.NoSchemaFoundException
 import com.github.jaime.intoParquet.exception.NotImplementedTypeException
 import com.github.jaime.intoParquet.model.enumeration.FallBackFail
 import com.github.jaime.intoParquet.model.enumeration.ParseSchema
+import com.github.jaime.intoParquet.model.enumeration.RawSchema
 
 class TestExecutionController extends SparkTestBuilder {
 
@@ -51,6 +52,14 @@ class TestExecutionController extends SparkTestBuilder {
         val files               = Array(Resources.wrongTypeFile)
         val paths               = Resources.path
         val executionController = new ExecutionController(files, paths, new ParseSchema(), false)
+        val process             = executionController.execution
+        assert(process.isSuccess)
+    }
+
+    test("Should work with raw schema") {
+        val files               = Array(Resources.onlyCSV)
+        val paths               = Resources.path
+        val executionController = new ExecutionController(files, paths, RawSchema, true)
         val process             = executionController.execution
         assert(process.isSuccess)
     }
