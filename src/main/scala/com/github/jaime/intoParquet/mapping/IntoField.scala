@@ -6,7 +6,7 @@ package com.github.jaime.intoParquet.mapping
 
 import com.github.jaime.intoParquet.model.Field
 
-object IntoFieldMapper {
+object IntoField {
 
     def fromDescription(description: String): Field = {
         val e = splitValue(description)

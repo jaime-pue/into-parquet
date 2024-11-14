@@ -31,6 +31,6 @@ object IntoTableDescription {
     }
 
     private def intoFields(lines: List[String]): List[Field] = {
-        lines.map(i => IntoFieldMapper.fromDescription(i))
+        lines.map(i => IntoField.fromDescription(i))
     }
 }
