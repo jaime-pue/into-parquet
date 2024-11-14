@@ -23,8 +23,4 @@ trait AppLogger {
     protected def logError(msg: Any): Unit = {
         log.error(msg)
     }
-
-    protected def logError(msg: Any, cause: Throwable): Unit = {
-        log.error(msg, cause)
-    }
 }
