@@ -2,8 +2,9 @@
  * IntoParquet Copyright (c) 2024 Jaime Alvarez
  */
 
-package com.github.jaime.intoParquet.utils
+package com.github.jaime.intoParquet.service
 
+import com.github.jaime.intoParquet.configuration.text.AppInfo
 import com.github.jaime.intoParquet.model.enumeration.CastMode
 import com.github.jaime.intoParquet.model.enumeration.FallBack
 import com.github.jaime.intoParquet.model.enumeration.FallBackFail
@@ -13,8 +14,7 @@ import com.github.jaime.intoParquet.model.enumeration.FallBackRaw
 import com.github.jaime.intoParquet.model.enumeration.InferSchema
 import com.github.jaime.intoParquet.model.enumeration.ParseSchema
 import com.github.jaime.intoParquet.model.enumeration.RawSchema
-import com.github.jaime.intoParquet.text.AppInfo
-import com.github.jaime.intoParquet.utils.Common.sanitizeString
+import com.github.jaime.intoParquet.service.Common.sanitizeString
 import scopt.OptionParser
 
 object Parser {

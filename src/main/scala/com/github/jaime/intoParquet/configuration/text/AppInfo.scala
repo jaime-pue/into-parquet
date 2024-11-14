@@ -2,7 +2,7 @@
  * IntoParquet Copyright (c) 2024 Jaime Alvarez
  */
 
-package com.github.jaime.intoParquet.text
+package com.github.jaime.intoParquet.configuration.text
 
 import scala.io.Source
 

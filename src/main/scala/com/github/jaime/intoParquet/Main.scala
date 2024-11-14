@@ -25,8 +25,8 @@ package com.github.jaime.intoParquet
 import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.github.jaime.intoParquet.exception.WrongInputArgsException
 import com.github.jaime.intoParquet.router.Router
-import com.github.jaime.intoParquet.utils.Parser.InputArgs
-import com.github.jaime.intoParquet.utils.Parser.parseSystemArgs
+import com.github.jaime.intoParquet.service.Parser.InputArgs
+import com.github.jaime.intoParquet.service.Parser.parseSystemArgs
 
 object Main extends AppLogger {
 

@@ -4,7 +4,7 @@
 
 package com.github.jaime.intoParquet.configuration
 
-import com.github.jaime.intoParquet.text.AppInfo
+import com.github.jaime.intoParquet.configuration.text.AppInfo
 import org.apache.spark.SparkConf
 
 object SparkConfiguration {

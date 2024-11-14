@@ -11,7 +11,7 @@ import com.github.jaime.intoParquet.controller.FileController
 import com.github.jaime.intoParquet.mapping.IntoBasePaths
 import com.github.jaime.intoParquet.mapping.IntoCastMode
 import com.github.jaime.intoParquet.model.enumeration.CastMode
-import com.github.jaime.intoParquet.utils.Parser.InputArgs
+import com.github.jaime.intoParquet.service.Parser.InputArgs
 
 class Router(inputArgs: InputArgs) extends AppLogger {
     final def route(): Unit = {

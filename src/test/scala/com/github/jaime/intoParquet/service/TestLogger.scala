@@ -2,7 +2,7 @@
  * IntoParquet Copyright (c) 2024 Jaime Alvarez
  */
 
-package com.github.jaime.intoParquet.utils
+package com.github.jaime.intoParquet.service
 
 import com.github.jaime.intoParquet.behaviour.AppLogger
 import org.scalatest.funsuite.AnyFunSuite

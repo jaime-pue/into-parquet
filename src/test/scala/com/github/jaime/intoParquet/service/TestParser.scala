@@ -2,9 +2,12 @@
  * IntoParquet Copyright (c) 2024 Jaime Alvarez
  */
 
-package com.github.jaime.intoParquet.utils
+package com.github.jaime.intoParquet.service
 
-import com.github.jaime.intoParquet.model.enumeration.{FallBackFail, FallBackInfer, ParseSchema, RawSchema}
+import com.github.jaime.intoParquet.model.enumeration.FallBackFail
+import com.github.jaime.intoParquet.model.enumeration.FallBackInfer
+import com.github.jaime.intoParquet.model.enumeration.ParseSchema
+import com.github.jaime.intoParquet.model.enumeration.RawSchema
 import org.scalatest.funsuite.AnyFunSuite
 
 class TestParser extends AnyFunSuite {
