@@ -50,25 +50,12 @@ mvn clean package
 java -jar target/into-parquet-cli.jar --optional-flags
 ```
 
-Ensure that all your CSV files are placed in the `/data/input` folder, which should be in the same directory as this JAR
+By default, maven puts the jar file inside the `target` directory but can be moved anywhere the user needs.
+
+Ensure that all your CSV files, with the mandatory [header row](#mandatory-header-row), are placed in the `/data/input`
+folder along with the [table description file](#table-description), which should be in the same directory as this JAR
 file.
 The tool will automatically read all CSV files from this folder and convert them into Parquet format.
-
-### <span style="color:red">WARNING</span>
-
-#### Mandatory header row
-
-CSV files must include a mandatory header row to ensure proper functionality. This header, located at the top of the
-file, defines the names of the columns, allowing for correct interpretation of the data by the software. Without a
-header, it's impossible to guess which column maps to which type.
-
-#### Note on `Null` values
-
-By default, the into-parquet script handles null values in the input CSV files. Any missing or empty values in the CSV
-will be interpreted as nulls during the conversion process.
-To ensure proper handling, it is important that any null values in the CSV are represented as NULL in uppercase.
-This ensures consistency and allows the script to correctly recognise and convert these null values into the Parquet
-format.
 
 ## Supported data types
 
@@ -112,7 +99,7 @@ Examples: `Decimal(38,2)`, `decimal(10, 4)`
 
 ### Input Folder
 
-Put both files, csv file and text file with schema, inside input folder.
+Put both files, csv file and text file with schema (the table description), inside input folder.
 
 ```
 Root/
@@ -128,16 +115,37 @@ Root/
 
 #### Csv files
 
-Csv files with the mandatory header row -> [read more](#span-stylecolorredwarningspan)
+Csv files with the mandatory header row
 
+### <span style="color:red">WARNING</span>
+
+#### Mandatory header row
+
+CSV files must include a mandatory header row to ensure proper functionality. This header, located at the top of the
+file, defines the names of the columns, allowing for correct interpretation of the data by the software. Without a
+header, it's impossible to guess which column maps to which type.
+
+#### Note on `Null` values
+
+By default, the into-parquet script handles null values in the input CSV files. Any missing or empty values in the CSV
+will be interpreted as nulls during the conversion process.
+To ensure proper handling, it is important that any null values in the CSV are represented as NULL in uppercase.
+This ensures consistency and allows the script to correctly recognise and convert these null values into the Parquet
+format.
 
 #### Table description
 
-Text files with schema following the convention: `column_name type_of`
+Plain text file following the convention for column names and their expected data types, `column_name type_of`. The file
+does not require a specific file extension, but the name must be the same as the CSV file the user needs to transform.
+To facilitate proper formatting, users can retrieve the expected schema, including column names and their corresponding
+data types, by using the `DESCRIBE TABLE` command in Impala. This ensures that the file aligns precisely with the
+anticipated structure, enabling seamless integration and data conversion. The first line, `name type comment`, is
+optional. [Supported data types](#sql-supported-data-types).
 
 Example
 
 ```text
+name type comment
 id int COMMENT 'represents field id'
 name string COMMENT 'just a name'
 flag BOOLEAN COMMENT 'boolean flag'
