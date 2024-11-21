@@ -54,6 +54,22 @@ Ensure that all your CSV files are placed in the `/data/input` folder, which sho
 file.
 The tool will automatically read all CSV files from this folder and convert them into Parquet format.
 
+### <span style="color:red">WARNING</span>
+
+#### Mandatory header row
+
+CSV files must include a mandatory header row to ensure proper functionality. This header, located at the top of the
+file, defines the names of the columns, allowing for correct interpretation of the data by the software. Without a
+header, it's impossible to guess which column maps to which type.
+
+#### Note on `Null` values
+
+By default, the into-parquet script handles null values in the input CSV files. Any missing or empty values in the CSV
+will be interpreted as nulls during the conversion process.
+To ensure proper handling, it is important that any null values in the CSV are represented as NULL in uppercase.
+This ensures consistency and allows the script to correctly recognise and convert these null values into the Parquet
+format.
+
 ## Supported data types
 
 This script only supports flat, non-nested data structures.
@@ -90,7 +106,7 @@ The next table shows the currently supported data types:
 The decimal type requires both the precision and the scale magnitudes.
 Scale magnitude can't be higher than precision magnitude.
 
-Examples: `Decimal(38,2)`, `decimal(10, 4)` 
+Examples: `Decimal(38,2)`, `decimal(10, 4)`
 
 ## Folder structure
 
@@ -112,15 +128,8 @@ Root/
 
 #### Csv files
 
-Csv files with header
+Csv files with the mandatory header row -> [read more](#span-stylecolorredwarningspan)
 
-##### Note on `Null` values
-
-By default, the into-parquet script handles null values in the input CSV files. Any missing or empty values in the CSV
-will be interpreted as nulls during the conversion process.
-To ensure proper handling, it is important that any null values in the CSV are represented as NULL in uppercase.
-This ensures consistency and allows the script to correctly recognise and convert these null values into the Parquet
-format.
 
 #### Table description
 
