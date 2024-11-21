@@ -94,7 +94,7 @@
                             <mainClass>com.github.jaime.intoParquet.Main</mainClass>
                         </manifest>
                     </archive>
-                    <!--                    <outputDirectory>.</outputDirectory>-->
+                    <outputDirectory>.</outputDirectory>
                 </configuration>
                 <executions>
                     <execution>

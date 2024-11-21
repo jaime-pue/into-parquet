@@ -41,13 +41,17 @@ To run the script, execute the following commands:
 1. Compile with [maven](https://maven.apache.org/):
 
 ```shell
-mvn clean package
+mvn package clean
 ```
 
-2. Once compiled. Execute jar with the following command:
+> `package` will compile the CLI tool
+> 
+> `clean` will delete target directory
+
+2. Once compiled. Execute jar within the shell with a command like the following:
 
 ```shell
-java -jar target/into-parquet-cli.jar --optional-flags
+java -jar into-parquet-cli.jar --optional-flags
 ```
 
 By default, maven puts the jar file inside the `target` directory but can be moved anywhere the user needs.
@@ -56,6 +60,8 @@ Ensure that all your CSV files, with the mandatory [header row](#mandatory-heade
 folder along with the [table description file](#table-description), which should be in the same directory as this JAR
 file.
 The tool will automatically read all CSV files from this folder and convert them into Parquet format.
+
+[List of optional flags](#cli-options)
 
 ## Supported data types
 
@@ -200,7 +206,7 @@ Root/
 ### Example
 
 ```shell
-java -jar target/into-parquet-cli.jar --files fileOne,fileTwo --output /home/user/
+java -jar into-parquet-cli.jar --files fileOne,fileTwo --output /home/user/
 ```
 
 ### Cast method options
