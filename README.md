@@ -12,7 +12,7 @@ This utility is particularly useful for users who need to work with local datase
 The conversion process preserves column names, and the structure of the original CSV files while transforming them
 into Parquet format with new data types defined by the user.
 
-By default, when the script encounters an exception, it will attempt to skip to the next CSV file and continue the
+When the script encounters an exception, it will attempt to skip to the next CSV file and continue the
 transformation process.
 This behaviour ensures that the script can process multiple files in one go even if one file contains issues.
 A log message will be rendered to the user, so it can take future actions with said file.
@@ -27,7 +27,9 @@ rather than proceeding with the next file. A full traceback will be displayed ba
 
 ## Usage
 
-Create a folder structure, like:
+### Pre-requisites: 
+
+1. Create a folder structure, like:
 
 ```
 Root/
@@ -36,9 +38,7 @@ Root/
     └── output/
 ```
 
-To run the script, execute the following commands:
-
-1. Compile with [maven](https://maven.apache.org/):
+2. Compile with [maven](https://maven.apache.org/):
 
 ```shell
 mvn package clean
@@ -46,22 +46,29 @@ mvn package clean
 
 > `package` will compile the CLI tool
 > 
-> `clean` will delete target directory
+> `clean` will delete /target directory
 
-2. Once compiled. Execute jar within the shell with a command like the following:
+No need to re-compile unless a new version is needed or some changes applied to source code.
+
+### Execution
+
+Once compiled. Execute jar within the shell with a command like:
 
 ```shell
-java -jar into-parquet-cli.jar --optional-flags
+java -jar into-parquet-cli.jar
 ```
 
-By default, maven puts the jar file inside the `target` directory but can be moved anywhere the user needs.
+The tool supports a full range of [optional flags](#cli-options) the user can add, e.g.:
 
-Ensure that all your CSV files, with the mandatory [header row](#mandatory-header-row), are placed in the `/data/input`
+```shell
+java -jar into-parquet-cli.jar --files exampleFile --fallback raw
+```
+
+Ensure that all your CSV files, with the [mandatory header row](#mandatory-header-row), are placed in the `/data/input`
 folder along with the [table description file](#table-description), which should be in the same directory as this JAR
 file.
 The tool will automatically read all CSV files from this folder and convert them into Parquet format.
 
-[List of optional flags](#cli-options)
 
 ## Supported data types
 
