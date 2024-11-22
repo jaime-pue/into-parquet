@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.jaime-alv</groupId>
     <artifactId>into-parquet</artifactId>
-    <version>0.0.16</version>
+    <version>0.0.16-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>"Cast csv files to parquet format and apply a used defined schema"</name>
 
@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <resource.dir>${project.basedir}/src/main/resources/</resource.dir>
         <spark.version>3.3.2</spark.version>
-        <scala.version>2.13.13</scala.version>
+        <scala.version>2.13.15</scala.version>
         <scala.binary.version>2.13</scala.binary.version>
         <scalatest.version>3.2.15</scalatest.version>
         <mvn.plugin>4.8.0</mvn.plugin>
@@ -21,6 +21,10 @@
         <scopt.version>4.1.0</scopt.version>
         <spark.testing-base.version>${spark.version}_2.0.1</spark.testing-base.version>
     </properties>
+
+    <scm>
+        <developerConnection>scm:git:https://github.com/Jaime-alv/into-parquet.git</developerConnection>
+    </scm>
 
     <dependencies>
         <dependency> <!-- Scala -->
@@ -111,6 +115,14 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${mvn.compiler}</version>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
             <!-- Scala test mvn compiler -->
             <plugin>
                 <groupId>org.scalatest</groupId>
@@ -131,13 +143,11 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>net.alchim31.maven</groupId>
-                <artifactId>scala-maven-plugin</artifactId>
-                <version>${mvn.plugin}</version>
+                <groupId>org.scala-tools</groupId>
+                <artifactId>maven-scala-plugin</artifactId>
+                <version>2.15.2</version>
                 <executions>
                     <execution>
-                        <?m2e execute onConfiguration?>
-                        <!-- <?m2e execute onConfiguration,onIncremental?> -->
                         <goals>
                             <goal>compile</goal>
                             <goal>testCompile</goal>
@@ -145,10 +155,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <args>
-                        <!-- work-around for https://issues.scala-lang.org/browse/SI-8358 -->
-                        <arg>-nobootcp</arg>
-                    </args>
+                    <scalaVersion>${scala.version}</scalaVersion>
                 </configuration>
             </plugin>
             <!-- https://mvnrepository.com/artifact/org.scoverage/scoverage-maven-plugin -->
@@ -190,6 +197,11 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>3.0.1</version>
             </plugin>
         </plugins>
     </build>
