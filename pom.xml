@@ -6,7 +6,11 @@
     <artifactId>into-parquet</artifactId>
     <version>0.0.16-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>"Cast csv files to parquet format and apply a used defined schema"</name>
+    <!--  Project information  -->
+    <description>"Cast CSV files into parquet format and apply a user defined schema"</description>
+    <url>https://github.com/Jaime-alv/into-parquet</url>
+    <inceptionYear>2024</inceptionYear>
+
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,6 +28,7 @@
 
     <scm>
         <developerConnection>scm:git:https://github.com/Jaime-alv/into-parquet.git</developerConnection>
+        <url>https://github.com/Jaime-alv/into-parquet</url>
     </scm>
 
     <dependencies>
@@ -223,4 +228,10 @@
             <timezone>Europe/Madrid</timezone>
         </developer>
     </developers>
+    <licenses>
+        <license>
+            <name>GPLv3</name>
+            <url>https://www.gnu.org/licenses/</url>
+        </license>
+    </licenses>
 </project>
