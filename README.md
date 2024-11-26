@@ -1,5 +1,10 @@
 # into-parquet
 
+![GitHub License](https://img.shields.io/github/license/Jaime-alv/into-parquet?color=0)
+![GitHub Tag](https://img.shields.io/github/v/tag/Jaime-alv/into-parquet?color=009EDB)
+
+## About
+
 This command-line tool is designed to convert CSV files into the Parquet format.
 It automatically scans the specified input directory for all CSV files, processes them, and saves the converted
 Parquet files in a target location.
