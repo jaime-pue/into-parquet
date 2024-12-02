@@ -14,10 +14,9 @@ import com.github.jaime.intoParquet.model.enumeration.FallBackInfer
 import com.github.jaime.intoParquet.model.enumeration.FallBackNone
 import com.github.jaime.intoParquet.model.enumeration.FallBackRaw
 import org.apache.spark.sql.Row
-import org.apache.spark.sql.types.IntegerType
-import org.apache.spark.sql.types.StringType
-import org.apache.spark.sql.types.StructField
-import org.apache.spark.sql.types.StructType
+import java.sql.Date
+import org.apache.spark.sql.types._
+import java.sql.Timestamp
 
 class TestParseMethod extends SparkTestBuilder {
 
@@ -79,10 +78,59 @@ class TestParseMethod extends SparkTestBuilder {
           List(
             StructField("id", IntegerType),
             StructField("name", StringType),
-            StructField("postal_region", IntegerType),
+            StructField("postal_region", IntegerType)
           )
         )
         val expectedDF = buildDataFrame(expectedData, expectedSchema)
         assertDataFrameNoOrderEquals(expectedDF, parse.readFrom)
+    }
+
+    test("Should parse all simple non-nested data types") {
+        val parse = new Parse("allSimpleDataTypes", basePaths, FallBackFail)
+        assume(parse.cast.isSuccess)
+        val result = parse.readFrom
+        val expectedData = List(
+          Row(
+            "example",
+            true,
+            Timestamp.valueOf("2024-11-10 22:01:35"),
+            Date.valueOf("2024-11-27"),
+            10.toByte,
+            120.toByte,
+            10001.toShort,
+            28039.toShort,
+            20240504,
+            20241127,
+            4147483647L,
+            9147483647L,
+            1.618,
+            3.141592.toFloat,
+            2.7182818284.toFloat,
+            new java.math.BigDecimal(57.2958)
+          )
+        )
+        val expectedSchema = StructType(
+            List(
+                StructField("string", StringType),
+                StructField("boolean", BooleanType),
+                StructField("timestamp", TimestampType),
+                StructField("date", DateType),
+                StructField("byte", ByteType),
+                StructField("tinyint", ByteType),
+                StructField("smallint", ShortType),
+                StructField("short", ShortType),                
+                StructField("int", IntegerType),
+                StructField("integer", IntegerType),
+                StructField("bigint", LongType),
+                StructField("long", LongType),
+                StructField("double", DoubleType),
+                StructField("float", FloatType),
+                StructField("real", FloatType),
+                StructField("decimal", new DecimalType(8,6))                
+            )
+        )
+        val expected = buildDataFrame(expectedData, expectedSchema)
+        assertResult(expected.schema)(result.schema)
+        assertDataFrameEquals(expected, result)
     }
 }

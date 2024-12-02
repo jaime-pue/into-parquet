@@ -1,0 +1,2 @@
+string,boolean,timestamp,date,byte,tinyint,smallint,short,int,integer,bigint,long,double,float,real,decimal
+example,true,2024-11-10 22:01:35,2024-11-27,10,120,10001,28039,20240504,20241127,4147483647,9147483647,1.618,3.141592,2.7182818284,57.2958
