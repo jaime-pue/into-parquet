@@ -27,14 +27,20 @@ rather than proceeding with the next file. A full traceback will be displayed ba
 
 ## Requirements
 
-- Java 1.11
-- Maven 3
+-   Java 1.8 or 1.11
+-   Maven 3
 
 ## Usage
 
-### Pre-requisites: 
+### Pre-requisites:
 
-1. Create a folder structure, like:
+1. Clone or download this repository
+
+```shell
+git clone git@github.com:Jaime-alv/into-parquet.git
+```
+
+2. Create a folder structure, like:
 
 ```
 Root/
@@ -43,14 +49,14 @@ Root/
     └── output/
 ```
 
-2. Compile with [maven](https://maven.apache.org/):
+3. Compile with [maven](https://maven.apache.org/):
 
 ```shell
 mvn package clean
 ```
 
 > `package` will compile the CLI tool
-> 
+>
 > `clean` will delete /target directory
 
 No need to re-compile unless a new version is needed or some changes applied to source code.
@@ -74,7 +80,6 @@ folder along with the [table description file](#table-description), which should
 file.
 The tool will automatically read all CSV files from this folder and convert them into Parquet format.
 
-
 ## Supported data types
 
 This script only supports flat, non-nested data structures.
@@ -93,7 +98,7 @@ continuing the transformation process for the remaining files.
 The next table shows the currently supported data types:
 
 | SQL name        |
-|-----------------|
+| --------------- |
 | string          |
 | boolean         |
 | timestamp       |
@@ -104,7 +109,7 @@ The next table shows the currently supported data types:
 | bigint, long    |
 | double          |
 | float, real     |
-| decimal         | 
+| decimal         |
 
 #### Note on Decimal type
 
@@ -150,6 +155,18 @@ will be interpreted as nulls during the conversion process.
 To ensure proper handling, it is important that any null values in the CSV are represented as NULL in uppercase.
 This ensures consistency and allows the script to correctly recognise and convert these null values into the Parquet
 format.
+
+#### Date format
+
+The date input format must follow the ISO 8601 standard, which specifies the structure as **YYYY-MM-DD**, where "YYYY" 
+represents the four-digit year, "MM" the two-digit month (01 through 12), and "DD" the two-digit day of the month (01 through 31), 
+and the separator must be a hyphen "-".
+For example, 2024-12-02 indicates the 2nd of December, 2024.
+
+The same happens with the timestamp format. Therefore, the order of the elements used to express date and time in ISO 8601 is 
+as follows: year, month, day, hour, minutes, seconds, and milliseconds.
+
+For example, September 27, 2022 at 6 p.m. is represented as 2022-09-27 18:00:00.000.
 
 #### Table description
 
@@ -205,7 +222,7 @@ Root/
 ## CLI Options
 
 | Name          | Shortcut | Comment                                        | Type   | Example                         |
-|---------------|----------|------------------------------------------------|--------|---------------------------------|
+| ------------- | -------- | ---------------------------------------------- | ------ | ------------------------------- |
 | `--files`     | `-f`     | List of files for processing, separated by `,` | String | `--files fileOne,fileTwo,fileN` |
 | `--path`      | `-p`     | Path where csv files are                       | String | `--path ./path/to/input/`       |
 | `--output`    | `-o`     | Where to put parquet files                     | String | `-output ~/output/dir/`         |
