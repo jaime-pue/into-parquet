@@ -6,8 +6,12 @@ package com.github.jaime.intoParquet.mapping
 
 import com.github.jaime.intoParquet.exception.NotImplementedTypeException
 import com.github.jaime.intoParquet.mapping.IntoSQLDataType.sanitizeString
+import com.github.jaime.intoParquet.model.enumeration.ByteDataType
 import com.github.jaime.intoParquet.model.enumeration.DecimalDataType
+import com.github.jaime.intoParquet.model.enumeration.FloatDataType
 import com.github.jaime.intoParquet.model.enumeration.IntegerDataType
+import com.github.jaime.intoParquet.model.enumeration.LongDataType
+import com.github.jaime.intoParquet.model.enumeration.ShortDataType
 import com.github.jaime.intoParquet.model.enumeration.StringDataType
 import org.apache.spark.sql.types
 import org.scalatest.funsuite.AnyFunSuite
@@ -78,4 +82,28 @@ class TestIntoSQLDataType extends AnyFunSuite{
         assertResult("decimal(38,2)")(sanitizeString("Decimal(38,2)"))
     }
 
+    test("Should become ByteDataType") {
+        assertResult(ByteDataType)(IntoSQLDataType.mapFrom("byte"))
+        assertResult(ByteDataType)(IntoSQLDataType.mapFrom("tinyint"))
+    }
+
+    test("Should become ShortDataType") {
+        assertResult(ShortDataType)(IntoSQLDataType.mapFrom("smallint"))
+        assertResult(ShortDataType)(IntoSQLDataType.mapFrom("short"))
+    }
+
+    test("Should become IntegerDataType") {
+        assertResult(IntegerDataType)(IntoSQLDataType.mapFrom("int"))
+        assertResult(IntegerDataType)(IntoSQLDataType.mapFrom("integer"))
+    }
+
+    test("Should become LongDataType") {
+        assertResult(LongDataType)(IntoSQLDataType.mapFrom("bigint"))
+        assertResult(LongDataType)(IntoSQLDataType.mapFrom("long"))
+    }
+
+    test("Should become FloatDataType") {
+        assertResult(FloatDataType)(IntoSQLDataType.mapFrom("float"))
+        assertResult(FloatDataType)(IntoSQLDataType.mapFrom("real"))
+    }
 }
