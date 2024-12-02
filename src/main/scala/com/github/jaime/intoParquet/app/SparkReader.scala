@@ -17,6 +17,14 @@ object SparkReader extends AppLogger {
         applySchema(raw, description)
     }
 
+    /**
+      * Converts an input raw dataframe to a new dataframe with a specified user schema.
+      * If the data is not in a proper format, it will return `null`
+      *
+      * @param df input raw dataframe with all columns as string
+      * @param description new fields types to convert
+      * @return a new dataframe with the new schema
+      */
     protected[app] def applySchema(df: DataFrame, description: TableDescription): DataFrame = {
         logInfo(s"Apply schema to current data")
         description.fields.foldLeft(df) { (temp, field) =>
