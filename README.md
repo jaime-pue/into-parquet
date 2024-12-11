@@ -3,6 +3,8 @@
 ![GitHub License](https://img.shields.io/github/license/Jaime-alv/into-parquet?color=0)
 ![GitHub Tag](https://img.shields.io/github/v/tag/Jaime-alv/into-parquet?color=009EDB)
 
+![Workflow](https://github.com/Jaime-alv/into-parquet/actions/workflows/maven.yml/badge.svg)
+
 ## About
 
 This command-line tool is designed to convert CSV files into the Parquet format.

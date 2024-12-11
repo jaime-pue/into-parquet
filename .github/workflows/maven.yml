@@ -6,11 +6,11 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Scala CI with Maven
+name: Scala test coverage
 
 on:
   push:
-    branches: [ "develop", "main" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -28,4 +28,4 @@ jobs:
         distribution: 'corretto'
         cache: maven
     - name: Run Maven tests
-      run: mvn test
+      run: mvn clean test
