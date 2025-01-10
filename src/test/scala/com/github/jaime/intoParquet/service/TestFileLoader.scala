@@ -5,6 +5,7 @@
 package com.github.jaime.intoParquet.service
 
 import com.github.jaime.intoParquet.common.Resources
+import com.github.jaime.intoParquet.common.Resources.InputTestFolder
 import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.exception.NoFileFoundException
 import com.github.jaime.intoParquet.mapping.IntoBasePaths
@@ -52,5 +53,13 @@ class TestFileLoader extends AnyFunSuite {
     test("Should return an empty array if no file coincidence") {
         val files = Array("E", "A")
         assertResult(Array[String]())(filesExists(path.inputBasePath, files))
+    }
+
+    test("Should read from file with Á & Í chars") {
+        val file = "wrongChars"
+        val filepath = s"$InputTestFolder$file"
+        val lines = readFile(filepath)
+        assert(lines.isDefined)
+        assertResult(List("Á", "Í"))(lines.get)
     }
 }

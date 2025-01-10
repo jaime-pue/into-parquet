@@ -20,4 +20,8 @@ class TableDescription(_fields: List[Field]) {
     def this(lines: Seq[String]) = {
         this(IntoTableDescription.mapFrom(lines.toList))
     }
+
+    override def toString: String = {
+        fields.mkString("\n")
+    }
 }

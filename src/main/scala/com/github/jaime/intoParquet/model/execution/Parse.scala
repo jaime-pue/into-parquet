@@ -56,7 +56,9 @@ class Parse(_file: String, _paths: BasePaths, fallBack: FallBack)
 
     private def intoTableDescription(tableLines: List[String]): TableDescription = {
         try {
-            new TableDescription(tableLines)
+            val description = new TableDescription(tableLines)
+            logDebug(description.toString)
+            description
         } catch {
             case sqlError: NotImplementedTypeException =>
                 throw new EnrichNotImplementedTypeException(

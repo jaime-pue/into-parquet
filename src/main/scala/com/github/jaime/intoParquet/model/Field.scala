@@ -33,4 +33,8 @@ class Field(_fieldName: String, _fieldType: SQLDataType) {
         }
     }
 
+    override def toString: String = {
+        s"Field: $fieldNameHolder >> ${fieldTypeHolder.toString}"
+    }
+
 }

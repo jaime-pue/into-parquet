@@ -9,6 +9,8 @@ import org.apache.spark.sql.types
 
 sealed trait SQLDataType {
     val value: DataType
+
+    override def toString: String = getClass.getSimpleName.replace("$", "")
 }
 
 object StringDataType extends SQLDataType {

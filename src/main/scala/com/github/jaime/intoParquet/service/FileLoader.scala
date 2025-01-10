@@ -11,20 +11,28 @@ import java.nio.file.Files
 import java.nio.file.NoSuchFileException
 import java.nio.file.Path
 import java.nio.file.Paths
+import scala.io.BufferedSource
+import scala.io.Codec
 import scala.io.Source
 import scala.jdk.CollectionConverters.IteratorHasAsScala
 
 object FileLoader extends AppLogger {
 
+    /** Read text file from filepath. Without the implicit Codec
+     * to UTF-8 scala method can't read some special chars,
+     * like Á & Í*/
     def readFile(filepath: String): Option[List[String]] = {
+        implicit val codec: Codec = Codec("UTF-8")
         try {
-            val file = Source.fromFile(filepath)
+            val file: BufferedSource = Source.fromFile(filepath)
+            logDebug(s"Read from $filepath")
             file.bufferedReader().lines()
             val lines = file.getLines().toList
             file.close()
             Some(lines)
         } catch {
-            case _: Exception =>
+            case i: Exception =>
+                logDebug(i.getMessage)
                 None
         }
     }
