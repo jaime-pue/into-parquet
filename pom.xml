@@ -27,7 +27,6 @@
     <scm>
         <developerConnection>scm:git:https://github.com/Jaime-alv/into-parquet.git</developerConnection>
         <url>https://github.com/Jaime-alv/into-parquet</url>
-      <tag>v1.0.0-rc2</tag>
   </scm>
 
     <dependencies>
