@@ -6,6 +6,7 @@ package com.github.jaime.intoParquet.mapping
 
 import com.github.jaime.intoParquet.model.Field
 
+import scala.util.Try
 import scala.util.matching.Regex
 
 object IntoTableDescription {
@@ -31,6 +32,11 @@ object IntoTableDescription {
     }
 
     private def intoFields(lines: List[String]): List[Field] = {
-        lines.map(i => IntoField.fromDescription(i))
+        lines.map(i => Field.fromDescription(i).get)
+    }
+
+    def fromLines(lines: List[String]): List[Try[Field]] = {
+        val fileLines = deleteFirstLine(cleanLines(lines)).toList
+        fileLines.map(Field.fromDescription)
     }
 }

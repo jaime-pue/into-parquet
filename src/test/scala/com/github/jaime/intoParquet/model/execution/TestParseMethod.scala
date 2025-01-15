@@ -6,9 +6,8 @@ package com.github.jaime.intoParquet.model.execution
 
 import com.github.jaime.intoParquet.common.Resources
 import com.github.jaime.intoParquet.common.SparkTestBuilder
-import com.github.jaime.intoParquet.exception.EnrichNotImplementedTypeException
+import com.github.jaime.intoParquet.exception.EnrichException
 import com.github.jaime.intoParquet.exception.NoSchemaFoundException
-import com.github.jaime.intoParquet.exception.NotImplementedTypeException
 import com.github.jaime.intoParquet.model.Field
 import com.github.jaime.intoParquet.model.TableDescription
 import com.github.jaime.intoParquet.model.enumeration._
@@ -55,14 +54,14 @@ class TestParseMethod extends SparkTestBuilder {
     test("Should be a failure if table description has wrong format but exists") {
         val parse = new Parse("wrongType", basePaths, FallBackNone)
         assume(parse.cast.isFailure)
-        assertThrows[NotImplementedTypeException](parse.cast.get)
+        assertThrows[EnrichException](parse.cast.get)
     }
 
     test("Should enrich the exception with file information") {
         val parse = new Parse("wrongType", basePaths, FallBackNone)
         assume(parse.cast.isFailure)
-        assertThrows[EnrichNotImplementedTypeException](parse.cast.get)
-        val exception = intercept[EnrichNotImplementedTypeException](parse.cast.get)
+        assertThrows[EnrichException](parse.cast.get)
+        val exception = intercept[EnrichException](parse.cast.get)
         assertResult("wrongType")(exception.file)
     }
 
@@ -374,5 +373,12 @@ class TestParseMethod extends SparkTestBuilder {
         val expected = buildDataFrame(expectedData, expectedSchema)
         assertResult(expected.schema)(result.schema)
         assertDataFrameEquals(expected, result)
+    }
+
+    test("Should throw an exception if field line is malformed") {
+        val a = new Parse("badField", basePaths, FallBackNone)
+        val cast = a.cast
+        assume(cast.isFailure)
+        assertThrows[EnrichException](cast.get)
     }
 }

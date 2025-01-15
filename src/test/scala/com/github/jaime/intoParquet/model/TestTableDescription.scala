@@ -4,6 +4,8 @@
 
 package com.github.jaime.intoParquet.model
 
+import com.github.jaime.intoParquet.exception.NotImplementedTypeException
+import com.github.jaime.intoParquet.exception.WrongFieldDescriptionException
 import com.github.jaime.intoParquet.model.enumeration.DecimalDataType
 import com.github.jaime.intoParquet.model.enumeration.IntegerDataType
 import com.github.jaime.intoParquet.model.enumeration.StringDataType
@@ -32,5 +34,17 @@ class TestTableDescription extends AnyFunSuite {
         val expected    = new TableDescription(List(randomDec))
         assertResult(expected)(description)
 
+    }
+
+    test("Should return an exception if a line is malformed") {
+        val describe = TableDescription.fromLines(List("aaaaaa"))
+        assume(describe.isFailure)
+        assertThrows[WrongFieldDescriptionException](describe.get)
+    }
+
+    test("Should throw NotImplementedTypeException if type is not right") {
+        val describe = TableDescription.fromLines(List("random numeric"))
+        assume(describe.isFailure)
+        assertThrows[NotImplementedTypeException](describe.get)
     }
 }

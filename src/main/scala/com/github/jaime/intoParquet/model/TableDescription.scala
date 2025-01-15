@@ -6,6 +6,10 @@ package com.github.jaime.intoParquet.model
 
 import com.github.jaime.intoParquet.mapping.IntoTableDescription
 
+import scala.util.Failure
+import scala.util.Success
+import scala.util.Try
+
 class TableDescription(_fields: List[Field]) {
 
     val fields: List[Field] = _fields
@@ -17,11 +21,21 @@ class TableDescription(_fields: List[Field]) {
         }
     }
 
-    def this(lines: Seq[String]) = {
+    protected[model] def this(lines: Seq[String]) = {
         this(IntoTableDescription.mapFrom(lines.toList))
     }
 
     override def toString: String = {
         fields.mkString("\n")
+    }
+}
+
+object TableDescription {
+    def fromLines(tableLines: List[String]): Try[TableDescription] = {
+        val items  = IntoTableDescription.fromLines(tableLines).map {
+            case Failure(exception) => return Failure(exception)
+            case Success(value) => value
+        }
+        Success(new TableDescription(items))
     }
 }

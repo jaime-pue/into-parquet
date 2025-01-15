@@ -6,8 +6,8 @@ package com.github.jaime.intoParquet.controller
 
 import com.github.jaime.intoParquet.common.Resources
 import com.github.jaime.intoParquet.common.SparkTestBuilder
+import com.github.jaime.intoParquet.exception.EnrichException
 import com.github.jaime.intoParquet.exception.NoSchemaFoundException
-import com.github.jaime.intoParquet.exception.NotImplementedTypeException
 import com.github.jaime.intoParquet.model.enumeration.FallBackFail
 import com.github.jaime.intoParquet.model.enumeration.ParseSchema
 import com.github.jaime.intoParquet.model.enumeration.RawSchema
@@ -27,7 +27,7 @@ class TestExecutionController extends SparkTestBuilder {
         val executionController = new ExecutionController(files, paths, new ParseSchema(), true)
         val process             = executionController.execution
         assert(process.isFailure)
-        assertThrows[NotImplementedTypeException](process.get)
+        assertThrows[EnrichException](process.get)
     }
 
     test("Should finish if no table description and fallback is not Fail") {

@@ -4,10 +4,13 @@
 
 package com.github.jaime.intoParquet.model
 
+import com.github.jaime.intoParquet.mapping.IntoField
 import com.github.jaime.intoParquet.model.enumeration.SQLDataType
 import org.apache.spark.sql.Column
 import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.types.DataType
+
+import scala.util.Try
 
 /** Individual field description. Holds column name and type
   */
@@ -37,4 +40,10 @@ class Field(_fieldName: String, _fieldType: SQLDataType) {
         s"Field: $fieldNameHolder >> ${fieldTypeHolder.toString}"
     }
 
+}
+
+object Field {
+    def fromDescription(value: String): Try[Field] = {
+        Try(IntoField.fromDescription(value))
+    }
 }

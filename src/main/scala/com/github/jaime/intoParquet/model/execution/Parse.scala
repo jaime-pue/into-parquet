@@ -9,8 +9,7 @@ import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.github.jaime.intoParquet.behaviour.Executor
 import com.github.jaime.intoParquet.behaviour.ReadAndWrite
 import com.github.jaime.intoParquet.configuration.BasePaths
-import com.github.jaime.intoParquet.exception.EnrichNotImplementedTypeException
-import com.github.jaime.intoParquet.exception.NotImplementedTypeException
+import com.github.jaime.intoParquet.exception.EnrichException
 import com.github.jaime.intoParquet.model.TableDescription
 import com.github.jaime.intoParquet.model.enumeration.FallBack
 import com.github.jaime.intoParquet.model.enumeration.FallBackFail
@@ -20,6 +19,9 @@ import com.github.jaime.intoParquet.model.enumeration.FallBackRaw
 import com.github.jaime.intoParquet.model.execution.Parse.applySchema
 import com.github.jaime.intoParquet.service.FileLoader.readFile
 import org.apache.spark.sql.DataFrame
+
+import scala.util.Failure
+import scala.util.Success
 
 class Parse(_file: String, _paths: BasePaths, fallBack: FallBack)
     extends Executor
@@ -55,17 +57,10 @@ class Parse(_file: String, _paths: BasePaths, fallBack: FallBack)
     }
 
     private def intoTableDescription(tableLines: List[String]): TableDescription = {
-        try {
-            val description = new TableDescription(tableLines)
-            logDebug(description.toString)
-            description
-        } catch {
-            case sqlError: NotImplementedTypeException =>
-                throw new EnrichNotImplementedTypeException(
-                  file = _file,
-                  invalidType = sqlError.invalidType
-                )
-            case e: Exception => throw e
+        TableDescription.fromLines(tableLines) match {
+            case Failure(exception) =>
+                throw new EnrichException(file, exception)
+            case Success(value) => value
         }
     }
 

@@ -5,6 +5,7 @@
 package com.github.jaime.intoParquet.mapping
 
 import com.github.jaime.intoParquet.behaviour.AppLogger
+import com.github.jaime.intoParquet.exception.WrongFieldDescriptionException
 import com.github.jaime.intoParquet.model.Field
 
 import scala.util.matching.Regex
@@ -26,6 +27,7 @@ object IntoField extends AppLogger {
         val regex: Regex = raw"(\w+)\s+([a-zA-Z]+(\(\d+,\s*\d+\))?).*".r
         line match {
             case regex(first, second, _*) => Array(first, second)
+            case _ => throw new WrongFieldDescriptionException(line)
         }
     }
 }

@@ -15,11 +15,10 @@ class NotImplementedTypeException(val invalidType: String) extends AppException 
     override val message: String = s"Not recognized type conversion for $invalidType"
 }
 
-class EnrichNotImplementedTypeException(val file: String, invalidType: String)
-    extends NotImplementedTypeException(invalidType) {
-    override def getMessage: String =
-        s"""There is a problem with table description for file <$file>:
-           |${super.getMessage}""".stripMargin
+class EnrichException(val file: String, exception: Throwable) extends AppException {
+
+    override val message: String = s"""There is a problem with table description for file <$file>:
+                                              |${exception.getMessage}""".stripMargin
 }
 
 class WrongInputArgsException extends AppException {
@@ -34,4 +33,9 @@ class NoFileFoundException(directory: String) extends AppException {
 class NoSchemaFoundException(e: String) extends AppException {
 
     override val message: String = s"No schema found for ${e}"
+}
+
+class WrongFieldDescriptionException(line: String) extends AppException {
+
+    override val message: String = s"Wrong pattern found in line: $line"
 }
