@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.jaime-alv</groupId>
     <artifactId>into-parquet</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0-rc4</version>
     <packaging>jar</packaging>
     <!--  Project information  -->
     <description>"Cast CSV files into parquet format and apply a user defined schema"</description>
@@ -27,6 +27,7 @@
     <scm>
         <developerConnection>scm:git:https://github.com/Jaime-alv/into-parquet.git</developerConnection>
         <url>https://github.com/Jaime-alv/into-parquet</url>
+    <tag>v1.0.0-rc4</tag>
   </scm>
 
     <dependencies>
