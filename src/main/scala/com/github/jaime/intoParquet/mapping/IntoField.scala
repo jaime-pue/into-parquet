@@ -12,19 +12,20 @@ import scala.util.matching.Regex
 object IntoField extends AppLogger {
 
     def fromDescription(description: String): Field = {
-        logDebug(s"Cast from $description")
-        val e = splitValue(description)
+        logDebug(s"Cast from <<$description>>")
+        val e        = splitValue(description)
         val dataType = IntoSQLDataType.mapFrom(e(1))
         new Field(e(0), dataType)
     }
 
-    /**Regex looks for the pattern field name space type followed by a parenthesis
-     * which indicates it may face a decimal type that can have several spaces in between*/
+    /** Regex looks for the pattern `FieldName Type`. If it follows a pair of parenthesis and within
+      * them `(digit, digit)`, it signals it may face a decimal type that can have several spaces in
+      * between
+      */
     protected[mapping] def splitValue(line: String): Array[String] = {
-        val regex: Regex = raw"(\w+)\s+([a-zA-Z]+\(\d+,\s*\d+\)).*".r
+        val regex: Regex = raw"(\w+)\s+([a-zA-Z]+(\(\d+,\s*\d+\))?).*".r
         line match {
-            case regex(first, second) => Array(first, second)
-            case _ => line.split("\\s").take(2)
+            case regex(first, second, _*) => Array(first, second)
         }
     }
 }

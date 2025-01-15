@@ -49,7 +49,7 @@ class TestIntoField extends AnyFunSuite {
 
     test("Should split values with ()") {
         val sample = "field type() comment"
-        val expected = List("field", "type()")
+        val expected = List("field", "type")
         assertResult(expected)(IntoField.splitValue(sample))
     }
 
@@ -68,5 +68,10 @@ class TestIntoField extends AnyFunSuite {
         val sample = "field type(2,   4) comment"
         val expected = List("field", "type(2,   4)")
         assertResult(expected)(IntoField.splitValue(sample))
+    }
+
+    test("Should throw an exception if no matches") {
+        val sample = "aaa"
+        assertThrows[Exception](IntoField.splitValue(sample))
     }
 }
