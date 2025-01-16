@@ -6,17 +6,23 @@ package com.github.jaime.intoParquet.app
 
 import com.github.jaime.intoParquet.common.Resources
 import com.github.jaime.intoParquet.common.SparkTestBuilder
+import com.github.jaime.intoParquet.configuration.ReaderConfiguration
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types._
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.GivenWhenThen
 
-class TestSparkReadingCSV extends SparkTestBuilder with GivenWhenThen {
+class TestSparkReadingCSV extends SparkTestBuilder with GivenWhenThen with BeforeAndAfterEach {
 
     private val Filename: String      = "exampleTable.csv"
     private val TimestampFile: String = "timestampConversion.csv"
     private val FilePath: String      = s"${Resources.InputTestFolder}"
     private val file: String          = s"$FilePath$Filename"
+
+    override def beforeEach(): Unit = ReaderConfiguration.Separator = ","
+
+    override def afterEach(): Unit = ReaderConfiguration.Separator = ","
 
     private def buildRawData: DataFrame = {
         val data = Seq(
@@ -100,5 +106,27 @@ class TestSparkReadingCSV extends SparkTestBuilder with GivenWhenThen {
         )
         assertResult(expectedSchema)(df.schema)
         assertResult(7)(df.count())
+    }
+
+    test("Should work with a custom separator") {
+        assume(ReaderConfiguration.Separator.equals(","))
+        val cols = Array("id", "name", "country")
+        val df = SparkReader.readInferSchema(s"$FilePath/semicolonFile.csv")
+        assertResult(Array("id;name;country"))(df.columns)
+        ReaderConfiguration.Separator = ";"
+        assume(ReaderConfiguration.Separator.equals(";"))
+        val newDf = SparkReader.readInferSchema(s"$FilePath/semicolonFile.csv")
+        assertResult(cols)(newDf.columns)
+    }
+
+    test("Should fail if separator is not , and reading raw") {
+        assume(ReaderConfiguration.Separator.equals(","))
+        val cols = Array("id", "name", "country")
+        val df = SparkReader.readRawCSV(s"$FilePath/semicolonFile.csv")
+        assertResult(Array("id;name;country"))(df.columns)
+        ReaderConfiguration.Separator = ";"
+        assume(ReaderConfiguration.Separator.equals(";"))
+        val newDf = SparkReader.readRawCSV(s"$FilePath/semicolonFile.csv")
+        assertResult(cols)(newDf.columns)
     }
 }

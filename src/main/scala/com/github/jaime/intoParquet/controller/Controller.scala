@@ -6,6 +6,7 @@ package com.github.jaime.intoParquet.controller
 
 import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.github.jaime.intoParquet.configuration.BasePaths
+import com.github.jaime.intoParquet.configuration.ReaderConfiguration
 import com.github.jaime.intoParquet.mapping.IntoBasePaths
 import com.github.jaime.intoParquet.mapping.IntoCastMode
 import com.github.jaime.intoParquet.mapping.transformer.AsController
@@ -23,8 +24,10 @@ class Controller(inputArgs: InputArgs) extends AppLogger {
 
     final def route(): Unit = {
         intoFileController.files match {
-            case Some(csvFiles) => intoExecutionController(csvFiles).buildSparkAndRun()
-            case None           => logInfo(s"No file found in ${basePaths.inputBasePath}. Skip")
+            case Some(csvFiles) =>
+                ReaderConfiguration.Separator = inputArgs.separator.getOrElse(",")
+                intoExecutionController(csvFiles).buildSparkAndRun()
+            case None => logInfo(s"No file found in ${basePaths.inputBasePath}. Skip")
         }
     }
 

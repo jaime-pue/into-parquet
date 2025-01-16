@@ -19,17 +19,18 @@ import scopt.OptionParser
 
 object Parser {
 
-    private val Version: String           = AppInfo.license
+    private val Version: String = AppInfo.license
 
     case class InputArgs(
-                            csvFile: Option[String],
-                            castMethod: Option[CastMode] = None,
-                            fallBack: Option[FallBack] = None,
-                            recursive: Boolean = true,
-                            inputDir: Option[String] = None,
-                            outputDir: Option[String] = None,
-                            failFast: Boolean = false,
-                            debugMode: Boolean = false
+        csvFile: Option[String],
+        castMethod: Option[CastMode] = None,
+        fallBack: Option[FallBack] = None,
+        recursive: Boolean = true,
+        inputDir: Option[String] = None,
+        outputDir: Option[String] = None,
+        failFast: Boolean = false,
+        debugMode: Boolean = false,
+        separator: Option[String] = None
     )
 
     private final val parser = new OptionParser[InputArgs]("into-parquet") {
@@ -44,6 +45,9 @@ object Parser {
                 }
             })
             .text("csv files for processing, separated by ','")
+        opt[String]("sep").optional
+            .action((sep, c) => c.copy(separator = Some(sep)))
+            .text("Field separator character")
         opt[String]('p', "path").optional
             .action((path, c) => c.copy(inputDir = if (isEmpty(path)) None else Some(path)))
             .text("Path to input folder")

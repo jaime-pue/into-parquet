@@ -6,6 +6,7 @@ package com.github.jaime.intoParquet.app
 
 import com.github.jaime.intoParquet.app.SparkBuilder.spark
 import com.github.jaime.intoParquet.behaviour.AppLogger
+import com.github.jaime.intoParquet.configuration.ReaderConfiguration
 import com.github.jaime.intoParquet.service.Common.renderPath
 import org.apache.spark.sql.DataFrame
 
@@ -17,10 +18,10 @@ object SparkReader extends AppLogger {
             .option("mode", "DROPMALFORMED")
             .option("columnNameOfCorruptRecord", "ERROR")
             .option("inferSchema", true)
-            .option("nullValue", "NULL")
-            .option("TimeStampFormat", "yyyy-MM-dd HH:mm:ss[.SSSSSSSSS]")
             .option("header", true)
-            .format("csv")
+            .option("nullValue", ReaderConfiguration.NullValue)
+            .option("TimeStampFormat", ReaderConfiguration.TimestampFormat)
+            .option("sep", ReaderConfiguration.Separator)
             .csv(filename)
     }
 
@@ -29,7 +30,8 @@ object SparkReader extends AppLogger {
         spark.read
             .option("header", true)
             .option("inferSchema", false)
-            .option("nullValue", "NULL")
+            .option("nullValue", ReaderConfiguration.NullValue)
+            .option("sep", ReaderConfiguration.Separator)
             .csv(filename)
     }
 
