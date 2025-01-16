@@ -4,6 +4,7 @@
 
 package com.github.jaime.intoParquet.common
 
+import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.holdenkarau.spark.testing.DataFrameSuiteBase
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.Row
@@ -37,5 +38,6 @@ trait SparkTestBuilder extends AnyFunSuite with DataFrameSuiteBase {
     override def beforeAll(): Unit = {
         super.beforeAll()
         deactivateScLog()
+        AppLogger.DebugMode = true
     }
 }

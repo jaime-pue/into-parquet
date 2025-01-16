@@ -22,13 +22,14 @@ object Parser {
     private val Version: String           = AppInfo.license
 
     case class InputArgs(
-        csvFile: Option[String],
-        castMethod: Option[CastMode] = None,
-        fallBack: Option[FallBack] = None,
-        recursive: Boolean = true,
-        inputDir: Option[String] = None,
-        outputDir: Option[String] = None,
-        failFast: Boolean = false
+                            csvFile: Option[String],
+                            castMethod: Option[CastMode] = None,
+                            fallBack: Option[FallBack] = None,
+                            recursive: Boolean = true,
+                            inputDir: Option[String] = None,
+                            outputDir: Option[String] = None,
+                            failFast: Boolean = false,
+                            debugMode: Boolean = false
     )
 
     private final val parser = new OptionParser[InputArgs]("into-parquet") {
@@ -65,6 +66,9 @@ object Parser {
         opt[Unit]("fail-fast").optional
             .action((_, c) => c.copy(failFast = true))
             .text("Fail and exit if any transformation fails")
+        opt[Unit]("debug").optional
+            .action((_, c) => c.copy(debugMode = true))
+            .text("Activate `debug` mode and display more information")
         opt[String]("fallback")
             .abbr("fb")
             .optional

@@ -111,4 +111,11 @@ class TestParser extends AnyFunSuite {
         assert(args.get.fallBack.isDefined)
         assertResult(FallBackInfer)(args.get.fallBack.get)
     }
+
+    test("Should activate debug mode flag") {
+        val input = Array("--debug")
+        val args = Parser.parseSystemArgs(input)
+        assume(args.isDefined)
+        assert(args.get.debugMode)
+    }
 }

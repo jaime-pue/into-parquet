@@ -18,7 +18,7 @@
         <Root level="error">
             <AppenderRef ref="console"/>
         </Root>
-        <Logger name="com.github.jaime.intoParquet" level="info" additivity="false">
+        <Logger name="com.github.jaime.intoParquet" level="debug" additivity="false">
             <AppenderRef ref="app"/>
         </Logger>
     </Loggers>
