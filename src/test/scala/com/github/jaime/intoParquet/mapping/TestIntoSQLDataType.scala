@@ -106,4 +106,20 @@ class TestIntoSQLDataType extends AnyFunSuite{
         assertResult(FloatDataType)(IntoSQLDataType.mapFrom("float"))
         assertResult(FloatDataType)(IntoSQLDataType.mapFrom("real"))
     }
+
+    test("Should become a Decimal if there is a single whitespace before the parenthesis") {
+        assertResult(new DecimalDataType(3,2))(IntoSQLDataType.mapFrom("decimal (3,2)"))
+    }
+
+    test("Should become a Decimal if there are several spaces inside the parenthesis") {
+        assertResult(new DecimalDataType(3,2))(IntoSQLDataType.mapFrom("decimal(3,   2)"))
+    }
+
+    test("Should become a Decimal if there are several spaces inside the parenthesis and one before") {
+        assertResult(new DecimalDataType(3,2))(IntoSQLDataType.mapFrom("decimal (3,  2)"))
+    }
+
+    test("Should fail if there are more than one whitespace before the parenthesis") {
+        assertThrows[NotImplementedTypeException](IntoSQLDataType.mapFrom("decimal     (3,2)"))
+    }
 }

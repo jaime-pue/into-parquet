@@ -7,17 +7,15 @@ package com.github.jaime.intoParquet.mapping
 import com.github.jaime.intoParquet.exception.NotImplementedTypeException
 import com.github.jaime.intoParquet.model.enumeration._
 
+import scala.util.matching.Regex
+
 object IntoSQLDataType {
 
     private val PunctuationSigns = "[,;.:]"
 
     def mapFrom(value: String): SQLDataType = {
         val sanitizedString = sanitizeString(value)
-        if (isDecimal(sanitizedString)) {
-            DecimalDataType(sanitizedString)
-        } else {
-            resolveCaseStatement(sanitizedString)
-        }
+        resolveCaseStatement(sanitizedString)
     }
 
     protected[mapping] def sanitizeString(value: String): String = {
@@ -33,11 +31,8 @@ object IntoSQLDataType {
         PunctuationSigns.contains(stringValue.reverse.head)
     }
 
-    private def isDecimal(value: String): Boolean = {
-        value.startsWith("decimal")
-    }
-
     private def resolveCaseStatement(cleanString: String): SQLDataType = {
+        val decimalRegex: Regex = raw"decimal\s?\(\d+,\s*\d+\)".r
         cleanString match {
             case "string"  => StringDataType
             case "boolean" => BooleanDataType
@@ -54,10 +49,12 @@ object IntoSQLDataType {
             case "bigint"   => LongDataType
             case "long"     => LongDataType
             // decimal types
-            case "double" => DoubleDataType
-            case "float"  => FloatDataType
-            case "real"   => FloatDataType
-            case e        => throw new NotImplementedTypeException(e)
+            case "double"         => DoubleDataType
+            case "float"          => FloatDataType
+            case "real"           => FloatDataType
+            case decimalRegex(_*) => DecimalDataType(cleanString)
+            // Anything else is a Failure
+            case e => throw new NotImplementedTypeException(e)
         }
     }
 }

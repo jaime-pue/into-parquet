@@ -42,6 +42,14 @@ object LongDataType extends SQLDataType {
 class DecimalDataType(val precision: Int, val scale: Int) extends SQLDataType {
 
     override val value: DataType = types.DecimalType(precision, scale)
+
+    override def equals(obj: Any): Boolean = {
+        obj match {
+            case d: DecimalDataType =>
+                d.value.equals(this.value)
+            case _ => false
+        }
+    }
 }
 
 object DecimalDataType {
