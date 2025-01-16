@@ -24,7 +24,7 @@ object IntoField extends AppLogger {
       * between
       */
     protected[mapping] def splitValue(line: String): Array[String] = {
-        val regex: Regex = raw"(\w+)\s+([a-zA-Z]+(\(\d+,\s*\d+\))?).*".r
+        val regex: Regex = raw"(\w+)\s+([a-zA-Z]+(\s?\(\d+,\s*\d+\))?).*".r
         line match {
             case regex(first, second, _*) => Array(first, second)
             case _ => throw new WrongFieldDescriptionException(line)

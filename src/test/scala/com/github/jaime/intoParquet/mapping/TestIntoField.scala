@@ -74,4 +74,10 @@ class TestIntoField extends AnyFunSuite {
         val sample = "aaa"
         assertThrows[Exception](IntoField.splitValue(sample))
     }
+
+    test("Should work if there is a space between the type") {
+        val sample = "random type (3,2)"
+        val expected = List("random", "type (3,2)")
+        assertResult(expected)(IntoField.splitValue(sample))
+    }
 }
