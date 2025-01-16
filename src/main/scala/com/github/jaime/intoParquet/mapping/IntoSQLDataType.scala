@@ -7,15 +7,20 @@ package com.github.jaime.intoParquet.mapping
 import com.github.jaime.intoParquet.exception.NotImplementedTypeException
 import com.github.jaime.intoParquet.model.enumeration._
 
+import scala.util.Try
 import scala.util.matching.Regex
 
 object IntoSQLDataType {
 
     private val PunctuationSigns = "[,;.:]"
 
-    def mapFrom(value: String): SQLDataType = {
+    protected[mapping] def mapFrom(value: String): SQLDataType = {
         val sanitizedString = sanitizeString(value)
         resolveCaseStatement(sanitizedString)
+    }
+
+    def tryFromString(value: String): Try[SQLDataType] = {
+        Try(mapFrom(value))
     }
 
     protected[mapping] def sanitizeString(value: String): String = {

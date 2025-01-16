@@ -44,6 +44,6 @@ class Field(_fieldName: String, _fieldType: SQLDataType) {
 
 object Field {
     def fromDescription(value: String): Try[Field] = {
-        Try(IntoField.fromDescription(value))
+        IntoField.tryFromDescription(value)
     }
 }
