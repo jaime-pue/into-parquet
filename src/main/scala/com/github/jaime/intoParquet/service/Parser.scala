@@ -44,7 +44,7 @@ object Parser {
                     c.copy(csvFile = Some(inputFiles), recursive = false)
                 }
             })
-            .text("csv files for processing, separated by ','")
+            .text("csv files for processing. By default, separated by ','")
         opt[String]("sep").optional
             .action((sep, c) => c.copy(separator = Some(sep)))
             .text("Field separator character")

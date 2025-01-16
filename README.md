@@ -29,8 +29,8 @@ rather than proceeding with the next file. A full traceback will be displayed ba
 
 ## Requirements
 
--   Java 1.8 or 1.11
--   Maven 3
+- Java 1.8 or 1.11
+- Maven 3
 
 ## Usage
 
@@ -54,14 +54,18 @@ Root/
 3. Compile with [maven](https://maven.apache.org/):
 
 ```shell
-mvn package clean
+mvn package clean -Dmaven.test.skip
 ```
 
 > `package` will compile the CLI tool
 >
 > `clean` will delete /target directory
+> 
+> `-Dmaven.test.skip` skip tests
 
 No need to re-compile unless a new version is needed or some changes applied to source code.
+
+NOTE:` mvn install` will launch scoverage report
 
 ### Execution
 
@@ -100,7 +104,7 @@ continuing the transformation process for the remaining files.
 The next table shows the currently supported data types:
 
 | SQL name        |
-| --------------- |
+|-----------------|
 | string          |
 | boolean         |
 | timestamp       |
@@ -118,7 +122,7 @@ The next table shows the currently supported data types:
 The decimal type requires both the precision and the scale magnitudes.
 Scale magnitude can't be higher than precision magnitude.
 
-Examples: `Decimal(38,2)`, `decimal(10, 4)`
+Examples: `Decimal(38,2)`, `decimal(10, 4)`, `decimal (10,2)`
 
 ## Folder structure
 
@@ -160,12 +164,14 @@ format.
 
 #### Date format
 
-The date input format must follow the ISO 8601 standard, which specifies the structure as **YYYY-MM-DD**, where "YYYY" 
-represents the four-digit year, "MM" the two-digit month (01 through 12), and "DD" the two-digit day of the month (01 through 31), 
+The date input format must follow the ISO 8601 standard, which specifies the structure as **YYYY-MM-DD**, where "YYYY"
+represents the four-digit year, "MM" the two-digit month (01 through 12), and "DD" the two-digit day of the month (01
+through 31),
 and the separator must be a hyphen "-".
 For example, 2024-12-02 indicates the 2nd of December, 2024.
 
-The same happens with the timestamp format. Therefore, the order of the elements used to express date and time in ISO 8601 is 
+The same happens with the timestamp format. Therefore, the order of the elements used to express date and time in ISO
+8601 is
 as follows: year, month, day, hour, minutes, seconds, and milliseconds.
 
 For example, September 27, 2022 at 6 p.m. is represented as 2022-09-27 18:00:00.000.
@@ -223,16 +229,18 @@ Root/
 
 ## CLI Options
 
-| Name          | Shortcut | Comment                                        | Type   | Example                         |
-| ------------- | -------- | ---------------------------------------------- | ------ | ------------------------------- |
-| `--files`     | `-f`     | List of files for processing, separated by `,` | String | `--files fileOne,fileTwo,fileN` |
-| `--path`      | `-p`     | Path where csv files are                       | String | `--path ./path/to/input/`       |
-| `--output`    | `-o`     | Where to put parquet files                     | String | `-output ~/output/dir/`         |
-| `--mode`      | `-m`     | Cast method                                    | String | `--mode raw`                    |
-| `--fallback`  | `-fb`    | Fallback method                                | String | `--fallback fail`               |
-| `--fail-fast` |          | Fail if any error found                        | Flag   | `--fail-fast`                   |
-| `--version`   | `-v`     | Show current script version                    | Flag   | `--version`                     |
-| `--help`      | `-h`     | Show help context                              | Flag   | `--help`                        |
+| Name          | Shortcut | Comment                                                        | Type   | Example                         |
+|---------------|----------|----------------------------------------------------------------|--------|---------------------------------|
+| `--files`     | `-f`     | List of files for processing, by default, separated by `,`     | String | `--files fileOne,fileTwo,fileN` |
+| `--sep`       |          | Field separator, for special bash chars they should be escaped | String | `--sep \;`                      |
+| `--path`      | `-p`     | Path where csv files are                                       | String | `--path ./path/to/input/`       |
+| `--output`    | `-o`     | Where to put parquet files                                     | String | `-output ~/output/dir/`         |
+| `--mode`      | `-m`     | Cast method                                                    | String | `--mode raw`                    |
+| `--fallback`  | `-fb`    | Fallback method                                                | String | `--fallback fail`               |
+| `--fail-fast` |          | Fail if any error found                                        | Flag   | `--fail-fast`                   |
+| `--debug`     |          | Show debug level messages                                      | Flag   | `--debug`                       |
+| `--version`   | `-v`     | Show current script version                                    | Flag   | `--version`                     |
+| `--help`      | `-h`     | Show help context                                              | Flag   | `--help`                        |
 
 ### Example
 
@@ -298,34 +306,11 @@ Fail with an exception if no schema file found, if fail-fast mode set, will forc
 
 ### Enabling Debug Mode in the Application
 
-To enable debug mode for the application, you will need to modify a specific parameter in the `log4j2.xml` configuration
-file. This file is located in the `src/main/resources` directory of your project.
+To enable debug mode for the application, you will need to pass `--debug` flag as an argument:
 
-1. Locate the `log4j2.xml` file:
-
-Navigate to the src/main/resources folder in your project directory and open the `log4j2.xml` file.
-
-2. Modify the Log Level:
-
-In the `log4j2.xml` file, you will find a <Logger> element that controls the logging level.
-To enable debug logging, change the level attribute to debug. It should look something like this:
-
-```xml
-
-<Loggers>
-    ...
-    <Logger name="com.github.jaime.intoParquet" level="debug" additivity="false">
-        <AppenderRef ref="app"/>
-    </Logger>
-</Loggers>
+```shell
+java -jar into-parquet-cli.jar --debug
 ```
-
-This will configure the application to log detailed debug information, which can help with troubleshooting and
-monitoring.
-
-3. Save and Restart:
-
-After saving the changes to the `log4j2.xml` file, recompile the application and start once again.
 
 ### Customising Log Rendering
 
