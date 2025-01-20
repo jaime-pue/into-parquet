@@ -28,4 +28,4 @@ jobs:
         distribution: 'corretto'
         cache: maven
     - name: Run Maven tests
-      run: mvn clean test
+      run: mvn scoverage:check
