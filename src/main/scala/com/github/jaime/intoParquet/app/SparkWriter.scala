@@ -4,27 +4,35 @@
 
 package com.github.jaime.intoParquet.app
 
+import com.github.jaime.intoParquet.app.SparkBuilder.spark
+import com.github.jaime.intoParquet.app.SparkWriter.calculateNumberOfPartitions
+import com.github.jaime.intoParquet.app.SparkWriter.isRepartitionBetter
 import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.github.jaime.intoParquet.service.Common.renderPath
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.SaveMode
 
-object SparkWriter extends AppLogger {
+import scala.math.pow
 
-    private val LinesForSplitting: Int = 50000
+class SparkWriter(df: DataFrame, path: String) extends AppLogger {
 
-    def writeTo(df: DataFrame, path: String): Unit = {
+    def writeTo(): Unit = {
         logInfo("Write parquet file")
         logDebug(s"Write data to: ${renderPath(path)}")
-        val rows = df.cache().count()
-        logDebug(s"Row count: ${rows}")
-        val partitions = calculateNumberOfPartitions(rows)
-        setNumberOfPartitions(df, partitions).write
+        val partitions = calculateNumberOfPartitions(sizeInBytes.toLong)
+        setNumberOfPartitions(partitions).write
             .mode(SaveMode.Overwrite)
             .parquet(path)
     }
 
-    private def setNumberOfPartitions(df: DataFrame, partitions: Int): DataFrame = {
+    private def sizeInBytes: BigInt = {
+        val rows = df.cache().count()
+        logDebug(s"Row count: ${rows}")
+        val catalystPlan = df.queryExecution.logical
+        spark.sessionState.executePlan(catalystPlan).optimizedPlan.stats.sizeInBytes
+    }
+
+    protected[app] def setNumberOfPartitions(partitions: Int): DataFrame = {
         logDebug(s"Split in #$partitions files")
         if (isRepartitionBetter(partitions)) {
             df.repartition(1)
@@ -32,13 +40,20 @@ object SparkWriter extends AppLogger {
             df.coalesce(partitions)
         }
     }
+}
+
+object SparkWriter extends AppLogger {
+    private val MaxMBForSplits: Int = 100
+
+    protected[app] def calculateNumberOfPartitions(sizeInBytes: Long): Int = {
+        (ceilBytesToInt(sizeInBytes).toDouble / MaxMBForSplits.toDouble).ceil.toInt
+    }
+
+    protected[app] def ceilBytesToInt(bytes: BigInt): Int = {
+        (bytes.toDouble * pow(10, -6)).ceil.toInt
+    }
 
     private def isRepartitionBetter(parts: Int): Boolean = {
-        parts == 0 || parts == 1
+        parts <= 1
     }
-
-    protected[app] def calculateNumberOfPartitions(dataFrameRows: Long): Int = {
-        (dataFrameRows.toDouble / LinesForSplitting.toDouble).ceil.toInt
-    }
-
 }

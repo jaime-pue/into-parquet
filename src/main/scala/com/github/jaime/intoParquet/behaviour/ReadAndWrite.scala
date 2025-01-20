@@ -4,7 +4,7 @@
 
 package com.github.jaime.intoParquet.behaviour
 
-import com.github.jaime.intoParquet.app.SparkWriter.writeTo
+import com.github.jaime.intoParquet.app.SparkWriter
 import com.github.jaime.intoParquet.configuration.BasePaths
 import org.apache.spark.sql.DataFrame
 
@@ -24,7 +24,8 @@ trait ReadAndWrite {
     def readFrom: DataFrame
 
     protected def writeResult(): Unit = {
-        writeTo(readFrom, absoluteOutputPath)
+        val writer = new SparkWriter(readFrom, absoluteOutputPath)
+        writer.writeTo()
     }
 
     override def execution(): Unit = {
