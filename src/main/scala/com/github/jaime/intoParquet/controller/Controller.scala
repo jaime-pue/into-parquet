@@ -11,32 +11,21 @@ import com.github.jaime.intoParquet.mapping.IntoBasePaths
 import com.github.jaime.intoParquet.mapping.IntoCastMode
 import com.github.jaime.intoParquet.mapping.transformer.AsController
 import com.github.jaime.intoParquet.model.enumeration.CastMode
-import com.github.jaime.intoParquet.service.Parser.InputArgs
 
-class Controller(inputArgs: InputArgs) extends AppLogger {
-    private val recursiveRead: Boolean = inputArgs.recursive
-    private val basePaths: BasePaths   = intoBasePaths
-    private val failFast: Boolean      = inputArgs.failFast
-
-    def this(fromArgs: AsController) = {
-        this(fromArgs.into)
-    }
+class Controller(
+    basePaths: BasePaths,
+    recursiveRead: Boolean,
+    failFast: Boolean,
+    castMode: CastMode,
+    csvFiles: Option[String]
+) extends AppLogger {
 
     final def route(): Unit = {
         intoFileController.files match {
             case Some(csvFiles) =>
-                ReaderConfiguration.Separator = inputArgs.separator.getOrElse(",")
                 intoExecutionController(csvFiles).buildSparkAndRun()
-            case None => logInfo(s"No file found in ${basePaths.inputBasePath}. Skip")
+            case None => logInfo(s"No file found in ${basePaths.inputBasePath}. Skipping")
         }
-    }
-
-    private def intoBasePaths: BasePaths = {
-        new BasePaths(new IntoBasePaths(inputArgs.inputDir, inputArgs.outputDir))
-    }
-
-    private def intoCastMethod: CastMode = {
-        new IntoCastMode(inputArgs.fallBack, inputArgs.castMethod).mode
     }
 
     private def intoFileController: FileController = {
@@ -44,7 +33,7 @@ class Controller(inputArgs: InputArgs) extends AppLogger {
         new FileController(
           basePaths = basePaths,
           recursiveRead = recursiveRead,
-          csvFiles = inputArgs.csvFile
+          csvFiles = csvFiles
         )
     }
 
@@ -53,8 +42,24 @@ class Controller(inputArgs: InputArgs) extends AppLogger {
         new ExecutionController(
           csvFiles = files,
           basePaths = basePaths,
-          castMode = intoCastMethod,
+          castMode = castMode,
           failFast = failFast
+        )
+    }
+}
+
+object Controller {
+
+    def into(obj: AsController): Controller = {
+        val inputArgs = obj.into
+        AppLogger.DebugMode = inputArgs.debugMode
+        ReaderConfiguration.Separator = inputArgs.separator.getOrElse(",")
+        new Controller(
+          new BasePaths(new IntoBasePaths(inputArgs.inputDir, inputArgs.outputDir)),
+          inputArgs.recursive,
+          inputArgs.failFast,
+          new IntoCastMode(inputArgs.fallBack, inputArgs.castMethod).mode,
+          inputArgs.csvFile
         )
     }
 }

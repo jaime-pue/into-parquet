@@ -25,16 +25,14 @@ package com.github.jaime.intoParquet
 import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.github.jaime.intoParquet.controller.Controller
 import com.github.jaime.intoParquet.mapping.IntoController
-import com.github.jaime.intoParquet.service.Parser.InputArgs
 
 object Main extends AppLogger {
 
     def main(args: Array[String]): Unit = {
         logDebug("Start new session")
-        val inputArgs: InputArgs = new IntoController(args).into
-        AppLogger.DebugMode = inputArgs.debugMode
+        val asConfig = new IntoController(args)
         logDebug("Input arguments seems Ok")
-        val controller = new Controller(inputArgs)
+        val controller = Controller.into(asConfig)
         controller.route()
         logDebug("Close application")
     }
