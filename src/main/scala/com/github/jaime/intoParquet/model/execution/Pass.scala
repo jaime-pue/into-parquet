@@ -5,7 +5,6 @@
 package com.github.jaime.intoParquet.model.execution
 
 import com.github.jaime.intoParquet.service.AppLogger
-import com.github.jaime.intoParquet.behaviour.Executor
 
 class Pass(_file: String) extends Executor with AppLogger {
 

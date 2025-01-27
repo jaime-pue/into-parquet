@@ -4,7 +4,6 @@
 
 package com.github.jaime.intoParquet.model.execution
 
-import com.github.jaime.intoParquet.behaviour.Executor
 import com.github.jaime.intoParquet.exception.NoSchemaFoundException
 
 class Fail(_file: String) extends Executor {

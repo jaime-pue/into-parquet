@@ -1,8 +1,8 @@
 /*
- * IntoParquet Copyright (c) 2024 Jaime Alvarez
+ * IntoParquet Copyright (c) 2024-2025 Jaime Alvarez
  */
 
-package com.github.jaime.intoParquet.behaviour
+package com.github.jaime.intoParquet.model.execution
 
 import scala.util.Try
 
