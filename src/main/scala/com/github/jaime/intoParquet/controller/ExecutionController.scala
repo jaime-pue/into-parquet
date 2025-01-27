@@ -14,6 +14,7 @@ import com.github.jaime.intoParquet.model.execution.Executor
 import com.github.jaime.intoParquet.model.execution.Infer
 import com.github.jaime.intoParquet.model.execution.Parse
 import com.github.jaime.intoParquet.model.execution.Raw
+import com.github.jaime.intoParquet.service.Chronometer
 
 import scala.util.Failure
 import scala.util.Success
@@ -28,15 +29,16 @@ class ExecutionController(
 
     protected[controller] def execution: Try[Unit] = {
         logInfo(s"Apply cast mode ${castMode.toString}")
-        Success(this.csvFiles.foreach(files => {
-            castElement(files).cast match {
+        Success(this.csvFiles.foreach(file => {
+            val timer = new Chronometer()
+            castElement(file).cast match {
                 case Failure(exception) =>
                     if (failFast) {
                         return Failure(exception)
                     } else {
                         logError(exception.getMessage)
                     }
-                case Success(_) =>
+                case Success(_) => logInfo(s"$file took: ${timer.toString} seconds")
             }
         }))
     }
