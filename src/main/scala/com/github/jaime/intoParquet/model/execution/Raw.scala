@@ -5,7 +5,7 @@
 package com.github.jaime.intoParquet.model.execution
 
 import com.github.jaime.intoParquet.app.SparkReader.readRawCSV
-import com.github.jaime.intoParquet.behaviour.AppLogger
+import com.github.jaime.intoParquet.service.AppLogger
 import com.github.jaime.intoParquet.behaviour.Executor
 import com.github.jaime.intoParquet.behaviour.ReadAndWrite
 import com.github.jaime.intoParquet.configuration.BasePaths

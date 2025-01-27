@@ -4,7 +4,7 @@
 
 package com.github.jaime.intoParquet.app
 
-import com.github.jaime.intoParquet.behaviour.AppLogger
+import com.github.jaime.intoParquet.service.AppLogger
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 

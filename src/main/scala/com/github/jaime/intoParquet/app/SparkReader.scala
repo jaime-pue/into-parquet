@@ -5,7 +5,7 @@
 package com.github.jaime.intoParquet.app
 
 import com.github.jaime.intoParquet.app.SparkBuilder.spark
-import com.github.jaime.intoParquet.behaviour.AppLogger
+import com.github.jaime.intoParquet.service.AppLogger
 import com.github.jaime.intoParquet.configuration.ReaderConfiguration
 import com.github.jaime.intoParquet.service.Common.renderPath
 import org.apache.spark.sql.DataFrame

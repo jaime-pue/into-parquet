@@ -4,7 +4,7 @@
 
 package com.github.jaime.intoParquet.mapping
 
-import com.github.jaime.intoParquet.behaviour.AppLogger
+import com.github.jaime.intoParquet.service.AppLogger
 import com.github.jaime.intoParquet.exception.WrongFieldDescriptionException
 import com.github.jaime.intoParquet.model.Field
 

@@ -22,7 +22,7 @@
 
 package com.github.jaime.intoParquet
 
-import com.github.jaime.intoParquet.behaviour.AppLogger
+import com.github.jaime.intoParquet.service.AppLogger
 import com.github.jaime.intoParquet.controller.Controller
 import com.github.jaime.intoParquet.mapping.IntoController
 

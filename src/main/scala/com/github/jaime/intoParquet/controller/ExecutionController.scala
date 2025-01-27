@@ -4,7 +4,7 @@
 
 package com.github.jaime.intoParquet.controller
 
-import com.github.jaime.intoParquet.behaviour.AppLogger
+import com.github.jaime.intoParquet.service.AppLogger
 import com.github.jaime.intoParquet.behaviour.Executor
 import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.model.enumeration.CastMode

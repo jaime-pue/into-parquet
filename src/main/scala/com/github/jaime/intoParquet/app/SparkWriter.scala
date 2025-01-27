@@ -7,7 +7,7 @@ package com.github.jaime.intoParquet.app
 import com.github.jaime.intoParquet.app.SparkBuilder.spark
 import com.github.jaime.intoParquet.app.SparkWriter.calculateNumberOfPartitions
 import com.github.jaime.intoParquet.app.SparkWriter.isRepartitionBetter
-import com.github.jaime.intoParquet.behaviour.AppLogger
+import com.github.jaime.intoParquet.service.AppLogger
 import com.github.jaime.intoParquet.service.Common.renderPath
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.SaveMode

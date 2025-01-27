@@ -5,7 +5,7 @@
 package com.github.jaime.intoParquet.controller
 
 import com.github.jaime.intoParquet.app.SparkBuilder
-import com.github.jaime.intoParquet.behaviour.AppLogger
+import com.github.jaime.intoParquet.service.AppLogger
 import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.configuration.ReaderConfiguration
 import com.github.jaime.intoParquet.configuration.SparkConfiguration.configuration
