@@ -4,13 +4,18 @@
 
 package com.github.jaime.intoParquet.controller
 
+import com.github.jaime.intoParquet.app.SparkBuilder
 import com.github.jaime.intoParquet.behaviour.AppLogger
 import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.configuration.ReaderConfiguration
+import com.github.jaime.intoParquet.configuration.SparkConfiguration.configuration
 import com.github.jaime.intoParquet.mapping.IntoBasePaths
 import com.github.jaime.intoParquet.mapping.IntoCastMode
 import com.github.jaime.intoParquet.mapping.transformer.AsController
 import com.github.jaime.intoParquet.model.enumeration.CastMode
+
+import scala.util.Failure
+import scala.util.Success
 
 class Controller(
     basePaths: BasePaths,
@@ -22,9 +27,25 @@ class Controller(
 
     final def route(): Unit = {
         intoFileController.files match {
-            case Some(csvFiles) =>
-                intoExecutionController(csvFiles).buildSparkAndRun()
-            case None => logInfo(s"No file found in ${basePaths.inputBasePath}. Skipping")
+            case Some(csvFiles) => resolveExecution(csvFiles)
+            case None           => logInfo(s"No file found in ${basePaths.inputBasePath}. Skipping")
+        }
+    }
+
+    /** Gracefully stop current Spark Session even if a failure throws its exception */
+    private def resolveExecution(csvFiles: Array[String]): Unit = {
+        logInfo("Start batch")
+        SparkBuilder.beforeAll(configuration)
+        intoExecutionController(csvFiles).execution match {
+            case Failure(exception) =>
+                logError(s"""Something went wrong:
+                            |${exception.getMessage}
+                            |""".stripMargin)
+                SparkBuilder.afterAll()
+                throw exception
+            case Success(_) =>
+                logInfo("Job ended Ok!")
+                SparkBuilder.afterAll()
         }
     }
 

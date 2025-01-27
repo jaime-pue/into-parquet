@@ -68,7 +68,8 @@ class TestMain extends SparkTestBuilder with BeforeAndAfterEach {
           "-fb",
           "fail",
           "-p",
-          Resources.InputTestFolder
+          Resources.InputTestFolder,
+          "--debug"
         )
         assertThrows[NoSchemaFoundException](Main.main(args))
     }
