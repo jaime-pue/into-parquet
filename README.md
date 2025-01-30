@@ -29,8 +29,8 @@ rather than proceeding with the next file. A full traceback will be displayed ba
 
 ## Requirements
 
-- Java 1.8 or 1.11
-- Maven 3
+-   Java 1.8 or 1.11
+-   Maven 3
 
 ## Usage
 
@@ -60,12 +60,13 @@ mvn package clean -Dmaven.test.skip
 > `package` will compile the CLI tool
 >
 > `clean` will delete /target directory
-> 
+>
 > `-Dmaven.test.skip` skip tests
 
 No need to re-compile unless a new version is needed or some changes applied to source code.
 
-NOTE:` mvn install` will launch scoverage report
+The compiled jar can be moved safely to another directory.
+
 
 ### Execution
 
@@ -77,7 +78,7 @@ java -jar into-parquet-cli.jar
 
 The tool supports a full range of [optional flags](#cli-options) the user can add, e.g.:
 
-```shell
+```**shell**
 java -jar into-parquet-cli.jar --files exampleFile --fallback raw
 ```
 
@@ -85,6 +86,92 @@ Ensure that all your CSV files, with the [mandatory header row](#mandatory-heade
 folder along with the [table description file](#table-description), which should be in the same directory as this JAR
 file.
 The tool will automatically read all CSV files from this folder and convert them into Parquet format.
+
+## CLI Options
+
+Command line arguments are optional. They provide useful modifications to how the scripts works and flows.
+
+Default configuration, running the tool without any arguments, equals to:
+
+```shell
+java -jar into-parquet-cli.jar --sep , --path ./data/input --output ./data/output --mode parse --fallback pass
+```
+
+### Optional arguments
+
+| Name          | Shortcut | Comment                                                                    | Type   | Example                           |
+| ------------- | -------- | -------------------------------------------------------------------------- | ------ | --------------------------------- |
+| `--files`     | `-f`     | List of files for processing. Separated by `,`                             | String | `--files fileOne,fileTwo,fileN`   |
+| `--exclude`   | `-e`     | Exclude files from processing. Separated by `,`                            | String | `--exclude fileOne,fileTwo,fileN` |
+| `--sep`       |          | CSV field separator, for special bash chars they should be escaped         | String | `--sep \;`                        |
+| `--path`      | `-p`     | Path where CSV files are                                                   | String | `--path ./path/to/input/`         |
+| `--output`    | `-o`     | Where to put parquet files from CSV sources                                | String | `-output ~/output/dir/`           |
+| `--mode`      | `-m`     | Cast method [parse, raw, infer]                                            | String | `--mode raw`                      |
+| `--fallback`  | `-fb`    | Fallback method for parse mode [raw, infer, pass, fail]                    | String | `--fallback fail`                 |
+| `--fail-fast` |          | Fail if any error found. Throw exception and log the stacktrace to console | Flag   | `--fail-fast`                     |
+| `--debug`     |          | Show debug level messages                                                  | Flag   | `--debug`                         |
+| `--version`   | `-v`     | Show current script version                                                | Flag   | `--version`                       |
+| `--help`      | `-h`     | Show help context                                                          | Flag   | `--help`                          |
+
+### Example
+
+```shell
+java -jar into-parquet-cli.jar --files fileOne,fileTwo --output /home/user/
+```
+
+### Cast method options
+
+Try to apply these transformations
+
+#### Raw Schema
+
+Read all fields as String and don't perform any inference or cast to anything
+
+`--mode raw`
+
+#### Infer Schema
+
+Infer schema automatically and try casting each column to appropriate type.
+
+May infer types wrong, such as inferring a String field as an Integer. "00002" could be cast to 2
+
+`--mode infer`
+
+#### Parse Schema (Default)
+
+Apply a given schema from a text file with the same name as the processed csv file
+
+`--mode parse`
+
+### Fallback method options
+
+If there are no correspondent txt files inside `input` folder, try to apply some other operation
+
+#### Raw
+
+Read all fields as String and don't perform any inference or cast to anything
+
+`--fallback raw`
+
+#### Infer Schema
+
+Infer schema automatically and try casting each column to appropriate type.
+
+May infer types wrong, such as inferring a String field as an Integer. "00002" could be cast to 2
+
+`--fallback infer`
+
+#### Pass (Default)
+
+Do nothing with the current file and skip to the next one
+
+`--fallback pass`
+
+#### Fail
+
+Fail with an exception if no schema file found, if fail-fast mode set, will force an exit
+
+`--fallback fail`
 
 ## Supported data types
 
@@ -104,7 +191,7 @@ continuing the transformation process for the remaining files.
 The next table shows the currently supported data types:
 
 | SQL name        |
-|-----------------|
+| --------------- |
 | string          |
 | boolean         |
 | timestamp       |
@@ -227,81 +314,6 @@ Root/
             └── part-hash-snappy.parquet
 ```
 
-## CLI Options
-
-| Name          | Shortcut | Comment                                                        | Type   | Example                         |
-|---------------|----------|----------------------------------------------------------------|--------|---------------------------------|
-| `--files`     | `-f`     | List of files for processing, by default, separated by `,`     | String | `--files fileOne,fileTwo,fileN` |
-| `--sep`       |          | Field separator, for special bash chars they should be escaped | String | `--sep \;`                      |
-| `--path`      | `-p`     | Path where csv files are                                       | String | `--path ./path/to/input/`       |
-| `--output`    | `-o`     | Where to put parquet files                                     | String | `-output ~/output/dir/`         |
-| `--mode`      | `-m`     | Cast method                                                    | String | `--mode raw`                    |
-| `--fallback`  | `-fb`    | Fallback method                                                | String | `--fallback fail`               |
-| `--fail-fast` |          | Fail if any error found                                        | Flag   | `--fail-fast`                   |
-| `--debug`     |          | Show debug level messages                                      | Flag   | `--debug`                       |
-| `--version`   | `-v`     | Show current script version                                    | Flag   | `--version`                     |
-| `--help`      | `-h`     | Show help context                                              | Flag   | `--help`                        |
-
-### Example
-
-```shell
-java -jar into-parquet-cli.jar --files fileOne,fileTwo --output /home/user/
-```
-
-### Cast method options
-
-Try to apply these transformations
-
-#### Raw Schema
-
-Read all fields as String and don't perform any inference or cast to anything
-
-`--mode raw`
-
-#### Infer Schema
-
-Infer schema automatically and try casting each column to appropriate type.
-
-May infer types wrong, such as inferring a String field as an Integer. "00002" could be cast to 2
-
-`--mode infer`
-
-#### Parse Schema (Default)
-
-Apply a given schema from a text file with the same name as the processed csv file
-
-`--mode parse`
-
-### Fallback method options
-
-If there are no correspondent txt files inside `input` folder, try to apply some other operation
-
-#### Raw
-
-Read all fields as String and don't perform any inference or cast to anything
-
-`--fallback raw`
-
-#### Infer Schema
-
-Infer schema automatically and try casting each column to appropriate type.
-
-May infer types wrong, such as inferring a String field as an Integer. "00002" could be cast to 2
-
-`--fallback infer`
-
-#### Pass (Default)
-
-Do nothing with the current file and skip to the next one
-
-`--fallback pass`
-
-#### Fail
-
-Fail with an exception if no schema file found, if fail-fast mode set, will force an exit
-
-`--fallback fail`
-
 ## Debug Mode
 
 ### Enabling Debug Mode in the Application
@@ -311,6 +323,16 @@ To enable debug mode for the application, you will need to pass `--debug` flag a
 ```shell
 java -jar into-parquet-cli.jar --debug
 ```
+
+### Enabling the stacktrace
+
+To enable the stacktrace for debugging purposes, you will need to pass `--fail-fast` flag as an argument:
+
+```shell
+java -jar into-parquet-cli.jar --fail-fast
+```
+
+Adding `--debug` flag will render more information back to the user.
 
 ### Customising Log Rendering
 
