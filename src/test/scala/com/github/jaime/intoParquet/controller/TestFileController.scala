@@ -19,7 +19,7 @@ class TestFileController extends AnyFunSuite {
         val controller = new FileController(basePaths,  None)
         val files = controller.getAllFilenamesFromFolder
         assume(files.isSuccess)
-        assert(files.get.length > 0)
+        assert(files.get.nonEmpty)
     }
 
     test("Should return None if directory doesn't exist") {

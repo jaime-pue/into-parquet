@@ -22,7 +22,8 @@ object Parser {
     private val Version: String = AppInfo.license
 
     case class InputArgs(
-        csvFile: Option[String],
+        csvFile: Option[String] = None,
+        excludeCSV: Option[String] = None,
         castMethod: Option[CastMode] = None,
         fallBack: Option[FallBack] = None,
         inputDir: Option[String] = None,
@@ -43,7 +44,16 @@ object Parser {
                     c.copy(csvFile = Some(inputFiles))
                 }
             })
-            .text("csv files for processing. By default, separated by ','")
+            .text("Process only these CSV files. Separated by ','")
+        opt[String]('e', "exclude").optional
+            .action((excludeFiles, c) => {
+                if (isEmpty(excludeFiles)) {
+                    c.copy(excludeCSV = None)
+                } else {
+                    c.copy(excludeCSV = Some(excludeFiles))
+                }
+            })
+            .text("Exclude these CSV files. Separated by ','")
         opt[String]("sep").optional
             .action((sep, c) => c.copy(separator = Some(sep)))
             .text("Field separator character")

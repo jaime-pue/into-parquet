@@ -98,4 +98,18 @@ class TestParser extends AnyFunSuite {
         assume(args.isDefined)
         assert(args.get.debugMode)
     }
+
+    test("Should exclude some files") {
+        val input = Array("--exclude", "one,two")
+        val args = Parser.parseSystemArgs(input)
+        assume(args.isDefined)
+        assume(args.get.excludeCSV.isDefined)
+        assertResult("one,two")(args.get.excludeCSV.get)
+    }
+
+    test("Should return None if no excluded line") {
+        val args = Parser.parseSystemArgs(Array[String]())
+        assume(args.isDefined)
+        assert(args.get.excludeCSV.isEmpty)
+    }
 }

@@ -22,7 +22,8 @@ class Controller(
     basePaths: BasePaths,
     failFast: Boolean,
     castMode: CastMode,
-    csvFiles: Option[String]
+    csvFiles: Option[String],
+    excludeFiles: Option[String] = None
 ) extends AppLogger {
 
     final def route(): Unit = {
@@ -49,11 +50,12 @@ class Controller(
         }
     }
 
-    private def intoFileController: FileController = {
+    protected[controller] def intoFileController: FileController = {
         logDebug("Create new File Controller class")
         new FileController(
           basePaths = basePaths,
-          csvFiles = csvFiles
+          csvFiles = csvFiles,
+          excludedFiles = excludeFiles
         )
     }
 

@@ -45,7 +45,7 @@ class FileController(
         Try(readAllFilesFromRaw(inputBasePath))
     }
 
-    def getFiles: Option[Seq[String]] = {
+    protected[controller] def getFiles: Option[Seq[String]] = {
         val files = getAllFilenamesFromFolder match {
             case Failure(exception) =>
                 logError(exception.getMessage)
