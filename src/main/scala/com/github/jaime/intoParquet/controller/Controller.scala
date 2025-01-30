@@ -20,7 +20,6 @@ import scala.util.Success
 
 class Controller(
     basePaths: BasePaths,
-    recursiveRead: Boolean,
     failFast: Boolean,
     castMode: CastMode,
     csvFiles: Option[String]
@@ -77,7 +76,6 @@ object Controller {
         ReaderConfiguration.Separator = inputArgs.separator.getOrElse(",")
         new Controller(
           new BasePaths(new IntoBasePaths(inputArgs.inputDir, inputArgs.outputDir)),
-          inputArgs.recursive,
           inputArgs.failFast,
           new IntoCastMode(inputArgs.fallBack, inputArgs.castMethod).mode,
           inputArgs.csvFile

@@ -25,7 +25,6 @@ object Parser {
         csvFile: Option[String],
         castMethod: Option[CastMode] = None,
         fallBack: Option[FallBack] = None,
-        recursive: Boolean = true,
         inputDir: Option[String] = None,
         outputDir: Option[String] = None,
         failFast: Boolean = false,
@@ -41,7 +40,7 @@ object Parser {
                 if (isEmpty(inputFiles)) {
                     c.copy(csvFile = None)
                 } else {
-                    c.copy(csvFile = Some(inputFiles), recursive = false)
+                    c.copy(csvFile = Some(inputFiles))
                 }
             })
             .text("csv files for processing. By default, separated by ','")
