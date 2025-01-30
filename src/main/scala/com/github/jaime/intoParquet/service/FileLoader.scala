@@ -4,7 +4,6 @@
 
 package com.github.jaime.intoParquet.service
 
-import com.github.jaime.intoParquet.service.AppLogger
 import com.github.jaime.intoParquet.exception.NoFileFoundException
 
 import java.nio.file.Files

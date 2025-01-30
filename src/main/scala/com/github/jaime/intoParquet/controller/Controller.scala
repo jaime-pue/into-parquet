@@ -53,7 +53,6 @@ class Controller(
         logDebug("Create new File Controller class")
         new FileController(
           basePaths = basePaths,
-          recursiveRead = recursiveRead,
           csvFiles = csvFiles
         )
     }

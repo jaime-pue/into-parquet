@@ -16,13 +16,32 @@ class TestFileController extends AnyFunSuite {
     private val basePaths = Resources.path
 
     test("Should get all csv files from resources folder") {
-        val controller = new FileController(basePaths, recursiveRead = true, None)
-        assert(controller.getAllFilenamesFromFolder.length > 0)
+        val controller = new FileController(basePaths,  None)
+        val files = controller.getAllFilenamesFromFolder
+        assume(files.isSuccess)
+        assert(files.get.length > 0)
     }
 
-    test("Should return an empty array of files") {
-        val controller = new FileController(basePaths, recursiveRead = true, Some("one,two"))
-        assertResult(Array[String]())(controller.getFilenamesFromInputLine)
+    test("Should return None if directory doesn't exist") {
+        val failController = new FileController(new BasePaths("imagine"), None)
+        assert(failController.files.isEmpty)
+    }
+
+    test("Should return None if no file matches") {
+        val controller = new FileController(basePaths, Some("one,two"))
+        assert(controller.getFiles.isEmpty)
+    }
+
+    test("Should return all files if recursive set to false but no inclusion file set") {
+        val controller = new FileController(basePaths, None, None)
+        assert(controller.files.isDefined)
+    }
+
+    test("Should return all files if recursive set to false but only excluded files added") {
+        val realFile = "exampleTable"
+        val controller = new FileController(basePaths, None, Some(realFile))
+        assume(controller.files.isDefined)
+        assert(!controller.files.get.contains(realFile))
     }
 
     test("Should return an array of files") {
@@ -50,22 +69,16 @@ class TestFileController extends AnyFunSuite {
     }
 
     test("Should return None if no files found") {
-        val controller = new FileController(basePaths, recursiveRead = false, Some("one,two"))
+        val controller = new FileController(basePaths, Some("one,two"))
         assert(controller.files.isEmpty)
     }
 
     test("Should return None if point to empty directory, but log message") {
         val controller = new FileController(
           new BasePaths(new IntoBasePaths(Some(Resources.ResourceFolder))),
-          recursiveRead = true,
+          
           csvFiles = None
         )
-        assert(controller.files.isEmpty)
-    }
-
-    test("Should throw exception if no recursive read and no files") {
-        val controller = new FileController(basePaths, recursiveRead = false, None)
-        assertResult(Array[String]())(controller.getFilenamesFromInputLine)
         assert(controller.files.isEmpty)
     }
 
@@ -81,21 +94,37 @@ class TestFileController extends AnyFunSuite {
         assert(isBlank(Some("   ")))
     }
 
-    private def newController(files: Option[String]): FileController = {
-        new FileController(basePaths, recursiveRead = false, csvFiles =files)
+    test("Should filter files by nane") {
+        val fileController = new FileController(basePaths, Some("one"))
+        val allFiles = Array("one", "two")
+        assertResult(Array("one"))(fileController.filterFiles(allFiles))
     }
 
-    private val Empty: Array[String] = Array()
-
-    test("Should return empty array if empty csvFiles") {
-        assertResult(Empty)(newController(None).getFilenamesFromInputLine)
+    test("Should return all files") {
+        val fileController = new FileController(basePaths, None)
+        val allFiles = Array("one", "two")
+        assertResult(allFiles)(fileController.filterFiles(allFiles))
     }
 
-    test("Should return empty array if csvFiles is empty string") {
-        assertResult(Empty)(newController(Some("")).getFilenamesFromInputLine)
+    test("Should exclude files by name") {
+        val fileController = new FileController(basePaths, None, Some("two"))
+        val allFiles = Array("one", "two")
+        assertResult(Array("one"))(fileController.filterFiles(allFiles))
     }
 
-    test("Should return an empty array if csvFiles contains only whitespaces") {
-        assertResult(Empty)(newController(Some("     ")).getFilenamesFromInputLine)
+    test("Should exclude a file that is included") {
+        val fileController = new FileController(basePaths, Some("one"), Some("one"))
+        val allFiles = Array("one", "two")
+        assertResult(Array[String]())(fileController.filterFiles(allFiles))
+    }
+
+    test("Should return None if input is only whitespaces") {
+        val fileController = new FileController(basePaths, Some("   "), None)
+        assert(fileController.files.isEmpty)
+    }
+
+    test("Should return a defined array if excluded files are only whitespaces") {
+        val fileController = new FileController(basePaths, None, Some("  "))
+        assert(fileController.files.isDefined)
     }
 }
