@@ -36,7 +36,7 @@ object FileLoader extends AppLogger {
         }
     }
 
-    def readAllFilesFromRaw(filepath: String): Array[String] = {
+    def readAllFilesFromRaw(filepath: String): List[String] = {
         val filePath = Paths.get(s"$filepath").toAbsolutePath
         logDebug(s"read from $filepath")
         try {
@@ -46,7 +46,7 @@ object FileLoader extends AppLogger {
                 .asScala
                 .filter(isCSV)
                 .map(grabFilename)
-                .toArray
+                .toList
         } catch {
             case _: NoSuchFileException => throw new NoFileFoundException(filePath.toString)
         }
@@ -54,11 +54,6 @@ object FileLoader extends AppLogger {
 
     private def isCSV(f: Path): Boolean = {
         Files.isRegularFile(f) && f.getFileName.toString.endsWith(".csv")
-    }
-
-    def filesExists(filepath: String, files: Array[String]): Array[String] = {
-        val allFiles = readAllFilesFromRaw(filepath)
-        allFiles.filter(f => files.contains(f))
     }
 
     private def grabFilename(file: Path): String = {

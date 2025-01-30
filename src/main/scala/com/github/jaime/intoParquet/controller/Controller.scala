@@ -12,6 +12,7 @@ import com.github.jaime.intoParquet.configuration.SparkConfiguration.configurati
 import com.github.jaime.intoParquet.mapping.IntoBasePaths
 import com.github.jaime.intoParquet.mapping.IntoCastMode
 import com.github.jaime.intoParquet.mapping.transformer.AsController
+import com.github.jaime.intoParquet.model.Files
 import com.github.jaime.intoParquet.model.enumeration.CastMode
 
 import scala.util.Failure
@@ -33,7 +34,7 @@ class Controller(
     }
 
     /** Gracefully stop current Spark Session even if a failure throws its exception */
-    private def resolveExecution(csvFiles: Array[String]): Unit = {
+    private def resolveExecution(csvFiles: Files): Unit = {
         logInfo("Start batch")
         SparkBuilder.beforeAll(configuration)
         intoExecutionController(csvFiles).execution match {
@@ -57,7 +58,7 @@ class Controller(
         )
     }
 
-    private def intoExecutionController(files: Array[String]): ExecutionController = {
+    private def intoExecutionController(files: Files): ExecutionController = {
         logDebug("Create new Execution Controller class")
         new ExecutionController(
           csvFiles = files,

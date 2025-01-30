@@ -9,10 +9,9 @@ import com.github.jaime.intoParquet.common.Resources.InputTestFolder
 import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.exception.NoFileFoundException
 import com.github.jaime.intoParquet.mapping.IntoBasePaths
-import com.github.jaime.intoParquet.service.FileLoader.filesExists
 import com.github.jaime.intoParquet.service.FileLoader.readAllFilesFromRaw
-import org.scalatest.funsuite.AnyFunSuite
 import com.github.jaime.intoParquet.service.FileLoader.readFile
+import org.scalatest.funsuite.AnyFunSuite
 
 class TestFileLoader extends AnyFunSuite {
 
@@ -42,17 +41,6 @@ class TestFileLoader extends AnyFunSuite {
     test("Should not fail if no csv files found") {
         val wrongDirectory = new BasePaths(new IntoBasePaths(Some(Resources.ResourceFolder))).inputBasePath
         assertResult(Array[String]())(readAllFilesFromRaw(wrongDirectory))
-    }
-
-    test("Should return all existing csv files") {
-        val files   = Array("exampleTable", "random")
-        val outcome = filesExists(path.inputBasePath, files)
-        assertResult(Array("exampleTable"))(outcome)
-    }
-
-    test("Should return an empty array if no file coincidence") {
-        val files = Array("E", "A")
-        assertResult(Array[String]())(filesExists(path.inputBasePath, files))
     }
 
     test("Should read from file with Á & Í chars") {

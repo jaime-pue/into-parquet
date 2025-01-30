@@ -41,7 +41,7 @@ class TestFileController extends AnyFunSuite {
         val realFile = "exampleTable"
         val controller = new FileController(basePaths, None, Some(realFile))
         assume(controller.files.isDefined)
-        assert(!controller.files.get.contains(realFile))
+        assert(!controller.files.get.items.contains(realFile))
     }
 
     test("Should return an array of files") {
