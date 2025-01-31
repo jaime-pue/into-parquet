@@ -16,7 +16,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -27,5 +26,13 @@ jobs:
         java-version: '11'
         distribution: 'corretto'
         cache: maven
-    - name: Run Maven tests
-      run: mvn scoverage:check
+    - name: Run Maven tests java 11
+      run: mvn clean scoverage:check
+    - name: Set up JDK 8
+      uses: actions/setup-java@v4
+      with:
+        java-version: '8'
+        distribution: 'corretto'
+        cache: maven
+    - name: Run Maven tests java 8
+      run: mvn clean scoverage:check
