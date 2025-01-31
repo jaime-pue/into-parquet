@@ -1,5 +1,5 @@
 /*
- * IntoParquet Copyright (c) 2024 Jaime Alvarez
+ * IntoParquet Copyright (c) 2024-2025 Jaime Alvarez
  */
 
 package com.github.jaime.intoParquet.service
@@ -56,7 +56,7 @@ object Parser {
             .text("Exclude these CSV files. Separated by ','")
         opt[String]("sep").optional
             .action((sep, c) => c.copy(separator = Some(sep)))
-            .text("Field separator character")
+            .text("CSV field separator character")
         opt[String]('p', "path").optional
             .action((path, c) => c.copy(inputDir = if (isEmpty(path)) None else Some(path)))
             .text("Path to input folder")
@@ -67,18 +67,15 @@ object Parser {
               |Transformation options:""".stripMargin)
         opt[String]('m', "mode").optional
             .action((castMethod, c) => c.copy(castMethod = Some(parseCastMethod(castMethod))))
-            .validate(m =>
-                if (isValidMethod(m)) success
-                else failure("Cast mode should be one of the following: raw, r; infer, i; parse, p")
-            )
-            .text("""Choose one of the following: [R]aw, [I]nfer, [P]arse
-                  | > Raw: read csv fields as String
+            .text("""Set the transformation method for CSVs. 
+                  | Choose one from [Raw | Infer | Parse]
+                  | > Raw: read all CSV fields as String
                   | > Infer: infer schema from fields (may yield wrong types)
-                  | > Parse: apply schema if found in adjacent text file
+                  | > Parse [Default]: apply schema if found in adjacent text file
                   |""".stripMargin)
         opt[Unit]("fail-fast").optional
             .action((_, c) => c.copy(failFast = true))
-            .text("Fail and exit if any transformation fails")
+            .text("Fail and exit if any transformation fails. Show stacktrace error")
         opt[Unit]("debug").optional
             .action((_, c) => c.copy(debugMode = true))
             .text("Activate `debug` mode and display more information")
@@ -86,10 +83,11 @@ object Parser {
             .abbr("fb")
             .optional
             .action((fallback, c) => c.copy(fallBack = Some(parseFallBackMethod(fallback))))
-            .text("""When using Parse mode option, use fallback method if no schema file found:
-                  | > Raw: read csv fields as String
+            .text("""When using Parse mode option, use fallback method transformation if no schema file found:
+                  | Choose one from [raw | infer | none | fail]
+                  | > Raw: read all CSV fields as String
                   | > Infer: infer schema from fields (may yield wrong types)
-                  | > None: skip conversion
+                  | > None [Default]: skip conversion
                   | > Fail: fail if no text file found""".stripMargin)
         note("""
               |Other options:""".stripMargin)
@@ -102,19 +100,12 @@ object Parser {
         parser.parse(args, InputArgs(csvFile = None))
     }
 
-    private def isValidMethod(method: String): Boolean = {
-        val validMethods = List("raw", "infer", "parse", "r", "i", "p")
-        validMethods.contains(sanitizeString(method))
-    }
-
     private def parseCastMethod(value: String): CastMode = {
         sanitizeString(value) match {
             case "raw"   => RawSchema
-            case "r"     => RawSchema
             case "infer" => InferSchema
-            case "i"     => InferSchema
             case "parse" => new ParseSchema()
-            case "p"     => new ParseSchema()
+            case _       => new ParseSchema()
         }
     }
 
@@ -123,7 +114,8 @@ object Parser {
             case "infer" => FallBackInfer
             case "fail"  => FallBackFail
             case "pass"  => FallBackNone
-            case _       => FallBackRaw
+            case "raw"   => FallBackRaw
+            case _       => FallBackNone
         }
     }
 
