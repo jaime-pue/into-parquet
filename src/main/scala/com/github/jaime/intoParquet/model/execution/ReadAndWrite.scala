@@ -8,6 +8,8 @@ import com.github.jaime.intoParquet.app.SparkWriter
 import com.github.jaime.intoParquet.configuration.BasePaths
 import org.apache.spark.sql.DataFrame
 
+import scala.util.Try
+
 trait ReadAndWrite {
     self: Executor =>
 
@@ -23,12 +25,10 @@ trait ReadAndWrite {
 
     def readFrom: DataFrame
 
-    protected def writeResult(): Unit = {
+    private def writeResult(): Unit = {
         val writer = new SparkWriter(readFrom, absoluteOutputPath)
         writer.writeTo()
     }
 
-    override def execution(): Unit = {
-        writeResult()
-    }
+    override def cast: Try[Unit] = Try(writeResult())
 }

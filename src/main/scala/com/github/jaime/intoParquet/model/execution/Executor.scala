@@ -10,11 +10,7 @@ trait Executor {
 
     protected val file: String
 
-    final def cast: Try[Unit] = {
-        Try(execution())
-    }
-
-    def execution(): Unit
+    def cast: Try[Unit]
 
     override def toString: String = file
 }

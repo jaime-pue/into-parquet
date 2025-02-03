@@ -20,51 +20,54 @@ import org.apache.spark.sql.DataFrame
 
 import scala.util.Failure
 import scala.util.Success
+import scala.util.Try
 
 class Parse(_file: String, _paths: BasePaths, fallBack: FallBack)
     extends Executor
     with ReadAndWrite
     with AppLogger {
 
-    override protected val file: String                         = _file
-    override val paths: BasePaths                               = _paths
-    private lazy val tableDescription: Option[TableDescription] = loadTableDescription
+    override protected val file: String = _file
+    override val paths: BasePaths       = _paths
+    private var tb: TableDescription    = _
 
     override def readFrom: DataFrame = {
         logDebug("Load table description")
         val raw = readRawCSV(absoluteInputCSVPath)
         logInfo(s"Apply schema to current data")
-        applySchema(raw, tableDescription.get)
+        applySchema(raw, tb)
     }
 
-    override def execution(): Unit = {
-        if (tableDescription.isEmpty) {
-            applyFallbackMethodToCurrentFile.execution()
-        } else {
-            writeResult()
-        }
-    }
-
-    private def loadTableDescription: Option[TableDescription] = {
-        readFile(paths.absoluteInputTableDescriptionPath(file)) match {
-            case Some(value) => Some(intoTableDescription(value))
+    override def cast: Try[Unit] = {
+        val listOfFields = loadTableDescription match {
+            case Some(value) => value
             case None =>
-                logWarning(s"No table description file for $file")
-                None
+                logInfo(s"No table description file for $file")
+                return applyFallbackMethodToCurrentFile.cast
         }
+        val table = intoTable(listOfFields) match {
+            case Failure(exception) => return Failure(new EnrichException(file, exception))
+            case Success(description)     => description
+        }
+        this.tb = table
+        super.cast
     }
 
-    private def intoTableDescription(tableLines: List[String]): TableDescription = {
+    private def loadTableDescription: Option[List[String]] = {
+        readFile(paths.absoluteInputTableDescriptionPath(file))
+    }
+
+    private def intoTable(tableLines: List[String]): Try[TableDescription] = {
         TableDescription.fromLines(tableLines) match {
             case Failure(exception) =>
-                throw new EnrichException(file, exception)
-            case Success(value) => value
+                Failure(new EnrichException(file, exception))
+            case Success(value) => Success(value)
         }
     }
 
     private def applyFallbackMethodToCurrentFile: Executor = {
         logDebug(s"Apply fallback method ${fallBack.toString}")
-        fallBack match {
+        this.fallBack match {
             case FallBackRaw   => new Raw(file, paths)
             case FallBackInfer => new Infer(file, paths)
             case FallBackFail  => new Fail(file)
@@ -76,15 +79,20 @@ class Parse(_file: String, _paths: BasePaths, fallBack: FallBack)
 
 object Parse {
 
-    /**
-     * Converts an input raw dataframe to a new dataframe with a specified user schema.
-     * If the data is not in a proper format, it will return `null`
-     *
-     * @param df input raw dataframe with all columns as string
-     * @param description new fields types to convert
-     * @return a new dataframe with the new schema
-     */
-    protected[execution] def applySchema(df: DataFrame, description: TableDescription): DataFrame = {
+    /** Converts an input raw dataframe to a new dataframe with a specified user schema. If the data
+      * is not in a proper format, it will return `null`
+      *
+      * @param df
+      *   input raw dataframe with all columns as string
+      * @param description
+      *   new fields types to convert
+      * @return
+      *   a new dataframe with the new schema
+      */
+    protected[execution] def applySchema(
+        df: DataFrame,
+        description: TableDescription
+    ): DataFrame = {
         description.fields.foldLeft(df) { (temp, field) =>
             temp.withColumn(field.fieldName, field.colExpression)
         }
