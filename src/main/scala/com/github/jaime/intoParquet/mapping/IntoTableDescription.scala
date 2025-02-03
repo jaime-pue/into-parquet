@@ -10,8 +10,10 @@ import scala.util.Try
 import scala.util.matching.Regex
 
 object IntoTableDescription {
+
+    private val firstCol: Regex = raw"name\s+type(\s+comment)?.*".r
+
     protected[mapping] def matchCase(line: String): Boolean = {
-        val firstCol: Regex = raw"name\s+type(\s+comment)?.*".r
         line match {
             case firstCol(_*) => true
             case _            => false

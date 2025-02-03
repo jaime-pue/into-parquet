@@ -13,6 +13,7 @@ import scala.util.matching.Regex
 object IntoSQLDataType {
 
     private val PunctuationSigns = "[,;.:]"
+    private val decimalRegex: Regex = raw"decimal\s?\(\d+,\s*\d+\)".r
 
     protected[mapping] def mapFrom(value: String): SQLDataType = {
         val sanitizedString = sanitizeString(value)
@@ -37,7 +38,6 @@ object IntoSQLDataType {
     }
 
     private def resolveCaseStatement(cleanString: String): SQLDataType = {
-        val decimalRegex: Regex = raw"decimal\s?\(\d+,\s*\d+\)".r
         cleanString match {
             case "string"  => StringDataType
             case "boolean" => BooleanDataType
