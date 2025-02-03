@@ -1,10 +1,9 @@
 /*
- * IntoParquet Copyright (c) 2024 Jaime Alvarez
+ * IntoParquet Copyright (c) 2025 Jaime Alvarez
  */
 
 package com.github.jaime.intoParquet.controller
 
-import com.github.jaime.intoParquet.service.AppLogger
 import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.model.Files
 import com.github.jaime.intoParquet.model.enumeration.CastMode
@@ -15,37 +14,20 @@ import com.github.jaime.intoParquet.model.execution.Executor
 import com.github.jaime.intoParquet.model.execution.Infer
 import com.github.jaime.intoParquet.model.execution.Parse
 import com.github.jaime.intoParquet.model.execution.Raw
-import com.github.jaime.intoParquet.service.Chronometer
+import com.github.jaime.intoParquet.service.AppLogger
 
-import scala.util.Failure
-import scala.util.Success
 import scala.util.Try
 
-class ExecutionController(
-    csvFiles: Seq[String],
+protected[controller] abstract class HandleExecution(
+    csvFiles: Files,
     basePaths: BasePaths,
-    castMode: CastMode,
-    failFast: Boolean
+    castMode: CastMode
 ) extends AppLogger {
 
-    def this(csvFiles: Files, basePaths: BasePaths, castMode: CastMode, failFast: Boolean) = {
-        this(csvFiles.items, basePaths, castMode, failFast)
-    }
+    def execution: Try[Unit]
 
-    protected[controller] def execution: Try[Unit] = {
-        logInfo(s"Apply cast mode ${castMode.toString}")
-        Success(this.csvFiles.foreach(file => {
-            val timer = new Chronometer()
-            castElement(file).cast match {
-                case Failure(exception) =>
-                    if (failFast) {
-                        return Failure(exception)
-                    } else {
-                        logError(exception.getMessage)
-                    }
-                case Success(_) => logInfo(s"$file took: ${timer.toString} seconds")
-            }
-        }))
+    protected def mapper: Iterator[Executor] = {
+        this.csvFiles.items.iterator.map(castElement)
     }
 
     private def castElement(element: String): Executor = {

@@ -9,6 +9,10 @@ import com.github.jaime.intoParquet.service.AppLogger
 import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.configuration.ReaderConfiguration
 import com.github.jaime.intoParquet.configuration.SparkConfiguration.configuration
+import com.github.jaime.intoParquet.controller.execution.FailFastExecution
+import com.github.jaime.intoParquet.controller.execution.IgnoreExecution
+import com.github.jaime.intoParquet.controller.file.FailFastFile
+import com.github.jaime.intoParquet.controller.file.IgnoreFile
 import com.github.jaime.intoParquet.mapping.IntoBasePaths
 import com.github.jaime.intoParquet.mapping.IntoCastMode
 import com.github.jaime.intoParquet.mapping.transformer.AsController
@@ -27,9 +31,11 @@ class Controller(
 ) extends AppLogger {
 
     final def route(): Unit = {
-        intoFileController.files match {
-            case Some(csvFiles) => resolveExecution(csvFiles)
-            case None           => logInfo(s"No file found in ${basePaths.inputBasePath}. Skipping")
+        intoFileController.getFiles match {
+            case Some(csvFiles) =>
+                logDebug(s"Files for processing: [${csvFiles.toString}]")
+                resolveExecution(csvFiles)
+            case None => logInfo(s"No file found in ${basePaths.inputBasePath}. Skipping")
         }
     }
 
@@ -50,23 +56,24 @@ class Controller(
         }
     }
 
-    protected[controller] def intoFileController: FileController = {
+    protected[controller] def intoFileController: HandleFile = {
         logDebug("Create new File Controller class")
-        new FileController(
-          basePaths = basePaths,
-          csvFiles = csvFiles,
-          excludedFiles = excludeFiles
-        )
+        val fileController = if (failFast) {
+            FailFastFile
+        } else {
+            IgnoreFile
+        }
+        fileController.buildFrom(basePaths, csvFiles, excludeFiles)
     }
 
-    private def intoExecutionController(files: Files): ExecutionController = {
+    private def intoExecutionController(files: Files): HandleExecution = {
         logDebug("Create new Execution Controller class")
-        new ExecutionController(
-          csvFiles = files,
-          basePaths = basePaths,
-          castMode = castMode,
-          failFast = failFast
-        )
+        val executionController = if (failFast) {
+            FailFastExecution
+        } else {
+            IgnoreExecution
+        }
+        executionController.buildFrom(files, basePaths, castMode)
     }
 }
 

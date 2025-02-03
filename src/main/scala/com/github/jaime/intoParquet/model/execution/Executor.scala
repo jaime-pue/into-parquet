@@ -15,4 +15,6 @@ trait Executor {
     }
 
     def execution(): Unit
+
+    override def toString: String = file
 }

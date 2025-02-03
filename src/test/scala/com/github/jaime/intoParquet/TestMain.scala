@@ -6,6 +6,7 @@ package com.github.jaime.intoParquet
 
 import com.github.jaime.intoParquet.common.Resources
 import com.github.jaime.intoParquet.common.SparkTestBuilder
+import com.github.jaime.intoParquet.exception.NoFileFoundException
 import com.github.jaime.intoParquet.exception.NoSchemaFoundException
 import com.github.jaime.intoParquet.exception.WrongInputArgsException
 import org.scalatest.BeforeAndAfterEach
@@ -74,9 +75,9 @@ class TestMain extends SparkTestBuilder with BeforeAndAfterEach {
         assertThrows[NoSchemaFoundException](Main.main(args))
     }
 
-    test("Should not fail if can't file the file") {
+    test("Should fail if can't file the file") {
         val args = Array("--fail-fast", "-f", "badRecord", "-m", "raw")
-        runMain(args)
+        assertThrows[NoFileFoundException](Main.main(args))
     }
 
     test("Should throw exception if args are wrong") {
