@@ -18,7 +18,7 @@ class NotImplementedTypeException(val invalidType: String) extends AppException 
 class EnrichException(val file: String, exception: Throwable) extends AppException {
 
     override val message: String = s"""There is a problem with the table description for file <$file>:
-                                              |${exception.getMessage}""".stripMargin
+                                              |>> ${exception.getMessage}""".stripMargin
 }
 
 class WrongInputArgsException extends AppException {

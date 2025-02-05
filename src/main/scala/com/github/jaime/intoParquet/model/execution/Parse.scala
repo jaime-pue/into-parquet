@@ -46,7 +46,7 @@ class Parse(_file: String, _paths: BasePaths, fallBack: FallBack)
                 return applyFallbackMethodToCurrentFile.cast
         }
         val table = intoTable(listOfFields) match {
-            case Failure(exception) => return Failure(new EnrichException(file, exception))
+            case Failure(exception) => return Failure(exception)
             case Success(description)     => description
         }
         this.tb = table
