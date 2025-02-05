@@ -2,7 +2,7 @@
  * IntoParquet Copyright (c) 2025 Jaime Alvarez
  */
 
-package com.github.jaime.intoParquet.controller.file
+package com.github.jaime.intoParquet.controller.fail
 
 import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.controller.HandleFile
@@ -27,15 +27,5 @@ class FailFastFile(
         if (files.isEmpty) {
             throw new NoFileFoundException(basePaths.inputBasePath)
         } else { Some(new Files(files)) }
-    }
-}
-
-object FailFastFile extends Builder[FailFastFile] {
-    override def buildFrom(
-        basePaths: BasePaths,
-        csvFiles: Option[String],
-        excludedFiles: Option[String]
-    ): FailFastFile = {
-        new FailFastFile(basePaths, csvFiles, excludedFiles)
     }
 }

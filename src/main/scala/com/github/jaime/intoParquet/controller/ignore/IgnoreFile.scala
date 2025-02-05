@@ -2,7 +2,7 @@
  * IntoParquet Copyright (c) 2025 Jaime Alvarez
  */
 
-package com.github.jaime.intoParquet.controller.file
+package com.github.jaime.intoParquet.controller.ignore
 
 import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.controller.HandleFile
@@ -29,14 +29,5 @@ class IgnoreFile(
         } else {
             Some(new Files(files))
         }
-    }
-}
-object IgnoreFile extends Builder[IgnoreFile] {
-    override def buildFrom(
-        basePaths: BasePaths,
-        csvFiles: Option[String],
-        excludedFiles: Option[String]
-    ): IgnoreFile = {
-        new IgnoreFile(basePaths, csvFiles, excludedFiles)
     }
 }

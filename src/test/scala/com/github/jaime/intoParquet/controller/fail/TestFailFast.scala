@@ -2,7 +2,7 @@
  * IntoParquet Copyright (c) 2025 Jaime Alvarez
  */
 
-package com.github.jaime.intoParquet.controller.execution
+package com.github.jaime.intoParquet.controller.fail
 
 import com.github.jaime.intoParquet.common.Resources
 import com.github.jaime.intoParquet.common.SparkTestBuilder
@@ -18,19 +18,21 @@ class TestFailFast extends SparkTestBuilder {
         val files               = new Files(Array(Resources.wrongTypeFile))
         val paths               = Resources.path
         val executionController = new FailFastExecution(files, paths, new ParseSchema())
-        val process             = executionController.execution
-        assert(process.isFailure)
-        assertThrows[EnrichException](process.get)
+        assertThrows[EnrichException](executionController.execution())
     }
 
-    test("Should finish if no table description and fallback is Fail") {
+    test("Should fail if no table description and fallback is Fail") {
         val files = new Files(Array(Resources.onlyCSV))
         val paths = Resources.path
         val executionController =
             new FailFastExecution(files, paths, new ParseSchema(FallBackFail))
-        val process = executionController.execution
-        assert(process.isFailure)
-        assertThrows[NoSchemaFoundException](process.get)
+        assertThrows[NoSchemaFoundException](executionController.execution())
     }
 
+    test("Should fail if table description doesn't have a proper schema") {
+        val files = new Files(Array("badField"))
+        val paths = Resources.path
+        val exec = new FailFastExecution(files, paths, new ParseSchema())
+        assertThrows[EnrichException](exec.execution())
+    }
 }

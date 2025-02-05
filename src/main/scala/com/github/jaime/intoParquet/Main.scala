@@ -2,7 +2,7 @@
  * IntoParquet
  * This command-line tool is designed to convert CSV files into
  * the efficient Parquet format.
- * Copyright (c) 2024 Jaime Alvarez
+ * Copyright (c) 2024-2025 Jaime Alvarez
  *
  * Contact info: jaime.af.git@gmail.com
  *
@@ -22,17 +22,17 @@
 
 package com.github.jaime.intoParquet
 
+import com.github.jaime.intoParquet.controller.HandleRouter
+import com.github.jaime.intoParquet.mapping.IntoRouter
 import com.github.jaime.intoParquet.service.AppLogger
-import com.github.jaime.intoParquet.controller.Controller
-import com.github.jaime.intoParquet.mapping.IntoController
 
 object Main extends AppLogger {
 
     def main(args: Array[String]): Unit = {
         logDebug("Start new session")
-        val asConfig = new IntoController(args)
+        val asConfig = new IntoRouter(args)
         logDebug("Input arguments seems Ok")
-        val controller = Controller.into(asConfig)
+        val controller = HandleRouter.router(asConfig)
         controller.route()
         logDebug("Close application")
     }
