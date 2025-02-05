@@ -12,7 +12,7 @@ import com.github.jaime.intoParquet.model.enumeration.FallBackFail
 import com.github.jaime.intoParquet.model.enumeration.ParseSchema
 import com.github.jaime.intoParquet.model.enumeration.RawSchema
 
-class TestIgnoreFails extends SparkTestBuilder {
+class TestIgnoreExecution extends SparkTestBuilder {
 
     private def testExecution(execution: HandleExecution): Unit = {
         try {
@@ -28,7 +28,6 @@ class TestIgnoreFails extends SparkTestBuilder {
         val executionController = new IgnoreExecution(new Files(files), paths, new ParseSchema())
         testExecution(executionController)
     }
-
 
     test("Should finish if no table description and fallback is not Fail") {
         val files               = Array(Resources.onlyCSV)
@@ -57,6 +56,13 @@ class TestIgnoreFails extends SparkTestBuilder {
         val paths               = Resources.path
         val executionController = new IgnoreExecution(new Files(files), paths, RawSchema)
         testExecution(executionController)
+    }
+
+    test("Should finish if bad schema for table description") {
+        val files = new Files(Array("badField"))
+        val paths = Resources.path
+        val exec  = new IgnoreExecution(files, paths, new ParseSchema())
+        testExecution(exec)
     }
 
 }

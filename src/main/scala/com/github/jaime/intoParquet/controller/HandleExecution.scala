@@ -4,9 +4,7 @@
 
 package com.github.jaime.intoParquet.controller
 
-import com.github.jaime.intoParquet.app.SparkBuilder
 import com.github.jaime.intoParquet.configuration.BasePaths
-import com.github.jaime.intoParquet.configuration.SparkConfiguration.configuration
 import com.github.jaime.intoParquet.model.Files
 import com.github.jaime.intoParquet.model.enumeration.CastMode
 import com.github.jaime.intoParquet.model.enumeration.InferSchema
@@ -25,17 +23,16 @@ protected[controller] abstract class HandleExecution(
     castMode: CastMode
 ) extends AppLogger {
 
-    /** Gracefully stop current Spark Session even if a failure throws its exception */
+    /** If flows gets here, it does mean there are, at least, one file to
+      * process. The script can time each item from read to write.
+      */
     def execution(): Unit = {
-        logInfo("Start batch")
-        SparkBuilder.beforeAll(configuration)
         mapper.foreach(fileItem => {
+            logInfo(s"Start job for: $fileItem")
             val timer = new Chronometer()
             processEachFile(fileItem)
-            logInfo(s"${fileItem} took: ${timer.toString} seconds")
+            logInfo(s"$fileItem took: ${timer.toString} seconds")
         })
-        logInfo("Job ended Ok!")
-        SparkBuilder.afterAll()
     }
 
     protected def processEachFile(e: Executor): Unit
@@ -45,7 +42,6 @@ protected[controller] abstract class HandleExecution(
     }
 
     private def castElement(element: String): Executor = {
-        logInfo(s"Start job for: ${element}")
         this.castMode match {
             case RawSchema      => new Raw(element, basePaths)
             case InferSchema    => new Infer(element, basePaths)

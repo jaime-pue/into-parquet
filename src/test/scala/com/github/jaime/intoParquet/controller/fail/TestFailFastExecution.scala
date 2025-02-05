@@ -4,6 +4,7 @@
 
 package com.github.jaime.intoParquet.controller.fail
 
+import com.github.jaime.intoParquet.app.SparkBuilder
 import com.github.jaime.intoParquet.common.Resources
 import com.github.jaime.intoParquet.common.SparkTestBuilder
 import com.github.jaime.intoParquet.exception.EnrichException
@@ -11,8 +12,13 @@ import com.github.jaime.intoParquet.exception.NoSchemaFoundException
 import com.github.jaime.intoParquet.model.Files
 import com.github.jaime.intoParquet.model.enumeration.FallBackFail
 import com.github.jaime.intoParquet.model.enumeration.ParseSchema
+import org.scalatest.BeforeAndAfterEach
 
-class TestFailFast extends SparkTestBuilder {
+class TestFailFastExecution extends SparkTestBuilder with BeforeAndAfterEach {
+
+    override def beforeEach(): Unit = {
+        SparkBuilder.beforeAll()
+    }
 
     test("Should fail if error found while converting table description") {
         val files               = new Files(Array(Resources.wrongTypeFile))
@@ -32,7 +38,7 @@ class TestFailFast extends SparkTestBuilder {
     test("Should fail if table description doesn't have a proper schema") {
         val files = new Files(Array("badField"))
         val paths = Resources.path
-        val exec = new FailFastExecution(files, paths, new ParseSchema())
+        val exec  = new FailFastExecution(files, paths, new ParseSchema())
         assertThrows[EnrichException](exec.execution())
     }
 }

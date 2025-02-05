@@ -4,6 +4,7 @@
 
 package com.github.jaime.intoParquet.app
 
+import com.github.jaime.intoParquet.configuration.SparkConfiguration.configuration
 import com.github.jaime.intoParquet.service.AppLogger
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
@@ -21,7 +22,7 @@ object SparkBuilder extends AppLogger {
         logDebug("Stop spark session")
     }
 
-    final def beforeAll(configuration: SparkConf): Unit = {
+    final def beforeAll(configuration: SparkConf = configuration): Unit = {
         logDebug("Start spark session")
         SparkSession
             .builder()
