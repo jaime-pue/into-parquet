@@ -1,9 +1,14 @@
 # into-parquet
 
-![GitHub License](https://img.shields.io/github/license/Jaime-alv/into-parquet?color=0)
+![GitHub License](https://img.shields.io/github/license/Jaime-alv/into-parquet)
 ![GitHub Tag](https://img.shields.io/github/v/tag/Jaime-alv/into-parquet?color=009EDB)
+![Static Badge](https://img.shields.io/badge/scoverage-%3E90%25-green?logo=apachemaven&logoColor=C71A36)
 
-![Workflow](https://github.com/Jaime-alv/into-parquet/actions/workflows/maven.yml/badge.svg)
+
+![Workflow](https://github.com/Jaime-alv/into-parquet/actions/workflows/maven.yml/badge.svg?label=Scoverage)
+
+![TestJDKs](https://github.com/Jaime-alv/into-parquet/actions/workflows/test_jdk.yml/badge.svg)
+
 
 ## About
 
