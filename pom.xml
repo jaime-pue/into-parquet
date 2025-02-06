@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.jaime-alv</groupId>
     <artifactId>into-parquet</artifactId>
@@ -22,13 +24,14 @@
         <mvn.assembly>3.4.2</mvn.assembly>
         <scopt.version>4.1.0</scopt.version>
         <spark.testing-base.version>${spark.version}_2.0.1</spark.testing-base.version>
+        <cmdLine>${javaOpt}</cmdLine>
     </properties>
 
     <scm>
         <developerConnection>scm:git:https://github.com/Jaime-alv/into-parquet.git</developerConnection>
         <url>https://github.com/Jaime-alv/into-parquet</url>
         <tag>HEAD</tag>
-  </scm>
+    </scm>
 
     <dependencies>
         <dependency> <!-- Scala -->
@@ -136,6 +139,9 @@
                     <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
                     <junitxml>.</junitxml>
                     <filereports>WDF TestSuite.txt</filereports>
+                    <argLine>
+                        -Xms8G
+                    </argLine>
                 </configuration>
                 <executions>
                     <execution>
@@ -143,6 +149,9 @@
                         <goals>
                             <goal>test</goal>
                         </goals>
+                        <configuration>
+                            <argLine>${cmdLine}</argLine>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
