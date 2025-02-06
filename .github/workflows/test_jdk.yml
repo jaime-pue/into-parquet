@@ -19,17 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: ['11', '17']
+        java: ['8', '11', '17']
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 8
-      uses: actions/setup-java@v4
-      with:
-        java-version: '8'
-        distribution: 'corretto'
-        cache: maven
-    - name: Run Maven tests with java 8
-      run: mvn test
     - uses: actions/checkout@v4
     - name: Set up JDK ${{ matrix.java }}
       uses: actions/setup-java@v4
@@ -37,6 +28,13 @@ jobs:
         java-version: ${{ matrix.java }}
         distribution: 'corretto'
         cache: maven
-    - name: Run Maven tests with java ${{ matrix.java }}
-      run: mvn test -DjavaOpt="--add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.util.calendar=ALL-UNNAMED"
+    - name: Build app package with java ${{ matrix.java }}
+      run: |
+        if [[ "${{ matrix.java }}" = '8' ]]; then
+          echo "JDK${{ matrix.java }} => Run without args"
+          mvn package
+        else
+          echo "JDK${{ matrix.java }} => Adding extra opens"
+          mvn package -DjavaOpt="--add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.util.calendar=ALL-UNNAMED"
+        fi
 

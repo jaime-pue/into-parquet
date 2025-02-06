@@ -26,5 +26,5 @@ jobs:
         java-version: '11'
         distribution: 'corretto'
         cache: maven
-    - name: Run Maven tests with java 11 & scoverage
+    - name: Run Maven scoverage with java 11
       run: mvn clean scoverage:check
