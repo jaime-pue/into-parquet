@@ -29,7 +29,7 @@ rather than proceeding with the next file. A full traceback will be displayed ba
 
 ## Requirements
 
--   Java 1.8 or 1.11
+-   Java 1.8, 1.11, 1.17
 -   Maven 3
 
 ## Usage
@@ -74,6 +74,12 @@ Once compiled. Execute jar within the shell with a command like:
 
 ```shell
 java -jar into-parquet-cli.jar
+```
+
+Under JDK 17, user needs to add two mandatory flags:
+
+```sh
+java --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.util.calendar=ALL-UNNAMED -jar into-parquet-cli.jar
 ```
 
 The tool supports a full range of [optional flags](#cli-options) the user can add, e.g.:
