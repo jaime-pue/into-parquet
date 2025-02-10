@@ -16,9 +16,7 @@ This command-line tool is designed to convert CSV files into the Parquet format.
 It automatically scans the specified input directory for all CSV files, processes them, and saves the converted
 Parquet files in a target location.
 
-By default, will read all files recursively from `./data/input/`
-
-It will overwrite previous Parquet files.
+By default, will read all files recursively from `./data/input/`. It will overwrite previous Parquet files.
 
 This utility is particularly useful for users who need to work with local datasets.
 The conversion process preserves column names, and the structure of the original CSV files while transforming them
@@ -28,7 +26,6 @@ When the script encounters an exception, it will attempt to skip to the next CSV
 transformation process.
 This behaviour ensures that the script can process multiple files in one go even if one file contains issues.
 A log message will be rendered to the user, so it can take future actions with said file.
-
 However, if the `fail-fast` mode is enabled, the script will immediately stop its execution upon encountering any error,
 rather than proceeding with the next file. A full traceback will be displayed back to the user.
 
@@ -249,24 +246,20 @@ Csv files with the mandatory header row
 #### Mandatory header row
 
 CSV files must include a mandatory header row to ensure proper functionality. This header, located at the top of the
-file, defines the names of the columns, allowing for correct interpretation of the data by the software. Without a
-header, it's impossible to guess which column maps to which type.
+file, defines the names of the columns. Without a header, it's impossible to guess which column maps to which type.
 
 #### Note on `Null` values
 
 By default, the into-parquet script handles null values in the input CSV files. Any missing or empty values in the CSV
 will be interpreted as nulls during the conversion process.
-To ensure proper handling, it is important that any null values in the CSV are represented as NULL in uppercase.
-This ensures consistency and allows the script to correctly recognise and convert these null values into the Parquet
-format.
+To ensure proper handling, any null values in the CSV should be `NULL` in uppercase. This ensures consistency and 
+allows the script to correctly recognise and convert these null values into the Parquet format.
 
 #### Date format
 
 The date input format must follow the ISO 8601 standard, which specifies the structure as **YYYY-MM-DD**, where "YYYY"
 represents the four-digit year, "MM" the two-digit month (01 through 12), and "DD" the two-digit day of the month (01
-through 31),
-and the separator must be a hyphen "-".
-For example, 2024-12-02 indicates the 2nd of December, 2024.
+through 31), and the separator must be a hyphen "-". For example, 2024-12-02 indicates the 2nd of December, 2024.
 
 The same happens with the timestamp format. Therefore, the order of the elements used to express date and time in ISO
 8601 is
@@ -278,12 +271,17 @@ For example, September 27, 2022 at 6 p.m. is represented as 2022-09-27 18:00:00.
 
 Plain text file following the convention for column names and their expected data types, `column_name type_of`. The file
 does not require a specific file extension, but the name must be the same as the CSV file the user needs to transform.
+
 To facilitate proper formatting, users can retrieve the expected schema, including column names and their corresponding
-data types, by using the `DESCRIBE TABLE` command in Impala. This ensures that the file aligns precisely with the
+data types, by using the `DESCRIBE TABLE` statement in Impala. This ensures that the file aligns precisely with the
 anticipated structure, enabling seamless integration and data conversion. The first line, `name type comment`, is
 optional. [Supported data types](#sql-supported-data-types).
 
 Example
+
+```sql
+DESCRIBRE target_db.demo;
+```
 
 ```text
 name type comment
