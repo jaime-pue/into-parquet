@@ -6,12 +6,14 @@ package com.github.jaime.intoParquet
 
 import com.github.jaime.intoParquet.common.Resources
 import com.github.jaime.intoParquet.common.SparkTestBuilder
-import com.github.jaime.intoParquet.exception.NoFileFoundException
 import com.github.jaime.intoParquet.exception.NoSchemaFoundException
 import com.github.jaime.intoParquet.exception.WrongInputArgsException
+import org.apache.logging.log4j.LogManager
 import org.scalatest.BeforeAndAfterEach
 
 class TestMain extends SparkTestBuilder with BeforeAndAfterEach {
+
+    private val logger = LogManager.getLogger(getClass.getName)
 
     override protected def afterEach(): Unit = {
         Resources.cleanDirectory
@@ -37,7 +39,11 @@ class TestMain extends SparkTestBuilder with BeforeAndAfterEach {
         try {
             Main.main(args)
         } catch {
-            case ex: Exception => fail(ex)
+            case ex: Exception => {
+                logger.error(ex.getMessage)
+                ex.printStackTrace()
+                fail(ex)
+            }
         }
     }
 
