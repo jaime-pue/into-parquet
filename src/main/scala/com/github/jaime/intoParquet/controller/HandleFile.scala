@@ -27,7 +27,16 @@ abstract class HandleFile(
         Try(readAllFilesFromRaw(inputBasePath))
     }
 
-    def getFiles: Option[Files]
+    def getFiles: Option[Files] = {
+        val files = filterFiles(getRawFileNames)
+        if (files.isEmpty) {
+            None
+        } else {
+            Some(new Files(files))
+        }
+    }
+
+    def getRawFileNames: Seq[String]
 
 
     protected[controller] def filterFiles(files: Seq[String]): Seq[String] = {

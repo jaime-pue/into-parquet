@@ -8,7 +8,6 @@ import com.github.jaime.intoParquet.common.Resources
 import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.controller.HandleFile.isBlank
 import com.github.jaime.intoParquet.controller.HandleFile.splitFiles
-import com.github.jaime.intoParquet.model.Files
 import org.scalatest.funsuite.AnyFunSuite
 
 class TestFileController extends AnyFunSuite {
@@ -17,7 +16,8 @@ class TestFileController extends AnyFunSuite {
 
     class TestFile(basePaths: BasePaths, csvFiles: Option[String], excludedFiles: Option[String] = None)
         extends HandleFile(basePaths, csvFiles, excludedFiles) {
-        override def getFiles: Option[Files] = None
+
+        override def getRawFileNames: Seq[String] = List[String]()
     }
 
     test("Should get all csv files from resources folder") {

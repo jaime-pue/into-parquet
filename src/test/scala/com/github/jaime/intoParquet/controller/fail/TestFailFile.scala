@@ -22,17 +22,17 @@ class TestFailFile extends AnyFunSuite {
         assert(c.getFiles.get.items.nonEmpty)
     }
 
-    test("Should throw exception if no files found (path exists, include files is wrong)") {
+    test("Should not throw exception if no files found (path exists, include files is wrong)") {
         val wrongFile = "one"
         val c = new FailFastFile(Resources.path, Some(wrongFile), None)
         assume(!c.getAllFilenamesFromFolder.get.contains(wrongFile))
-        assertThrows[NoFileFoundException](c.getFiles.get)
+        assert(c.getFiles.isEmpty)
     }
 
-    test("Should throw exception if exclude deletes included files") {
+    test("Should not throw exception if exclude deletes included files, it just means there are no files") {
         val wrongFile = "exampleTable"
         val c = new FailFastFile(Resources.path, Some(wrongFile), Some(wrongFile))
         assume(c.getAllFilenamesFromFolder.get.contains(wrongFile))
-        assertThrows[NoFileFoundException](c.getFiles.get)
+        assert(c.getFiles.isEmpty)
     }
 }

@@ -75,9 +75,9 @@ class TestMain extends SparkTestBuilder with BeforeAndAfterEach {
         assertThrows[NoSchemaFoundException](Main.main(args))
     }
 
-    test("Should fail if can't file the file") {
+    test("Should finish if there are no files") {
         val args = Array("--fail-fast", "-f", "badRecord", "-m", "raw")
-        assertThrows[NoFileFoundException](Main.main(args))
+        runMain(args)
     }
 
     test("Should throw exception if args are wrong") {

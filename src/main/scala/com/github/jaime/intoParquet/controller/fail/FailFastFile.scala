@@ -6,8 +6,6 @@ package com.github.jaime.intoParquet.controller.fail
 
 import com.github.jaime.intoParquet.configuration.BasePaths
 import com.github.jaime.intoParquet.controller.HandleFile
-import com.github.jaime.intoParquet.exception.NoFileFoundException
-import com.github.jaime.intoParquet.model.Files
 
 import scala.util.Failure
 import scala.util.Success
@@ -17,15 +15,13 @@ class FailFastFile(
     csvFiles: Option[String],
     excludedFiles: Option[String]
 ) extends HandleFile(basePaths, csvFiles, excludedFiles) {
-    override def getFiles: Option[Files] = {
-        val files = getAllFilenamesFromFolder match {
+
+    override def getRawFileNames: Seq[String] = {
+        getAllFilenamesFromFolder match {
             case Failure(exception) =>
                 logError(exception.getMessage)
                 throw exception
-            case Success(value) => filterFiles(value)
+            case Success(value) => value
         }
-        if (files.isEmpty) {
-            throw new NoFileFoundException(basePaths.inputBasePath)
-        } else { Some(new Files(files)) }
     }
 }

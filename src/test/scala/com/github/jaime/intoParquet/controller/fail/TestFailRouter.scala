@@ -29,10 +29,10 @@ class TestFailRouter extends SparkTestBuilder {
         assertThrows[NoFileFoundException](c.route())
     }
 
-    test("Should fail if include and exclude files match") {
+    test("Should not fail if include and exclude files match, so there are no files") {
         val files = Some("exampleTable")
         val c     = new FailFastRouter(Resources.path, RawSchema, files, files)
-        assertThrows[NoFileFoundException](c.route())
+        testController(c)
     }
 
     test("Should finish if there is one included file") {
