@@ -6,6 +6,7 @@ package com.github.jaime.intoParquet
 
 import com.github.jaime.intoParquet.common.Resources
 import com.github.jaime.intoParquet.common.SparkTestBuilder
+import com.github.jaime.intoParquet.exception.NoFileFoundException
 import com.github.jaime.intoParquet.exception.NoSchemaFoundException
 import com.github.jaime.intoParquet.exception.WrongInputArgsException
 import org.apache.logging.log4j.LogManager
@@ -81,9 +82,14 @@ class TestMain extends SparkTestBuilder with BeforeAndAfterEach {
         assertThrows[NoSchemaFoundException](Main.main(args))
     }
 
-    test("Should finish if there are no files") {
-        val args = Array("--fail-fast", "-f", "badRecord", "-m", "raw")
+    test("Should finish if there are no files, but dir exists") {
+        val args = Array("--fail-fast", "-f", "badRecord", "-m", "raw", "-p", Resources.InputTestFolder)
         runMain(args)
+    }
+
+    test("Should fail if dir doesn't exist") {
+        val args = Array("--fail-fast", "-f", "badRecord", "-m", "raw", "-p", "imagine")
+        assertThrows[NoFileFoundException](Main.main(args))
     }
 
     test("Should throw exception if args are wrong") {
