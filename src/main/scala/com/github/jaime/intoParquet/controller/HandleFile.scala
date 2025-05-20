@@ -22,7 +22,6 @@ abstract class HandleFile(
     private val includeFiles: Option[Array[String]] = setFiles(csvFiles)
     private val excludeFiles: Option[Array[String]] = setFiles(excludedFiles)
 
-
     protected[controller] def getAllFilenamesFromFolder: Try[List[String]] = {
         Try(readAllFilesFromRaw(inputBasePath))
     }
@@ -38,11 +37,17 @@ abstract class HandleFile(
 
     def getRawFileNames: Seq[String]
 
-
+    /** Getting the elements in one Array that contains another one can be done with
+      * [[scala.collection.ArrayOps.contains]] method, but we need to iterate over the input which
+      * may contain a regex pattern. And that possible regex pattern must be cast to a proper regex
+      * while finding full names. This setup will lead to an `Array[List[String]]`, hence the
+      * flatMap.
+      */
     protected[controller] def filterFiles(files: Seq[String]): Seq[String] = {
         val inclusiveFiles = includeFiles match {
-            case Some(value) => files.filter(f => value.contains(f))
-            case None        => files
+            case Some(value) =>
+                value.flatMap(regex => files.filter(f => raw"$regex".r.matches(f))).toList.distinct
+            case None => files
         }
         val exclusiveFiles = excludeFiles match {
             case Some(value) => inclusiveFiles.filterNot(f => value.contains(f))

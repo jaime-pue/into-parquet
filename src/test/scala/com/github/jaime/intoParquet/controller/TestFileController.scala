@@ -86,4 +86,52 @@ class TestFileController extends AnyFunSuite {
         val allFiles       = Array("one", "two")
         assertResult(Array[String]())(fileController.filterFiles(allFiles))
     }
+
+    test("Should return multiple files") {
+        val fileController = new TestFile(basePaths, Some("one,two"), None)
+        val allFiles = Array("one", "two")
+        assertResult(allFiles)(fileController.filterFiles(allFiles))
+    }
+
+    test("Should work with a regex pattern, grab everything that starts with an 'r'") {
+        val fileController = new TestFile(basePaths, Some("r.*"), None)
+        val allFiles = Array("rcm", "random", "cop", "super")
+        assertResult(Array("rcm", "random"))(fileController.filterFiles(allFiles))
+    }
+
+    test("Should support multiple regex patterns") {
+        val fileController = new TestFile(basePaths, Some("r.*,.*"), None)
+        val allFiles = Array("rcm", "random", "cop", "super")
+        assertResult(allFiles)(fileController.filterFiles(allFiles))
+    }
+
+    test("Should work mixing regex and full names") {
+        val fileController = new TestFile(basePaths, Some("r.*,cop,sugar"), None)
+        val allFiles = Array("rcm", "random", "cop", "super")
+        assertResult(Array("rcm", "random", "cop"))(fileController.filterFiles(allFiles))
+    }
+
+    test("Should work with chars") {
+        val fileController = new TestFile(basePaths, Some("r.*,cop,su\\w+r"), None)
+        val allFiles = Array("rcm", "random", "cop", "super")
+        assertResult(allFiles)(fileController.filterFiles(allFiles))
+    }
+
+    test("Should work if regex captures nothing") {
+        val fileController = new TestFile(basePaths, Some("a\\d?"), None)
+        val allFiles = Array("rcm", "random", "cop", "super")
+        assertResult(Array[String]())(fileController.filterFiles(allFiles))
+    }
+
+    test("Should work with files that contains a dot") {
+        val fileController = new TestFile(basePaths, Some("a.b,a.c,a.d"), None)
+        val allFiles = Array("a.b","a.c","a.d")
+        assertResult(allFiles)(fileController.filterFiles(allFiles))
+    }
+
+    test("Should work with files that contains a dot, try with regex") {
+        val fileController = new TestFile(basePaths, Some("a..?"), None)
+        val allFiles = Array("a.b","a.c","a.d")
+        assertResult(allFiles)(fileController.filterFiles(allFiles))
+    }
 }
